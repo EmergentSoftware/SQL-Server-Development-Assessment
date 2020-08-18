@@ -5,7 +5,7 @@ This lists the database development best practice checks and naming conventions 
 
 ## Install Instructions
 
-It is recommend installing this stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine. 
+It is recommend installing the sp_Develop stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine.
 
 On Azure SQL Server you will need to install this stored procedure in the user database.
 

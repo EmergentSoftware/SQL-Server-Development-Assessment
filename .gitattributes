@@ -55,6 +55,7 @@
 
 # T-SQL files
 *.sql 	eol=crlf merge=union
+*.sql diff
 
 # prevent unwanted files from bloating the zip distribution package
 FolderName/ export-ignore

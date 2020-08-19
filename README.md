@@ -36,9 +36,6 @@ EXECUTE dbo.sp_Develop
 |@VersionCheckMode|Will set the version output variables and return without running the stored procedure.|
 
 ---
-[[_TOC_]]
-
----
 
 # Current High Check Id
 
@@ -48,7 +45,6 @@ EXECUTE dbo.sp_Develop
 
 The purpose of naming and style convention allows you and others to identify the type and purpose of database objects. Our goal is to create legible, concise and consistent names for our database objects.
 
----
 
 ## Concatenating Two Table Names
 **Check Id:** 13
@@ -57,7 +53,6 @@ Avoid, where possible, concatenating two table names together to create the name
 
 When a word does not exist to describe the relationship use "Table1Table2" with no underscores.
 
----
 
 ## Variable Naming
 **Check Id:** [NONE YET]
@@ -70,7 +65,6 @@ All variables should be written in PascalCase, e.g. "@FirstName" or "@City" or "
 
 Variable names should contain only letters and numbers. No special characters or spaces should be used.
 
----
 
 ## Stored Procedures & Function Naming
 **Check Id:** [NONE YET]

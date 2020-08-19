@@ -231,13 +231,17 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
 ## Column Naming
 **Check Id:** 14
 
-- Avoid repeating the table name except where it is natural to do so. [The most common place where we include the table name is with some primary key column (e.g. PersonId)](#using-id-for-primary-key-column-name).
-  - **Other Common Examples:** PatientNumber, PurchaseOrderNumber, DriversLicenseNumber
-- Use singular, not plural.
-- Choose a name to reflect precisely what is contained in the attribute.
-- Use abbreviations rarely in attribute names. If your organization has a TPS "thing" that is commonly used and referred to in general conversation as a TPS, you might use this abbreviation.
-  - **Pronounced abbreviations:** It is better to use a natural abbreviation like id instead of identifier.
-- End the name with a suffix that denotes general usage. These suffixes are not data types that are used in Hungarian notations.
+- Avoid repeating the table name except for:
+  - **Table Primary Key:** A table primary key should should include the table name and Id (e.g. PersonId) [See Using ID for Primary Key Column Name](#using-id-for-primary-key-column-name)
+  - **Natural Common Words:** PatientNumber, PurchaseOrderNumber, DriversLicenseNumber
+  - **Generic Names:** When using generic names like "Number", "Name", "Description" & "Code" you can use repeat the table name
+    - Instead use "AccountNumber", "AddressTypeName", "ProductDescription" & "StateCode"
+    - SELECT queries will need aliases when two tables use generic columns like "Name"
+- Use singular, not plural
+- Choose a name to reflect precisely what is contained in the attribute
+- Use abbreviations rarely in attribute names. If your organization has a TPS "thing" that is commonly used and referred to in general conversation as a TPS, you might use this abbreviation
+  - **Pronounced abbreviations:** It is better to use a natural abbreviation like id instead of identifier
+- End the name with a suffix that denotes general usage. These suffixes are not data types that are used in Hungarian notations. There can be names where a suffix would not apply
   - Invoice**Id** is the identity of the invoice record
   - Part**Number** is an alternate key
   - Start**Date** is the date something started
@@ -246,11 +250,8 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - Line**Amount** is a currency amount not dependant on the data type like DECIMAL(19, 4)
   - Group**Name** is the text string not dependant on the data type like VARCHAR() or NVARCHAR()
   - State**Code** indicates the short form of something
-  - OptIn**Flag** indicates a status
-  - **Name** used to indicate a full name for something
-  - **Quantity**
+  - IsDeleted**Flag** indicates a status
   - Unit**Price**
-  - **Description**
 
 
 
@@ -464,10 +465,31 @@ WHERE
 ## Not Using SET NOCOUNT ON in Stored Procedure or Trigger
 **Check Id:** 19
 
-Unless you need to return messages that give you the row count of each statement, you should ```SET NOCOUNT ON;```. When you execute a query a message is returned to the app with the rowcount impacted by the SQL statement.
+Use ```SET NOCOUNT ON;``` at the beginning of your SQL batches, stored procedures for report output and triggers in production environments, as this suppresses messages like '(10000 row(s) affected)' after executing INSERT, UPDATE, DELETE and SELECT statements. This improves the performance of stored procedures by reducing network traffic.
 
-When ```SET NOCOUNT ON;``` is included at the top of the stored procedure and trigger it will suppress the "(1000 row affected)" message.
+```SET NOCOUNT ON;``` is a procedural level instructions and as such there is no need to include a corresponding ```SET NOCOUNT OFF;``` command as the last statement in the batch. 
 
+```SET NOCOUNT OFF;``` can be helpfull when debugging your queries in displaying the number of rows impacted when performing INSERTs, UPDATEs and DELETEs.
+
+```sql
+CREATE OR ALTER PROCEDURE dbo.PersonInsert
+    @PersonId INT
+   ,@JobTitle NVARCHAR(100)
+   ,@HiredOn  DATE
+   ,@Gender   CHAR(1)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO
+        dbo.Person (PersonId, JobTitle, HiredOn, Gender)
+    SELECT 
+        PersonId = @PersonId, 
+        JobTitle = 'CEO', 
+        HiredOn  = '5/2/1971', 
+        Gender   = 'M';
+END;
+```
 
 
 ## Using NOLOCK (READ UNCOMMITTED)
@@ -517,42 +539,12 @@ SELECT
 ````
 
 
-
 ## Not Using SQL Formatting
 **Check Id:** [NONE YET]
 
 SQL statements should be arranged in an easy-to-read manner. When statements are written all to one line or not broken into smaller easy-to-read chunks, more complicated statements are very hard to decipher.
 
 Use one of the two RedGate SQL Prompt formatting styles "Emergent Style - Collapsed" or "Emergent Style - Expanded". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
-
-
-
-## Not Using NOCOUNT
-**Check Id:** [NONE YET]
-
-Use ```SET NOCOUNT ON;``` at the beginning of your SQL batches, stored procedures for report output and triggers in production environments, as this suppresses messages like '(1 row(s) affected)' after executing INSERT, UPDATE, DELETE and SELECT statements. This improves the performance of stored procedures by reducing network traffic.
-
-```SET NOCOUNT ON;``` is a procedural level instructions and as such there is no need to include a corresponding ```SET NOCOUNT OFF;``` command as the last statement in the batch. 
-
-```sql
-CREATE OR ALTER PROCEDURE dbo.PersonInsert
-    @PersonId INT
-   ,@JobTitle NVARCHAR(100)
-   ,@HiredOn  DATE
-   ,@Gender   CHAR(1)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    INSERT INTO
-        dbo.Person (PersonId, JobTitle, HiredOn, Gender)
-    SELECT 
-        PersonId = @PersonId, 
-        JobTitle = 'CEO', 
-        HiredOn  = '5/2/1971', 
-        Gender   = 'M';
-END;
-```
 
 
 
@@ -578,6 +570,8 @@ Use block comments instead of single line comments in your T-SQL code. Single li
 
 Stored procedures and functions should include at a minimum a header comment with a brief overview of the batches functionality and author information.
 
+You can skip including the Author, Created On & Modifed On details when you use source control. (You should be using source control!)
+
 ```sql
 /**********************************************************************************************************************
 ** Author:      Your Name
@@ -588,8 +582,6 @@ Stored procedures and functions should include at a minimum a header comment wit
 **********************************************************************************************************************/
 
 ```
-
-
 
 
 ## Not Using Table Schema
@@ -675,9 +667,11 @@ ORDER BY
 
 The deprecated syntax (which includes defining the join condition in the WHERE clause) is not standard SQL and is more difficult to inspect and maintain. Parts of this syntax are completely unsupported in SQL Server 2012 or higher.
 
-The "old style" Microsoft/Sybase JOIN style for SQL, which uses the =* and *= syntax, has been deprecated and is no longer used. Queries that use this syntax will fail when the database engine level is 10 (SQL Server 2008) or later (compatibility level 100). The ANSI-89 table citation list (FROM tableA, tableB) is still ISO standard for INNER JOINs only. 
+The "old style" Microsoft/Sybase JOIN style for T-SQL, which uses the =* and *= syntax, has been deprecated and is no longer used. Queries that use this syntax will fail when the database engine level is 10 (SQL Server 2008) or later (compatibility level 100).
 
-Neither of these styles are worth using. It is always better to specify the type of join you require, INNER, LEFT OUTER, RIGHT OUTER, FULL OUTER and CROSS, which has been standard since ANSI SQL-92 was published. While you can choose any supported JOIN style, without affecting the query plan used by SQL Server, using the ANSI-standard syntax will make your code easier to understand, more consistent, and portable to other relational database systems.
+It is always better to specify the type of join you require, INNER JOIN, LEFT OUTER JOIN (LEFT JOIN), RIGHT OUTER JOIN (RIGHT JOIN), FULL OUTER JOIN (FULL JOIN) and CROSS JOIN, which has been standard since ANSI SQL-92 was published.
+
+While you can choose any supported JOIN style, without affecting the query plan used by SQL Server, using the ANSI-standard syntax will make your code easier to understand, more consistent, and portable to other relational database systems.
 
 
 ## View Usage
@@ -685,15 +679,15 @@ Neither of these styles are worth using. It is always better to specify the type
 
 Ask yourself what you are gaining by creating a view.
 
-View do not lend themselves to being deeply nested. Views that reference views are difficult to maintain.
+Views do not lend themselves to being deeply nested. Views that reference views are difficult to maintain.
 
-- View Use Cases
+- **View Use Cases**
   - Create a temporary indexed view for performance issues you cannot solve without changing T-SQL code
-  - You need to retire a table and use a new table with similar data. Still should be a temporary use.
-  - For security reasons to expose only a specific data to a database role.
+  - You need to retire a table and use a new table with similar data (still should be a temporary use)
+  - For security reasons to expose only a specific data to a database role
+  - As an interface layer for an client that does not support a table or stored procedure data source
   - Abstracting complicated base tables
 
-* Views in views cause issues for development
 
 
 ## Invalid Objects

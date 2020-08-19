@@ -53,7 +53,7 @@ The purpose of naming and style convention allows you and others to identify the
 ## Concatenating Two Table Names
 **Check Id:** 13
 
-Avoid, where possible, concatenating two table names together to create the name of a relationship (junction, many-to-many) table when there is already a word to describe the relationship. e.g. use "Subscription" instead of "NewspaperReader".
+Avoid, where possible, concatenating two table names together to create the name of a relationship (junction, intersection, many-to-many) table when there is already a word to describe the relationship. e.g. use "Subscription" instead of "NewspaperReader".
 
 When a word does not exist to describe the relationship use "Table1Table2" with no underscores.
 
@@ -224,13 +224,6 @@ Use "Account" instead of "Acct" and "Hour" instead of "Hr". Not everyone will al
 ```
 Acct, AP, AR, Hr, Rpt, Assoc, Desc
 ```
-
----
-
-## Junction (Intersection Tables)
-**Check Id:** [NONE YET]
-
-Junction tables, which handle many to many relationships, should be named by concatenating the names of the tables that have a one to many relationship with the junction table. For example, you might have "Doctors" and "Patients" tables. Since doctors can have many patients and patients can have many doctors (specialists) you need a table to hold the data for those relationships in a junction table. This table should be named DoctorPatient". 
 
 ---
 

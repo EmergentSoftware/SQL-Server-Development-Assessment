@@ -35,7 +35,7 @@ EXECUTE dbo.sp_Develop
 |@VersionDate|Output variable to check the version date.|
 |@VersionCheckMode|Will set the version output variables and return without running the stored procedure.|
 
----
+
 
 # Current High Check Id
 
@@ -71,7 +71,7 @@ Variable names should contain only letters and numbers. No special characters or
 
 Stored procedures and functions should be named so they can be ordered by the table/business entity (ObjectAction) they perform a database operation on, and adding the database activity "Get, Update, Insert, Delete, Merge" as a suffix, e.g., ("ProductGet" or "OrderUpdate").
 
----
+
 
 ## Using ID for Primary Key Column Name
 **Check Id:** 7
@@ -108,7 +108,7 @@ FROM
     INNER JOIN Color AS CL ON MK.MakeId  = C.ColorId;
 ```
 
----
+
 
 ## Not Naming Foreign Key Column the Same as Parent Table
 **Check Id:** [NONE YET]
@@ -137,7 +137,7 @@ FROM
      INNER JOIN dbo.Directory AS D ON F.ID = D.FileId
 ```
 
----
+
 
 ## Using Plural in Name
 **Check Id:** 1
@@ -146,7 +146,7 @@ Table and view names should be singular, for example, "Customer" instead of "Cus
 
 If writing code for an data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
 
----
+
 
 ## Using Prefix in Name
 **Check Id:** 2
@@ -159,7 +159,7 @@ SQL Server is a strongly-typed language. There is never a doubt what type of obj
 
 Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvious in SQL statements which items are columns (before or after the FROM clause). Do not use a data type prefix for the column either, for example, "IntCustomerId" for a numeric type or "VcName" for a varchar type.
 
----
+
 
 ## Using Prefix in Index Name
 **Check Id:** [NONE YET]
@@ -169,14 +169,14 @@ I cannot think of a reason to keep using a prefix (PK_, IX_, UK_, UX_) or table 
 * Names should be "Column1_Column2_Column3" 
 * Names should indicate if there are included columns with "Column1_Column2_Column3_Includes"
 
----
+
 
 ## Not Using PascalCase
 **Check Id:** [NONE YET]
 
 For all parts of the table name, including prefixes, use Pascal Case. PascalCase also reduces the need for underscores to visually separate words in names.
 
----
+
 
 ## Using Reserved Words in Name
 **Check Id:** 4
@@ -185,14 +185,14 @@ Using reserved words makes code more difficult to read, can cause problems to co
 
 [Reserved Keywords](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/reserved-keywords-transact-sql)
 
----
+
 
 ## Including Special Characters in Name
 **Check Id:** 5
 
 Special characters should not be used in names. Using PascalCase for your table name allows for the upper-case letter to denote the first letter of a new word or name. Thus there is no need to do so with an underscore character. Do not use numbers in your table names either. This usually points to a poorly-designed data model or irregularly-partitioned tables. Do not use spaces in your table names either. While most database systems can handle names that include spaces, systems such as SQL Server require you to add brackets around the name when referencing it (like [table name] for example) which goes against the rule of keeping things as short and simple as possible.
 
----
+
 
 ## Including Numbers in Table Name
 **Check Id:** 11
@@ -201,14 +201,14 @@ Beware of numbers in any object names, especially table names. It normally flags
 
 It is far better to use partitions than to create dated tables such as Invoice2018, Invoice2019, etc. If old data is no longer used, archive the data, store only aggregations, or both.
 
----
+
 
 ## Column Named Same as Table
 **Check Id:** 12
 
 Do not give a table the same name as one of its columns.
 
----
+
 
 ## Using Abbreviation
 **Check Id:** [NONE YET]
@@ -219,14 +219,14 @@ Use "Account" instead of "Acct" and "Hour" instead of "Hr". Not everyone will al
 Acct, AP, AR, Hr, Rpt, Assoc, Desc
 ```
 
----
+
 
 ## Non-Affirmative Boolean Name Use
 **Check Id:** [NONE YET]
 
 Bit columns should be given affirmative boolean names like "IsDeletedFlag", "HasPermissionFlag", or "IsValidFlag" so that the meaning of the data in the column is not ambiguous; negative boolean names are harder to read when checking values in T-SQL because of double-negatives (e.g. "Not IsNotDeleted"). 
 
----
+
 
 ## Column Naming
 **Check Id:** 14
@@ -252,13 +252,13 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - Unit**Price**
   - **Description**
 
----
+
 
 # Table Conventions
 
 Table design matters because it is essential for building software applications that are scalable and capable of performing during high workload.
 
----
+
 
 ## UNIQUEIDENTIFIER in a Clustered Index
 **Check Id:** 22
@@ -267,35 +267,35 @@ UNIQUEIDENTIFIER/GUID columns should not be in a clustered index. Even NEWSEQUEN
 
 SQL Server will page bad page splits when a new record is inserted instead of being inserting on the last page. The clustered index will become fragmented because of randomness of UNIQUEIDENTIFIER.
 
----
+
 
 ## Missing Index for Foreign Key
 **Check Id:** 21
 
 Each foreign key in your table should be included in an index. Start off with an index on just the foreign key column if you have no workload to tune a multi-column index. There is a real good chance the indexes will be used when queries join on the parent table.
 
----
+
 
 ## Missing Primary Key
 **Check Id:** 20
 
 Every table should have some column (or set of columns) that uniquely identifies one and only one row. It makes it much easier to maintain the data.
 
----
+
 
 ## UNIQUEIDENTIFIER For Primary Key
 **Check Id:** 8
 
 Using UNIQUEIDENTIFIER/GUID as primary keys causes issues with SQL Server databases. Non-sequential GUID cause page splits and perform 200% worse than the INT data type. UNIQUEIDENTIFIER are unnecessarily wide (4x wider than an INT).
 
----
+
 
 ## Wide Table
 **Check Id:** 3
 
 Do you have more than 20 columns? You might be treating this table like a spreadsheet. You might need to redesign your table schema.
 
----
+
 
 ## Heap
 **Check Id:** 6
@@ -310,20 +310,20 @@ A table with a non-clustered index, but without a clustered index can sometimes 
 
 Heaps have performance issues like table scans, forward fetches.
 
----
+
 
 # Data Type Conventions
 
 Poor data type choices can have significant impact on a database design and performance. A best practice is to right size the data type by have an understanding of the data.
 
----
+
 
 ## Using User-Defined Data Type
 **Check Id:** 10
 
 User-defined data types should be avoided whenever possible. They are an added processing overhead whose functionality could typically be accomplished more efficiently with simple data type variables, table variables, or temporary tables.
 
----
+
 
 ## Using DATETIME Instead of DATETIMEOFFSET
 **Check Id:** [NONE YET]
@@ -336,21 +336,21 @@ Use this query to see all the timezone names:
 SELECT * FROM sys.time_zone_info
 ```
 
----
+
 
 ## Using DATETIME or DATETIME2 Instead of DATE
 **Check Id:** [NONE YET]
 
 Even with data storage being so cheap, a saving in a data type adds up and makes comparison and calculation easier. When appropriate, use the DATE or SMALLDATETIME type. Narrow tables perform better and use less resources.
 
----
+
 
 ## Using DATETIME or DATETIME2 Instead of TIME
 **Check Id:** [NONE YET]
 
 Being frugal with memory is important for large tables, not only to save space but also to reduce I/O activity during access. When appropriate, use the TIME or SMALLDATETIME type. Queries too are generally simpler on the appropriate data type.
 
----
+
 
 ## Using MONEY Data Type
 **Check Id:** [NONE YET]
@@ -361,7 +361,7 @@ MONEY has limited precision (the underlying type is a BIGINT or in the case of S
 
 Although the MONEY data type generally takes less storage and takes less bandwidth when sent over networks, it is generally far better to use a data type such as the DECIMAL(19, 4) type that is less likely to suffer from rounding errors or scale overflow.
 
----
+
 ## Using VARCHAR Instead of NVARCHAR for Unicode Data
 **Check Id:** [NONE YET]
 
@@ -385,13 +385,13 @@ You can't require everyone to stop using national characters or accents any more
 - StateName
 - ProvinceName
 
----
+
 
 # SQL Code Development
 
 T-SQL code must execute properly and performant. It must be readable, well laid out and it must be robust and resilient. It must not rely on deprecated features of SQL Server, or assume specific database settings.
 
----
+
 
 ## Scalar Function Is Not Inlineable
 **Check Id:** 25
@@ -426,7 +426,7 @@ WHERE
 
 **Serial execution:** SQL Server does not allow intra-query parallelism in queries that invoke UDFs.
 
----
+
 
 ## Using User-Defined Scalar Function
 **Check Id:** 24
@@ -459,7 +459,7 @@ WHERE
 
 **Serial execution:** SQL Server does not allow intra-query parallelism in queries that invoke UDFs.
 
----
+
 
 ## Not Using SET NOCOUNT ON in Stored Procedure or Trigger
 **Check Id:** 19
@@ -468,7 +468,7 @@ Unless you need to return messages that give you the row count of each statement
 
 When ```SET NOCOUNT ON;``` is included at the top of the stored procedure and trigger it will suppress the "(1000 row affected)" message.
 
----
+
 
 ## Using NOLOCK (READ UNCOMMITTED)
 **Check Id:** 15
@@ -492,14 +492,14 @@ Only use NOLOCK when the application stakeholders understand the problems and ap
 - Use READ COMMITTED SNAPSHOT ISOLATION (RCSI).
   - On by default in Azure SQL Server databases, local SQL Servers should be checked for TempDB latency before enabling
 
----
+
 
 ## Not Using Table Alias
 **Check Id:** [NONE YET]
 
 Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g. “Site” becomes "S" and "SiteType" becomes “ST”.
 
----
+
 
 ## Not Using Column List For INSERT
 **Check Id:** [NONE YET]
@@ -516,7 +516,7 @@ SELECT
    ,Gender       = 'M';
 ````
 
----
+
 
 ## Not Using SQL Formatting
 **Check Id:** [NONE YET]
@@ -525,7 +525,7 @@ SQL statements should be arranged in an easy-to-read manner. When statements are
 
 Use one of the two RedGate SQL Prompt formatting styles "Emergent Style - Collapsed" or "Emergent Style - Expanded". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
 
----
+
 
 ## Not Using NOCOUNT
 **Check Id:** [NONE YET]
@@ -554,7 +554,7 @@ BEGIN
 END;
 ```
 
----
+
 
 ## Not Using Code Comments
 **Check Id:** [NONE YET]
@@ -590,7 +590,7 @@ Stored procedures and functions should include at a minimum a header comment wit
 ```
 
 
----
+
 
 ## Not Using Table Schema
 **Check Id:** [NONE YET]
@@ -599,7 +599,7 @@ Prefix all table name with the table schema (in most cases "dbo."). This results
 
 By including the table schema, we avoid certain bugs, minimize the time the engine spends searching for the procedure, and help ensure that cached query plans for the procedures get reused.
 
----
+
 
 ## Using SELECT *
 **Check Id:** 23
@@ -616,7 +616,7 @@ Reasons not to use ```SELECT *```:
 - **Breaks Views While Adding New Columns to a Table** the view columns are created at the time of the view creation, you will need to refresh "sp_refreshview()"
 - **Copying Data From One Table to Another** your SELECT * INTO table will break with new columns
 
----
+
 
 ## Using Hardcoded Database Name Reference
 **Check Id:** 9
@@ -632,14 +632,14 @@ It is common to need a database to operate under different names.
 - When building database code
   - To validate database objects compile from source, it is best to not have the database name hardcoded. If you use a hardcoded names you need to ensure that only one build server can run a build for that database instance.
 
---- 
+ 
 
 ## Using @@IDENTITY Instead of SCOPE_IDENTITY
 **Check Id:** [NONE YET]
 
 The generation of an IDENTITY value is not transactional, so in some circumstances, @@IDENTITY returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The SCOPE_IDENTITY function is safer because it always relates to the current batch (within the same scope). Also consider using the IDENT_CURRENT function, which returns the last IDENTITY value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
 
----
+
 ## Using BETWEEN for DATETIME Ranges
 **Check Id:** [NONE YET]
 
@@ -669,7 +669,7 @@ ORDER BY
     O.PickingCompletedWhen DESC;
 ```
 
----
+
 ## Using Old Sybase JOIN Syntax
 **Check Id:** [NONE YET]
 
@@ -679,7 +679,7 @@ The "old style" Microsoft/Sybase JOIN style for SQL, which uses the =* and *= sy
 
 Neither of these styles are worth using. It is always better to specify the type of join you require, INNER, LEFT OUTER, RIGHT OUTER, FULL OUTER and CROSS, which has been standard since ANSI SQL-92 was published. While you can choose any supported JOIN style, without affecting the query plan used by SQL Server, using the ANSI-standard syntax will make your code easier to understand, more consistent, and portable to other relational database systems.
 
----
+
 ## View Usage
 **Check Id:** [NONE YET]
 
@@ -695,7 +695,7 @@ View do not lend themselves to being deeply nested. Views that reference views a
 
 * Views in views cause issues for development
 
----
+
 ## Invalid Objects
 **Check Id:** [NONE YET]
 
@@ -703,42 +703,43 @@ This check found objects that were deleted, renamed. Use can also run "Find Inva
 
 Try running EXEC sp_refreshsqlmodule or sp_refreshview.
 
----
+
 
 # Running Issues
 
----
+These are some issues you might run into when running sp_Develop.
+
 
 ## Some Checks Skipped
 **Check Id:** 26
 
 We skipped some checks that are not currently possible, relevant, or practical for the SQL Server sp_Develop is running against. This could be due to the SQL Server version/edition or the database compatibility level.
 
----
+
 
 ## Skipped non-readable AG secondary databases
 You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node.
 
----
+
 
 ## sp_Develop is Over 6 Months Old
 **Check Id:** 16
 
 There most likely been some new checks and fixes performed within the last 6 months - time to go download the current one.
 
----
+
 
 ## Ran on a Non-Readable Availability Group Secondary Databases
 **Check Id:** 17
 
 You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node. To analyze those databases, run sp_Develop on the primary, or on a readable secondary.
 
---- 
+ 
 ## Ran Against 50+ Databases Without @BringThePain = 1
 **Check Id:** 18
 
 Running sp_Develop on a server with 50+ databases may cause temporary insanity for the server and/or user. If you're sure you want to do this, run again with the parameter @BringThePain = 1.
 
----
+
 
 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />

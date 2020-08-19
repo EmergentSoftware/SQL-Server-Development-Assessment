@@ -1,7 +1,7 @@
-# SQL-Server-Assess Overview
-SQL-Server-Assess sp_Develop can be used by database developers, software developers and for performing database code (smell) reviews.
+# SQL Server Assess Overview
+The SQL Server Assess project contains the sp_Develop stored procedure. It can be used by database developers, software developers and for performing database code (smell) reviews.
 
-This lists the database development best practice checks and naming conventions checks for the stored procedure named sp_Developer.
+This lists the database development best practice checks and naming conventions checks for the stored procedure named sp_Develop.
 
 ## Install Instructions
 
@@ -14,7 +14,7 @@ On Azure SQL Server you will need to install this stored procedure in the user d
 After installing the stored procedure open SSMS and run in the database you wish to check for database development best practices.
 
 ```sql
-EXECUTE dbo.sp_Developer
+EXECUTE dbo.sp_Develop
 ```
 
 [Check out the parameter section for more options](#Parameter-Explanations)
@@ -718,7 +718,7 @@ Try running EXEC sp_refreshsqlmodule or sp_refreshview.
 ## Some Checks Skipped
 **Check Id:** 26
 
-We skipped some checks that are not currently possible, relevant, or practical for the SQL Server sp_Developer is running against. This could be due to the SQL Server version/edition or the database compatibility level.
+We skipped some checks that are not currently possible, relevant, or practical for the SQL Server sp_Develop is running against. This could be due to the SQL Server version/edition or the database compatibility level.
 
 ---
 
@@ -727,7 +727,7 @@ You are running this on an AG secondary, and some of your databases are configur
 
 ---
 
-## sp_Developer is Over 6 Months Old
+## sp_Develop is Over 6 Months Old
 **Check Id:** 16
 
 There most likely been some new checks and fixes performed within the last 6 months - time to go download the current one.
@@ -737,13 +737,13 @@ There most likely been some new checks and fixes performed within the last 6 mon
 ## Ran on a Non-Readable Availability Group Secondary Databases
 **Check Id:** 17
 
-You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node. To analyze those databases, run sp_Developer on the primary, or on a readable secondary.
+You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node. To analyze those databases, run sp_Develop on the primary, or on a readable secondary.
 
 --- 
 ## Ran Against 50+ Databases Without @BringThePain = 1
 **Check Id:** 18
 
-Running sp_Developer on a server with 50+ databases may cause temporary insanity for the server and/or user. If you're sure you want to do this, run again with the parameter @BringThePain = 1.
+Running sp_Develop on a server with 50+ databases may cause temporary insanity for the server and/or user. If you're sure you want to do this, run again with the parameter @BringThePain = 1.
 
 ---
 

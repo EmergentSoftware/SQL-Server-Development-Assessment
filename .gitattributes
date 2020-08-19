@@ -54,7 +54,7 @@
 *.LDF  BINARY
 
 # T-SQL files
-*.sql diff text eol=CRLF merge=union
+*.sql diff
 
 # prevent unwanted files from bloating the zip distribution package
 FolderName/ export-ignore

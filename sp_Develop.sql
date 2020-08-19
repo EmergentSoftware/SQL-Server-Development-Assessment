@@ -67,7 +67,7 @@ BEGIN
        ,@URLAnchor         VARCHAR(400)
        ,@Priority          INT;
 
-    SET @Version = '0.86';
+    SET @Version = '0.87';
     SET @VersionDate = '20200820';
     SET @URLBase = 'https://github.com/EmergentSoftware/SQL-Server-Assess#';
     SET @OutputType = UPPER(@OutputType);

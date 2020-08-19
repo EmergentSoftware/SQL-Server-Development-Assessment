@@ -56,6 +56,7 @@
 # T-SQL files
 *.sql 	eol=crlf merge=union
 *.sql diff
+*.sql text working-tree-encoding=UTF-16LE eol=CRLF
 
 # prevent unwanted files from bloating the zip distribution package
 FolderName/ export-ignore

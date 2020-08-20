@@ -27,7 +27,7 @@ EXECUTE dbo.sp_Develop
 |@GetAllDatabases|Runs checks across all of the databases on the server instead of just your current database context. Does not work on Azure SQL Server.|
 |@IgnoreCheckIds|Comma-delimited list of check ids you want to skip|
 |@IgnoreDatabases|Comma-delimited list of databases you want to skip|
-|@BringThePain |If youíve got more than 50 databases on the server, this only works if you also pass in @BringThePain = 1, because itís gonna be slow.|
+|@BringThePain |If you‚Äôve got more than 50 databases on the server, this only works if you also pass in @BringThePain = 1, because it‚Äôs gonna be slow.|
 |@OutputType|TABLE = table<br/>COUNT = row with number found<br/>MARKDOWN = bulleted list<br/>XML = table output as XML<br/>NONE = none|
 |@OutputXMLasNVARCHAR|Set to 1 if you like your XML out as NVARCHAR.|
 |@Debug|Default 0. When 1, we print out messages of what we're doing in the messages tab of SSMS. When 2, we print out the dynamic SQL query of the check.|
@@ -35,6 +35,13 @@ EXECUTE dbo.sp_Develop
 |@VersionDate|Output variable to check the version date.|
 |@VersionCheckMode|Will set the version output variables and return without running the stored procedure.|
 
+# Test Database Install
+
+The 'Test Database' folder contains the RedGate SQL Source Control. Use this test database for testing checks.
+
+**RedGate SQL Source Control Documentation**
+- [Getting Started ](https://documentation.red-gate.com/soc7/getting-started)
+- [Link to Git](https://documentation.red-gate.com/soc7/linking-to-source-control/link-to-git)
 
 
 # Current High Check Id
@@ -142,7 +149,7 @@ FROM
 ## Using Plural in Name
 **Check Id:** 1
 
-Table and view names should be singular, for example, "Customer" instead of "Customers". This rule is applicable because tables are patterns for storing an entity as a record ñ they are analogous to Classes serving up class instances. And if for no other reason than readability, you avoid errors due to the pluralization of English nouns in the process of database development. For instance, activity becomes activities, ox becomes oxen, person becomes people or persons, alumnus becomes alumni, while data remains data.
+Table and view names should be singular, for example, "Customer" instead of "Customers". This rule is applicable because tables are patterns for storing an entity as a record ‚Äì they are analogous to Classes serving up class instances. And if for no other reason than readability, you avoid errors due to the pluralization of English nouns in the process of database development. For instance, activity becomes activities, ox becomes oxen, person becomes people or persons, alumnus becomes alumni, while data remains data.
 
 If writing code for an data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
 
@@ -305,9 +312,9 @@ Add a clustered index.
 
 SQL Server storage is built around the clustered index as a fundamental part of the data storage and retrieval engine. The data itself is stored with the clustered key. All this makes having an appropriate clustered index a vital part of database design. The places where a table without a clustered index is preferable are rare; which is why a missing clustered index is a common code smell in database design.
 
-A 'table' without a clustered index is actually a heap, which is a particularly bad idea when its data is usually returned in an aggregated form, or in a sorted order. Paradoxically, though, it can be rather good for implementing a log or a ëstagingí table used for bulk inserts, since it is read very infrequently, and there is less overhead in writing to it. 
+A 'table' without a clustered index is actually a heap, which is a particularly bad idea when its data is usually returned in an aggregated form, or in a sorted order. Paradoxically, though, it can be rather good for implementing a log or a ‚Äòstaging‚Äô table used for bulk inserts, since it is read very infrequently, and there is less overhead in writing to it. 
 
-A table with a non-clustered index, but without a clustered index can sometimes perform well even though the index has to reference individual rows via a Row Identifier rather than a more meaningful clustered index. The arrangement can be effective for a table that isnít often updated if the table is always accessed by a non-clustered index and there is no good candidate for a clustered index.
+A table with a non-clustered index, but without a clustered index can sometimes perform well even though the index has to reference individual rows via a Row Identifier rather than a more meaningful clustered index. The arrangement can be effective for a table that isn‚Äôt often updated if the table is always accessed by a non-clustered index and there is no good candidate for a clustered index.
 
 Heaps have performance issues like table scans, forward fetches.
 
@@ -366,7 +373,7 @@ Although the MONEY data type generally takes less storage and takes less bandwid
 ## Using VARCHAR Instead of NVARCHAR for Unicode Data
 **Check Id:** [NONE YET]
 
-You can't require everyone to stop using national characters or accents any more. Names are likely to have accents in them if spelled properly, and international addresses and language strings will almost certainly have accents and national characters that canít be represented by 8-bit ASCII!
+You can't require everyone to stop using national characters or accents any more. Names are likely to have accents in them if spelled properly, and international addresses and language strings will almost certainly have accents and national characters that can‚Äôt be represented by 8-bit ASCII!
 
 **Future columns to check:**
 - FirstName
@@ -519,7 +526,7 @@ Only use NOLOCK when the application stakeholders understand the problems and ap
 ## Not Using Table Alias
 **Check Id:** [NONE YET]
 
-Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g. ìSiteî becomes "S" and "SiteType" becomes ìSTî.
+Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g. ‚ÄúSite‚Äù becomes "S" and "SiteType" becomes ‚ÄúST‚Äù.
 
 
 

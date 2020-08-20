@@ -45,7 +45,7 @@ Your code must handle:
 
 * Case sensitive databases & servers
 * Unicode object names (databases, tables, indexes, etc.)
-* Different date formats - "2013-01-27", "01/27/2013"
+* Different date formats: "2013-01-27", "01/27/2013"
 
 We know that's a pain, but that's the kind of thing we find out in the wild. Of course you would never build a server like that, but...
 

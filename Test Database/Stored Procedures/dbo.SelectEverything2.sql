@@ -1,0 +1,14 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[SelectEverything2]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+	FROM dbo.NewspaperReader AS NR;
+
+END;
+GO

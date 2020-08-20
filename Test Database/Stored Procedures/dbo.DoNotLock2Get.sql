@@ -1,0 +1,18 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[DoNotLock2Get]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	SELECT 
+		N.NewspaperId, 
+		N.Name 
+	FROM 
+		dbo.Newspaper AS N WITH (NOWAIT,NOLOCK,INDEX(1));
+
+END;
+GO

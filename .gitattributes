@@ -1,2 +1,5 @@
 # T-SQL files
 *.sql text
+
+# linguist overrides
+*.sql linguist-language=TSQL

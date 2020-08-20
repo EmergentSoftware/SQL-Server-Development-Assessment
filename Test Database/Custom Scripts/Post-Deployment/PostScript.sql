@@ -13,7 +13,17 @@ GO
 
 CREATE VIEW dbo.InvalidObject
 AS
-	SELECT UTE.UseToExistId, UTE.UseToExistColumn FROM dbo.UseToExist AS UTE
+SELECT UTE.UseToExistId, UTE.UseToExistColumn FROM dbo.UseToExist AS UTE;
 GO
 
-DROP TABLE dbo.UseToExist
+CREATE PROCEDURE dbo.InvalidObjectList
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT UTE.UseToExistId, UTE.UseToExistColumn FROM dbo.UseToExist AS UTE;
+END;
+GO
+
+DROP TABLE dbo.UseToExist;
+GO

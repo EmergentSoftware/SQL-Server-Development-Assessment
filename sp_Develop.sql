@@ -1,4 +1,4 @@
-﻿/**********************************************************************************************************************
+/**********************************************************************************************************************
 ** MIT License
 ** 
 ** Copyright for portions of sp_Develop are held by Brent Ozar Unlimited as part of project 
@@ -498,7 +498,7 @@ RETURN 0;
             PRIORITY      = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
            ,FindingsGroup = 'Naming Conventions'
            ,Finding       = 'Not Naming Foreign Key Column the Same as Parent Table'
-           ,URL           =  @URLBase + 'not-naming-foreign-key-column-the-same-as-parent-table'
+           ,URL           = @URLBase + 'not-naming-foreign-key-column-the-same-as-parent-table'
            ,Details       = N'REMEMBER: Name the foreign key column the same as the parent table.';
 
         /**********************************************************************************************************************
@@ -638,7 +638,7 @@ RETURN 0;
             PRIORITY      = 203 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
            ,FindingsGroup = 'SQL Code Development'
            ,Finding       = 'Using Old Sybase JOIN Syntax'
-           ,URL           = @URLBase = 'using-old-sybase-join-syntax'
+           ,URL           = @URLBase + 'using-old-sybase-join-syntax'
            ,Details       = N'REMEMBER: Use the ANSI standards "<>, >=" & "INNER JOIN" instead of the deprecated Sybase join syntax: "=*, *=" & "JOIN".';
 
     END;

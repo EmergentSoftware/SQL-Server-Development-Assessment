@@ -186,10 +186,10 @@ Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvio
 ## Using Prefix in Index Name
 **Check Id:** [NONE YET]
 
-I cannot think of a reason to keep using a prefix (PK_, IX_, UK_, UX_) or table name in index names or constraints.
+No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 
-* Names should be "Column1_Column2_Column3" 
-* Names should indicate if there are included columns with "Column1_Column2_Column3_Includes"
+* Names should be "TableName_Column1_Column2_Column3" 
+* Names should indicate if there are included columns with "TableName_Column1_Column2_Column3_Includes"
 
 
 

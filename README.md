@@ -390,7 +390,7 @@ Although the MONEY data type generally takes less storage and takes less bandwid
 
 You can't require everyone to stop using national characters or accents any more. Names are likely to have accents in them if spelled properly, and international addresses and language strings will almost certainly have accents and national characters that can’t be represented by 8-bit ASCII!
 
-**Future columns to check:**
+**Column names to check:**
 - FirstName
 - MiddleName
 - LastName
@@ -651,7 +651,7 @@ It is common to need a database to operate under different names.
 ## Using @@IDENTITY Instead of SCOPE_IDENTITY
 **Check Id:** [NONE YET]
 
-The generation of an IDENTITY value is not transactional, so in some circumstances, @@IDENTITY returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The SCOPE_IDENTITY function is safer because it always relates to the current batch (within the same scope). Also consider using the IDENT_CURRENT function, which returns the last IDENTITY value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
+The generation of an identity value is not transactional, so in some circumstances, ```@@IDENTITY``` returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The ```SCOPE_IDENTITY``` function is safer because it always relates to the current batch (within the same scope). Also consider using the ```IDENT_CURRENT``` function, which returns the last identity value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
 
 
 ## Using BETWEEN for DATETIME Ranges

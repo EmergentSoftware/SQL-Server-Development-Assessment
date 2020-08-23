@@ -1,17 +1,17 @@
 # SQL Server Assess Overview
-The SQL Server Assess project contains the sp_Develop stored procedure. It can be used by database developers, software developers and for performing database code (smell) reviews.
+The SQL Server Assess project contains the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure. It can be used by database developers, software developers and for performing database code (smell) reviews.
 
 This lists the database development best practice checks and naming conventions checks for the stored procedure named sp_Develop.
 
 ## Install Instructions
 
-It is recommend installing this stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine. 
+It is recommend installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine. 
 
-On Azure SQL Server you will need to install this stored procedure in the user database.
+On Azure SQL Server you will need to install the sp_Develop stored procedure in the user database.
 
 ## Usage Instructions
 
-After installing the stored procedure open SSMS and run in the database you wish to check for database development best practices.
+After installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure open SSMS and run in the database you wish to check for database development best practices.
 
 ```sql
 EXECUTE dbo.sp_Develop
@@ -390,7 +390,7 @@ Although the MONEY data type generally takes less storage and takes less bandwid
 
 You can't require everyone to stop using national characters or accents any more. Names are likely to have accents in them if spelled properly, and international addresses and language strings will almost certainly have accents and national characters that can’t be represented by 8-bit ASCII!
 
-**Future columns to check:**
+**Column names to check:**
 - FirstName
 - MiddleName
 - LastName
@@ -651,7 +651,7 @@ It is common to need a database to operate under different names.
 ## Using @@IDENTITY Instead of SCOPE_IDENTITY
 **Check Id:** [NONE YET]
 
-The generation of an IDENTITY value is not transactional, so in some circumstances, @@IDENTITY returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The SCOPE_IDENTITY function is safer because it always relates to the current batch (within the same scope). Also consider using the IDENT_CURRENT function, which returns the last IDENTITY value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
+The generation of an identity value is not transactional, so in some circumstances, ```@@IDENTITY``` returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The ```SCOPE_IDENTITY``` function is safer because it always relates to the current batch (within the same scope). Also consider using the ```IDENT_CURRENT``` function, which returns the last identity value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
 
 
 ## Using BETWEEN for DATETIME Ranges
@@ -723,13 +723,13 @@ Try running EXEC sp_refreshsqlmodule or sp_refreshview.
 
 # Running Issues
 
-These are some issues you might run into when running sp_Develop.
+These are some issues you might run into when running [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql).
 
 
 ## Some Checks Skipped
 **Check Id:** 26
 
-We skipped some checks that are not currently possible, relevant, or practical for the SQL Server sp_Develop is running against. This could be due to the SQL Server version/edition or the database compatibility level.
+We skipped some checks that are not currently possible, relevant, or practical for the SQL Server [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) is running against. This could be due to the SQL Server version/edition or the database compatibility level.
 
 
 
@@ -748,13 +748,13 @@ There most likely been some new checks and fixes performed within the last 6 mon
 ## Ran on a Non-Readable Availability Group Secondary Databases
 **Check Id:** 17
 
-You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node. To analyze those databases, run sp_Develop on the primary, or on a readable secondary.
+You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node. To analyze those databases, run [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) on the primary, or on a readable secondary.
 
  
 ## Ran Against 50+ Databases Without @BringThePain = 1
 **Check Id:** 18
 
-Running sp_Develop on a server with 50+ databases may cause temporary insanity for the server and/or user. If you're sure you want to do this, run again with the parameter @BringThePain = 1.
+Running [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) on a server with 50+ databases may cause temporary insanity for the server and/or user. If you're sure you want to do this, run again with the parameter @BringThePain = 1.
 
 
 

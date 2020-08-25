@@ -3,7 +3,7 @@ The SQL Server Assess project contains the [sp_Develop](https://github.com/Emerg
 
 This lists the database development best practice checks and naming conventions checks for the stored procedure named sp_Develop.
 
-## Install Instructions
+## Install InstructionsEmergent Style - Collapsedf
 
 It is recommend installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine. 
 
@@ -566,7 +566,7 @@ SELECT
 
 SQL statements should be arranged in an easy-to-read manner. When statements are written all to one line or not broken into smaller easy-to-read chunks, more complicated statements are very hard to decipher.
 
-Use one of the two RedGate SQL Prompt formatting styles "Emergent Style - Collapsed" or "Emergent Style - Expanded". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
+Use one of the two RedGate SQL Prompt formatting styles "Collapsed" or "Expanded". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
 
 
 

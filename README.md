@@ -3,13 +3,13 @@ The SQL Server Assess project contains the [sp_Develop](https://github.com/Emerg
 
 This lists the database development best practice checks and naming conventions checks for the stored procedure named sp_Develop.
 
-## Install Instructions
+## sp_Develop Install Instructions
 
 It is recommend installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine. 
 
 On Azure SQL Server you will need to install the sp_Develop stored procedure in the user database.
 
-## Usage Instructions
+## sp_Develop Usage Instructions
 
 After installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure open SSMS and run in the database you wish to check for database development best practices.
 
@@ -19,7 +19,7 @@ EXECUTE dbo.sp_Develop
 
 [Check out the parameter section for more options](#Parameter-Explanations)
 
-## Parameter Explanations
+## sp_Develop Parameter Explanations
 
 |Parameter|Details|
 |--|--|
@@ -57,6 +57,28 @@ The 'Test Database' folder contains the RedGate SQL Source Control. Use this dat
 **RedGate SQL Source Control Documentation**
 - [Getting Started ](https://documentation.red-gate.com/soc7/getting-started)
 - [Link to Git](https://documentation.red-gate.com/soc7/linking-to-source-control/link-to-git)
+
+
+# Configure Development Application Settings
+
+Included in this project are settings you can use for database development. Using the same set of settings across a team will helps ensure consisitent development patterns.
+
+#### SQL Server Management Studio
+
+The settings are located in the project "[\SQL-Server-Assess\Development Application Settings\Microsoft\SQL Server Management Studio\General Settings](https://github.com/EmergentSoftware/SQL-Server-Assess/tree/master/Development%20Application%20Settings/Microsoft/SQL%20Server%20Management%20Studio/General%20Settings)"
+
+1. Cloned or forked the repo
+2. In SSMS navigate to "Tools > Options > Environment > Import and Export Settings"
+3. Check "Use team settings file" and browse to "..\SQL-Server-Assess\Development Application Settings\Microsoft\SQL Server Management Studio\General Settings\SSMS.vssettings"
+4. Click the "OK" button
+
+#### RedGate SQL Server Prompt
+
+The settings are located in the project "[\SQL-Server-Assess\Development Application Settings\Red Gate\SQL Prompt](https://github.com/EmergentSoftware/SQL-Server-Assess/tree/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt)"
+
+1. Cloned or forked the repo
+2. Follow [these directions](https://documentation.red-gate.com/sp/managing-sql-prompt-behavior/sharing-your-settings)
+
 
 
 # Current High Check Id
@@ -566,8 +588,7 @@ SELECT
 
 SQL statements should be arranged in an easy-to-read manner. When statements are written all to one line or not broken into smaller easy-to-read chunks, more complicated statements are very hard to decipher.
 
-Use one of the two RedGate SQL Prompt formatting styles "Emergent Style - Collapsed" or "Emergent Style - Expanded". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
-
+Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Formatting%20Styles/Team%20Collapsed.sqlpromptstylev2)" or "[Team Expanded](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Formatting%20Styles/Team%20Expanded.sqlpromptstylev2)". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
 
 
 ## Not Using Code Comments

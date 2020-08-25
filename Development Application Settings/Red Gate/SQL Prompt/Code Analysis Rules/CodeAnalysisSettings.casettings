@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<SqlCodeGuardSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <UseTrustedConnection>false</UseTrustedConnection>
+  <UseSkipProcedures>true</UseSkipProcedures>
+  <SkipProcedures />
+  <ST009AllowedLabels />
+  <BP017AllowedTables />
+  <BP018AllowedTables />
+  <ST011AllowedTables />
+  <ST012AllowedTables />
+  <MI001AllowedNames />
+  <MI002AllowedNames />
+  <ST014AllowedName />
+  <ST015ForbiddenName />
+  <ST017AllowedName />
+  <NC001a />
+  <NC001d>
+    <Pattern>^THROW$</Pattern>
+  </NC001d>
+  <CustomAssemblies />
+  <IssueSettings>
+    <CGUNP>Warning</CGUNP>
+    <BP001>Warning</BP001>
+    <BP002>Warning</BP002>
+    <BP003>Warning</BP003>
+    <BP004>Warning</BP004>
+    <BP005>Warning</BP005>
+    <BP006>Warning</BP006>
+    <BP007>Warning</BP007>
+    <BP008>Warning</BP008>
+    <BP009>Warning</BP009>
+    <BP010>Warning</BP010>
+    <BP011>Warning</BP011>
+    <BP012>Warning</BP012>
+    <BP013>Warning</BP013>
+    <BP014>Warning</BP014>
+    <BP015>Warning</BP015>
+    <BP016>Warning</BP016>
+    <BP017>Warning</BP017>
+    <BP018>Warning</BP018>
+    <BP022>Warning</BP022>
+    <BP023>Warning</BP023>
+    <BP024>Warning</BP024>
+    <DEP001>Warning</DEP001>
+    <DEP002>Warning</DEP002>
+    <DEP003>Warning</DEP003>
+    <DEP006>Warning</DEP006>
+    <DEP007>Warning</DEP007>
+    <DEP009>Warning</DEP009>
+    <DEP011>Warning</DEP011>
+    <DEP012>Warning</DEP012>
+    <DEP013>Warning</DEP013>
+    <DEP014>Warning</DEP014>
+    <DEP015>Warning</DEP015>
+    <DEP016>Warning</DEP016>
+    <DEP018>Warning</DEP018>
+    <DEP019>Warning</DEP019>
+    <DEP020>Warning</DEP020>
+    <DEP021>Warning</DEP021>
+    <DEP022>Warning</DEP022>
+    <DEP025>Warning</DEP025>
+    <DEP026>Warning</DEP026>
+    <DEP027>Warning</DEP027>
+    <EI003>Warning</EI003>
+    <EI011>Warning</EI011>
+    <EI012>Warning</EI012>
+    <EI013>Warning</EI013>
+    <EI015>Warning</EI015>
+    <EI016>Warning</EI016>
+    <EI021>Warning</EI021>
+    <EI023>Warning</EI023>
+    <EI024>Warning</EI024>
+    <EI028>Warning</EI028>
+    <EI029>Warning</EI029>
+    <EI030>Warning</EI030>
+    <MI001>Warning</MI001>
+    <MI002>Warning</MI002>
+    <MI003>Warning</MI003>
+    <MI005>Warning</MI005>
+    <MI006>Warning</MI006>
+    <MI007>Warning</MI007>
+    <MI008>Warning</MI008>
+    <PE001>Warning</PE001>
+    <PE002>Warning</PE002>
+    <PE003>Warning</PE003>
+    <PE004>Warning</PE004>
+    <PE005>Warning</PE005>
+    <PE006>Warning</PE006>
+    <PE007>Warning</PE007>
+    <PE008>Warning</PE008>
+    <PE010>Warning</PE010>
+    <PE011>Warning</PE011>
+    <PE012>Warning</PE012>
+    <PE013>Warning</PE013>
+    <PE014>Warning</PE014>
+    <PE015>Warning</PE015>
+    <PE016>Warning</PE016>
+    <PE017>Warning</PE017>
+    <PE018>Warning</PE018>
+    <PE019>Warning</PE019>
+    <PE020>Warning</PE020>
+    <PE021>Warning</PE021>
+    <PE023>Warning</PE023>
+    <SC004>Warning</SC004>
+    <SC005>Warning</SC005>
+    <SC006>Warning</SC006>
+    <ST001>Warning</ST001>
+    <ST002>Warning</ST002>
+    <ST003>Warning</ST003>
+    <ST006>Warning</ST006>
+    <ST007>Warning</ST007>
+    <ST008>Warning</ST008>
+    <ST010>Warning</ST010>
+    <ST011>Ignore</ST011>
+    <ST013>Warning</ST013>
+  </IssueSettings>
+  <UseCompression>false</UseCompression>
+  <IssueGroups />
+  <SettingsGuid>386061d5-7081-4e64-856f-c32e5694a895</SettingsGuid>
+</SqlCodeGuardSettings>

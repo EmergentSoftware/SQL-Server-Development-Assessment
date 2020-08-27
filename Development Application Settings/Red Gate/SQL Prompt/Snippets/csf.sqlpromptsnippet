@@ -18,7 +18,7 @@
 ** Modified On: $DATE$
 ** Description: <FunctionDescription,, Description>
 **********************************************************************************************************************/
-CREATE OR ALTER FUNCTION <FunctionName, SYSNAME, SchemaName.FunctionName>(
+CREATE OR ALTER FUNCTION <Schema Name, SYSNAME, dbo>.<Function Name, SYSNAME, FunctionName>(
 	-- @ParameterName AS DataType [ = DefaultValue ]
 ) RETURNS <ReturnType,,int>
 -- WITH ENCRYPTION, SCHEMABINDING, RETURNS NULL ON NULL INPUT, CALLED ON NULL INPUT, EXECUTE AS CALLER|SELF|OWNER 'user_name', INLINE = {ON|OFF}

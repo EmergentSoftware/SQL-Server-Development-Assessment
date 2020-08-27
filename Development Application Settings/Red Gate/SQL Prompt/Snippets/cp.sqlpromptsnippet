@@ -18,9 +18,9 @@
 ** Author:      $USER$
 ** Created On:  $DATE$
 ** Modified On: $DATE$
-** Description: <ProcedureDescription,, Description>
+** Description: Description
 **********************************************************************************************************************/
-CREATE OR ALTER PROCEDURE <ProcedureName, SYSNAME, SchemaName.BusinessEntityAction> 
+CREATE OR ALTER PROCEDURE dbo.<Procedure Name, SYSNAME, BusinessEntityAction>
 	-- @ParameterName AS DataType [ = DefaultValue ]
 -- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'
 AS

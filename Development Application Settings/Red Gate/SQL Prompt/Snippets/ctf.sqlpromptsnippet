@@ -18,7 +18,7 @@
 ** Modified On: $DATE$
 ** Description: <FunctionDescription,, Description>
 **********************************************************************************************************************/
-CREATE FUNCTION SchemaName.FunctionName(
+CREATE FUNCTION <Schema Name, SYSNAME, dbo>.<Function Name, SYSNAME, FunctionName>(
 	-- @ParameterName1 AS DataType [ = DefaultValue ]
 	-- @ParameterName2 AS DataType [ = DefaultValue ]
 ) RETURNS <@TableVariableName, SYSNAME, @VariableName> TABLE (

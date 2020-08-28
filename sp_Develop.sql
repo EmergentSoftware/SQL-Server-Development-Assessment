@@ -31,7 +31,11 @@ CREATE OR ALTER PROCEDURE dbo.sp_Develop
    ,@GetAllDatabases     BIT           = 0
    ,@IgnoreDatabases     NVARCHAR(MAX) = NULL /* Comma-delimited list of databases you want to skip */
    ,@BringThePain        BIT           = 0
-   ,@IgnoreCheckIds      NVARCHAR(MAX) = NULL /* Comma-delimited list of check ids you want to skip */
+                                              --,@IgnoreCheckIds      NVARCHAR(MAX) = NULL /* Comma-delimited list of check ids you want to skip */
+   ,@SkipChecksServer    NVARCHAR(256) = NULL
+   ,@SkipChecksDatabase  NVARCHAR(256) = NULL
+   ,@SkipChecksSchema    NVARCHAR(256) = NULL
+   ,@SkipChecksTable     NVARCHAR(256) = NULL
    ,@ShowRememberChecks  BIT           = 0
    ,@OutputType          VARCHAR(20)   = 'TABLE'
    ,@OutputXMLasNVARCHAR BIT           = 0
@@ -124,57 +128,76 @@ RETURN 0;
 
     IF OBJECT_ID('tempdb..#SkipChecks') IS NOT NULL DROP TABLE #SkipChecks;
     CREATE TABLE #SkipChecks (
-        CheckId      INT           NOT NULL
+        ServerName   NVARCHAR(128) NULL
        ,DatabaseName NVARCHAR(128) NULL
-       ,ServerName   NVARCHAR(128) NULL
+       ,ObjectName   NVARCHAR(256) NULL
+       ,CheckId      INT           NULL
     );
     CREATE CLUSTERED INDEX CheckId_DatabaseName
     ON #SkipChecks (CheckId, DatabaseName);
 
     /**********************************************************************************************************************
-	** What checks are we going to perform?
-	**********************************************************************************************************************/
-    IF @IgnoreCheckIds IS NOT NULL
-       AND LEN(@IgnoreCheckIds) > 0
+    ** Skip Checks
+    ** You can build your own table with a list of checks to skip.
+    ** [TODO: LINK TO README.md for instructions]
+    **********************************************************************************************************************/
+    IF @SkipChecksTable IS NOT NULL
+       AND @SkipChecksSchema IS NOT NULL
+       AND @SkipChecksDatabase IS NOT NULL
     BEGIN
-        IF @Debug IN (1, 2)
-            RAISERROR(N'Setting up filter to ignore databases', 0, 1) WITH NOWAIT;
 
-        SET @ChecksToIgnore = N'';
+        IF @Debug IN (1, 2) RAISERROR('Inserting SkipChecks', 0, 1) WITH NOWAIT;
 
-        /* Do not use STRING_SPLIT(), we want this to work in SQL Servers before 2016 */
-        WHILE LEN(@IgnoreCheckIds) > 0
+        SET @StringToExecute = N'
+				INSERT INTO
+                    #SkipChecks(ServerName, DatabaseName, ObjectName, CheckId)
+                SELECT
+                   ServerName
+                   ,DatabaseName
+                   ,ObjectName
+                   ,CheckId
+                FROM ';
+
+        IF LTRIM(RTRIM(@SkipChecksServer)) <> ''
         BEGIN
-            IF PATINDEX('%,%', @IgnoreCheckIds) > 0
-            BEGIN
-                SET @ChecksToIgnore = SUBSTRING(@IgnoreCheckIds, 0, PATINDEX('%,%', @IgnoreCheckIds));
-
-                INSERT INTO
-                    #SkipChecks (CheckId, DatabaseName, ServerName)
-                SELECT
-                    CheckId      = LTRIM(RTRIM(@ChecksToIgnore))
-                   ,DatabaseName = NULL
-                   ,ServerName   = NULL
-                OPTION (RECOMPILE);
-
-                SET @IgnoreCheckIds = SUBSTRING(@IgnoreCheckIds, LEN(@ChecksToIgnore + ',') + 1, LEN(@IgnoreCheckIds));
-            END;
-            ELSE
-            BEGIN
-                SET @ChecksToIgnore = @IgnoreCheckIds;
-                SET @IgnoreCheckIds = NULL;
-
-                INSERT INTO
-                    #SkipChecks (CheckId, DatabaseName, ServerName)
-                SELECT
-                    CheckId      = LTRIM(RTRIM(@ChecksToIgnore))
-                   ,DatabaseName = NULL
-                   ,ServerName   = NULL
-                OPTION (RECOMPILE);
-            END;
+            SET @StringToExecute += QUOTENAME(@SkipChecksServer) + N'.';
         END;
-    END;
 
+        SET @StringToExecute += QUOTENAME(@SkipChecksDatabase) + N'.' + QUOTENAME(@SkipChecksSchema) + N'.' + QUOTENAME(@SkipChecksTable) + N'
+                WHERE
+                    ServerName IS NULL
+                    OR ServerName = SERVERPROPERTY(''ServerName'')
+                GROUP BY
+                    ServerName
+                   ,DatabaseName
+                   ,ObjectName
+                   ,CheckId
+                OPTION (RECOMPILE);';
+
+        EXEC sys.sp_executesql @stmt = @StringToExecute;
+        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+
+        /* Check if we should be running checks on this server, exit out if not. */
+        IF EXISTS (
+            SELECT
+                *
+            FROM
+                #SkipChecks AS SC
+            WHERE
+                SC.ServerName = SERVERPROPERTY('ServerName')
+                AND SC.DatabaseName IS NULL
+                AND SC.ObjectName IS NULL
+        )
+        BEGIN
+            IF @Debug IN (1, 2)
+                RAISERROR('The SQL Server is marked to be skipped', 0, 1) WITH NOWAIT;
+            RETURN 0;
+        END;
+
+        IF @Debug IN (1, 2)
+            RAISERROR('The SQL Server is not marked to be skipped', 0, 1) WITH NOWAIT;
+
+    END;
 
     /**********************************************************************************************************************
 	** Skip checks for specific SQL Servers
@@ -325,58 +348,113 @@ RETURN 0;
             END;
         END;
 
-        IF @IgnoreDatabases IS NOT NULL
-           AND LEN(@IgnoreDatabases) > 0
-        BEGIN
-            IF @Debug IN (1, 2)
-                RAISERROR(N'Setting up filter to ignore databases', 0, 1) WITH NOWAIT;
+        --yyyyyyy
 
-            SET @DatabaseToIgnore = N'';
+        SELECT * FROM #SkipChecks AS SC;
 
-            WHILE LEN(@IgnoreDatabases) > 0
-            BEGIN
-                IF PATINDEX('%,%', @IgnoreDatabases) > 0
-                BEGIN
-                    SET @DatabaseToIgnore = SUBSTRING(@IgnoreDatabases, 0, PATINDEX('%,%', @IgnoreDatabases));
 
-                    INSERT INTO
-                        #Ignore_Databases (DatabaseName, Reason)
-                    SELECT
-                        LTRIM(RTRIM(@DatabaseToIgnore))
-                       ,'Specified in the @IgnoreDatabases parameter'
-                    OPTION (RECOMPILE);
 
-                    SET @IgnoreDatabases = SUBSTRING(@IgnoreDatabases, LEN(@DatabaseToIgnore + ',') + 1, LEN(@IgnoreDatabases));
-                END;
-                ELSE
-                BEGIN
-                    SET @DatabaseToIgnore = @IgnoreDatabases;
-                    SET @IgnoreDatabases = NULL;
+        RETURN 0; --TODO: remove me after testing
 
-                    INSERT INTO
-                        #Ignore_Databases (DatabaseName, Reason)
-                    SELECT
-                        LTRIM(RTRIM(@DatabaseToIgnore))
-                       ,'Specified in the @IgnoreDatabases parameter'
-                    OPTION (RECOMPILE);
-                END;
-            END;
-        END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    --IF @IgnoreDatabases IS NOT NULL
+    --   AND LEN(@IgnoreDatabases) > 0
+    --BEGIN
+    --    IF @Debug IN (1, 2)
+    --        RAISERROR(N'Setting up filter to ignore databases', 0, 1) WITH NOWAIT;
+
+    --    SET @DatabaseToIgnore = N'';
+
+    --    WHILE LEN(@IgnoreDatabases) > 0
+    --    BEGIN
+    --        IF PATINDEX('%,%', @IgnoreDatabases) > 0
+    --        BEGIN
+    --            SET @DatabaseToIgnore = SUBSTRING(@IgnoreDatabases, 0, PATINDEX('%,%', @IgnoreDatabases));
+
+    --            INSERT INTO
+    --                #Ignore_Databases (DatabaseName, Reason)
+    --            SELECT
+    --                LTRIM(RTRIM(@DatabaseToIgnore))
+    --               ,'Specified in the @IgnoreDatabases parameter'
+    --            OPTION (RECOMPILE);
+
+    --            SET @IgnoreDatabases = SUBSTRING(@IgnoreDatabases, LEN(@DatabaseToIgnore + ',') + 1, LEN(@IgnoreDatabases));
+    --        END;
+    --        ELSE
+    --        BEGIN
+    --            SET @DatabaseToIgnore = @IgnoreDatabases;
+    --            SET @IgnoreDatabases = NULL;
+
+    --            INSERT INTO
+    --                #Ignore_Databases (DatabaseName, Reason)
+    --            SELECT
+    --                LTRIM(RTRIM(@DatabaseToIgnore))
+    --               ,'Specified in the @IgnoreDatabases parameter'
+    --            OPTION (RECOMPILE);
+    --        END;
+    --    END;
+    --END;
 
     END;
     ELSE
     BEGIN
-        INSERT INTO
-            #DatabaseList (DatabaseName)
-        SELECT
-            CASE
-                WHEN @DatabaseName IS NULL
-                     OR @DatabaseName = N'' THEN
-                    DB_NAME()
-                ELSE
-                    @DatabaseName
-            END;
+
+        --zzzzzz
+
+        --SELECT * FROM #SkipChecks AS SC
+
+        IF EXISTS (
+            SELECT
+                *
+            FROM
+                #SkipChecks AS SC
+            WHERE
+                (SC.ServerName      = SERVERPROPERTY('ServerName') OR SC.ServerName IS NULL)
+                AND SC.DatabaseName = DB_NAME()
+                AND SC.CheckId IS NULL
+        )
+        BEGIN
+            IF @Debug IN (1, 2)
+                RAISERROR('The database is marked to be skipped', 0, 1) WITH NOWAIT;
+            RETURN 0;
+
+        END;
+        ELSE
+        BEGIN
+            INSERT INTO
+                #DatabaseList (DatabaseName)
+            SELECT
+                CASE
+                    WHEN @DatabaseName IS NULL
+                         OR @DatabaseName = N'' THEN
+                        DB_NAME()
+                    ELSE
+                        @DatabaseName
+                END;
+        END;
+
+
     END;
+
+
+    
+
+
 
     SET @NumDatabases = (SELECT COUNT(*)FROM #DatabaseList);
     SET @Message = N'Number of databases to examine: ' + CAST(@NumDatabases AS NVARCHAR(50));

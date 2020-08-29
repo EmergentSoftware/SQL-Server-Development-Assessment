@@ -41,7 +41,7 @@ EXECUTE dbo.sp_Develop
 
 Sometimes there are checks, databases or servers that you want to skip. For example, say a database is from a vendor and you are not responsible for the database development. 
 
-Another use case for skipping checks is to indicate that you have acknowledged a potential issue and you are OK with it. You can skip that check for that specific object. Using sp_Develop with this pattern allows you to perform your database development and iteratively check for issues.
+Another use case for skipping checks is to indicate that you have acknowledged a potential issue and you are OK with it. You can skip that check for that specific object. Using [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) with this pattern allows you to perform your database development and iteratively check for issues.
 
 #### Create a table to hold the list of checks you want to skip
 
@@ -60,7 +60,7 @@ GO
 
 #### Checks to Skip
 
-The CheckId column refers to the list below. You can also scroll to the right in the sp_Develop 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
+The CheckId column refers to the list below. You can also scroll to the right in the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
 
 You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to insert that record into your skip check table.
 

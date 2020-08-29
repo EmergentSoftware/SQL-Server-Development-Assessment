@@ -4,7 +4,7 @@
     <Header>
       <Title>ct</Title>
       <Shortcut>ct</Shortcut>
-      <Description>Create a table</Description>
+      <Description>ES: Create a table</Description>
       <Author />
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -12,10 +12,13 @@
     </Header>
     <Snippet>
       <Declarations />
-      <Code Language="sql"><![CDATA[CREATE TABLE $CURSOR$
+      <Code Language="sql"><![CDATA[CREATE TABLE <Schema Name, SYSNAME, dbo>.<Table Name, SYSNAME, TableName>
 (
-    -- column_name data_type,...
-)]]></Code>
+	<Primary Key Column, , TableNameId> INT NOT NULL IDENTITY(1, 1), 
+	<Column Name, SYSNAME, FirstName> NVARCHAR(100) NOT NULL, $CURSOR$
+    CONSTRAINT <Primary Key Name, SYSNAME, TableName_TableNameId> PRIMARY KEY (<Primary Key, , TableNameId>)
+)
+GO]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

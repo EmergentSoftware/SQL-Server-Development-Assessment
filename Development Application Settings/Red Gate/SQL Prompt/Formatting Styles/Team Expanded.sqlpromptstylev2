@@ -56,7 +56,7 @@
   <InValuesOpeningParenthesisAlignment>ToStatement</InValuesOpeningParenthesisAlignment>
   <InValuesOpeningParenthesisBreakType>Never</InValuesOpeningParenthesisBreakType>
   <InValuesSubsequentListItemsBreakType>SimpleWrap</InValuesSubsequentListItemsBreakType>
-  <IndentBeginEndKeywords>false</IndentBeginEndKeywords>
+  <IndentBeginEndKeywords>true</IndentBeginEndKeywords>
   <IndentBlockContents>true</IndentBlockContents>
   <IndentCteContents>true</IndentCteContents>
   <IndentCteName>false</IndentCteName>
@@ -75,7 +75,7 @@
   <JoinConditionBreakType>Never</JoinConditionBreakType>
   <JoinOnAlignment>TabbedFromJoin</JoinOnAlignment>
   <JoinOnConditionAlignment>ToOnKeyword</JoinOnConditionAlignment>
-  <Name>Emergent Style - Expanded</Name>
+  <Name>Team Expanded</Name>
   <NewLineAfterTopRowFilter>true</NewLineAfterTopRowFilter>
   <NewLineBeforeTopRowFilter>false</NewLineBeforeTopRowFilter>
   <NewLineForCorrelatedTableSource>true</NewLineForCorrelatedTableSource>

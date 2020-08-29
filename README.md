@@ -14,7 +14,7 @@ On Azure SQL Server you will need to install the sp_Develop stored procedure in 
 After installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure open SSMS and run in the database you wish to check for database development best practices.
 
 ```sql
-EXECUTE dbo.sp_Develop
+EXEC dbo.sp_Develop
 ```
 
 [Check out the parameter section for more options](#Parameter-Explanations)
@@ -25,8 +25,10 @@ EXECUTE dbo.sp_Develop
 |--|--|
 |@DatabaseName|Defaults to current DB if not specified|
 |@GetAllDatabases|Runs checks across all of the databases on the server instead of just your current database context. Does not work on Azure SQL Server.|
-|@IgnoreCheckIds|Comma-delimited list of check ids you want to skip|
-|@IgnoreDatabases|Comma-delimited list of databases you want to skip|
+|@SkipChecksServer|The linked server name that stores the skip checks|
+|@SkipChecksDatabase|The database that stores the skip checks|
+|@SkipChecksSchema|The schema for the skip check table, when you pass in a value the SkipCheckTSQL column will be used|
+|@SkipChecksTable|The table that stores the skip checks, when you pass in a value the SkipCheckTSQL column will be used|
 |@BringThePain |If you’ve got more than 50 databases on the server, this only works if you also pass in @BringThePain = 1, because it’s gonna be slow.|
 |@OutputType|TABLE = table<br/>COUNT = row with number found<br/>MARKDOWN = bulleted list<br/>XML = table output as XML<br/>NONE = none|
 |@OutputXMLasNVARCHAR|Set to 1 if you like your XML out as NVARCHAR.|
@@ -34,6 +36,69 @@ EXECUTE dbo.sp_Develop
 |@Version|Output variable to check the version number.|
 |@VersionDate|Output variable to check the version date.|
 |@VersionCheckMode|Will set the version output variables and return without running the stored procedure.|
+
+## How to Skip Checks Across Your Estate
+
+Sometimes there are checks, databases or servers that you want to skip. For example, say a database is from a vendor and you are not responsible for the database development. 
+
+Another use case for skipping checks is to indicate that you have acknowledged a potential issue and you are OK with it. You can skip that check for that specific object. Using [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) with this pattern allows you to perform your database development and iteratively check for issues.
+
+#### Create a table to hold the list of checks you want to skip
+
+```sql
+CREATE TABLE dbo.DevelopChecksToSkip (
+    DevelopChecksToSkipId INT           IDENTITY(1, 1) NOT NULL
+   ,ServerName            NVARCHAR(128) NULL
+   ,DatabaseName          NVARCHAR(128) NULL
+   ,SchemaName            NVARCHAR(128) NULL
+   ,ObjectName            NVARCHAR(128) NULL
+   ,CheckId               INT           NULL
+   ,CONSTRAINT DevelopChecksToSkip_DevelopChecksToSkipId PRIMARY KEY CLUSTERED (DevelopChecksToSkipId ASC)
+);
+GO
+```
+
+#### Checks to Skip
+
+The CheckId column refers to the list below. You can also scroll to the right in the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
+
+You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to ```INSERT``` that record into your skip check table.
+
+Refer to the example checks below and each comment for its use.
+
+```sql
+INSERT INTO
+    dbo.DevelopChecksToSkip (ServerName, DatabaseName, SchemaName, ObjectName, CheckId)
+VALUES
+     (N'SQL2008', NULL, NULL, NULL, NULL)                             /* Skips all checks, for every database, on the SQL2008 SQL Server */
+    ,(N'SQL2012', N'AdventureWorks2012', NULL, NULL, NULL)            /* Skips all checks, in the AdventureWorks2012 database, on the SQL2012 SQL Server */
+    ,(N'SQL2017', N'AdventureWorks2017', N'dbo', N'fn_TPSTotal', NULL)/* Skips all checks, for the object named dbo.fn_TPSTotal, in the AdventureWorks2017 database, on the SQL2017 SQL Server */
+    ,(N'SQL2019', N'Northwind', N'dbo', N'Order Details', 5)          /* Skips CheckId 5 (Including Special Characters in Name), for the object named dbo.[Order Details], in the Northwind database, on the SQL2019 SQL Server*/
+    ,(NULL, N'AdventureWorks2017', NULL, NULL, NULL)                  /* Skips all checks, in the AdventureWorks2017 database, on every SQL Server */
+    ,(NULL, NULL, N'dbo', N'vPhone', NULL)                            /* Skips all checks, for the object named dbo.vPhone, in every database, on every SQL Server */
+    ,(NULL, NULL, N'dbo', N'CustOrderHist', 19);                      /* Skips CheckId 19 (Not Using SET NOCOUNT ON in Stored Procedure or Trigger), for the object named dbo.CustOrderHist, in every database, on every SQL Server */
+GO
+```
+
+#### How to Execute the Skip Checks
+
+```sql
+EXEC dbo.sp_Develop
+   ,@SkipCheckDatabase = N'pubs'
+   ,@SkipCheckSchema = N'dbo'
+   ,@SkipCheckTable = N'DevelopCheckToSkip';
+```
+
+You can also centralize this skip check table by putting it in a central location, setting up a linked server pointing to your central location, and then using the @SkipChecksServer parameter:
+
+```sql
+EXEC dbo.sp_Develop
+    @SkipCheckServer = N'ManagementServerName'
+   ,@SkipCheckDatabase = N'pubs'
+   ,@SkipCheckSchema = N'dbo'
+   ,@SkipCheckTable = N'DevelopCheckToSkip';
+```
+
 
 # Test Database Install
 
@@ -51,7 +116,7 @@ The 'Test Database' folder contains the RedGate SQL Source Control. Use this dat
 8. Develop objects to use when you create a new check
 9. Click 'Commit' tab
 10. Select objects to be pulled back into the branch, add comment, click the 'Commit' button and click the 'Push' button
-11. **Note:** there are exclude fiters setup for invalid objects created in the post script. Do not check these object back into the branch.
+11. **Note:** there are exclude fiters setup for invalid objects created in the post script. Do not check these objects back into the branch.
 
 
 **RedGate SQL Source Control Documentation**
@@ -61,7 +126,7 @@ The 'Test Database' folder contains the RedGate SQL Source Control. Use this dat
 
 # Configure Development Application Settings
 
-Included in this project are settings you can use for database development. Using the same set of settings across a team will helps ensure consisitent development patterns.
+Included in this project are settings you can use for database development. Using the same set of settings across a team will helps ensure consistent development patterns.
 
 #### SQL Server Management Studio
 
@@ -120,11 +185,11 @@ Stored procedures and functions should be named so they can be ordered by the ta
 ## Using ID for Primary Key Column Name
 **Check Id:** 7
 
-For columns that are the primary key for a table and uniquely identify each record in the table, the name should be [tableName] + "Id" (e.g. On the Make table, the primary key column would be "MakeId"). 
+For columns that are the primary key for a table and uniquely identify each record in the table, the name should be [TableName] + "Id" (e.g. On the Make table, the primary key column would be "MakeId"). 
 
 Though "MakeId" conveys no more information about the field than Make.Id and is a far wordier implementation, it is still preferable to "Id".
 
-Naming a primary key column "Id" is also "bad" when you query from several tables you will need to rename the "Id" columns so you can distinguish them in resultset.
+Naming a primary key column "Id" is also "bad" when you query from several tables you will need to rename the "Id" columns so you can distinguish them in result set.
 
 With different column names in joins masks errors.
 
@@ -188,7 +253,7 @@ FROM
 
 Table and view names should be singular, for example, "Customer" instead of "Customers". This rule is applicable because tables are patterns for storing an entity as a record – they are analogous to Classes serving up class instances. And if for no other reason than readability, you avoid errors due to the pluralization of English nouns in the process of database development. For instance, activity becomes activities, ox becomes oxen, person becomes people or persons, alumnus becomes alumni, while data remains data.
 
-If writing code for an data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
+If writing code for n data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
 
 
 
@@ -199,7 +264,7 @@ Never use a descriptive prefix such as tbl_. This 'reverse-Hungarian' notation h
 
 The use of the tbl_prefix for a table, often called "tibbling", came from databases imported from Access when SQL Server was first introduced. Unfortunately, this was an access convention inherited from Visual Basic, a loosely typed language. 
 
-SQL Server is a strongly-typed language. There is never a doubt what type of object something is in SQL Server if you know its name, schema and database, because its type is there in sys.objects: Also it is obvious from the usage. Columns can be easily identified as such and character columns would have to be checked for length in the Object Browser anyway or Intellisense tooltip hover in SSMS.
+SQL Server is a strongly typed language. There is never a doubt what type of object something is in SQL Server if you know its name, schema and database, because its type is there in sys.objects: Also it is obvious from the usage. Columns can be easily identified as such and character columns would have to be checked for length in the Object Browser anyway or Intellisense tooltip hover in SSMS.
 
 Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvious in SQL statements which items are columns (before or after the FROM clause). Do not use a data type prefix for the column either, for example, "IntCustomerId" for a numeric type or "VcName" for a varchar type.
 
@@ -234,7 +299,7 @@ Using reserved words makes code more difficult to read, can cause problems to co
 ## Including Special Characters in Name
 **Check Id:** 5
 
-Special characters should not be used in names. Using PascalCase for your table name allows for the upper-case letter to denote the first letter of a new word or name. Thus there is no need to do so with an underscore character. Do not use numbers in your table names either. This usually points to a poorly-designed data model or irregularly-partitioned tables. Do not use spaces in your table names either. While most database systems can handle names that include spaces, systems such as SQL Server require you to add brackets around the name when referencing it (like [table name] for example) which goes against the rule of keeping things as short and simple as possible.
+Special characters should not be used in names. Using PascalCase for your table name allows for the upper-case letter to denote the first letter of a new word or name. Thus, there is no need to do so with an underscore character. Do not use numbers in your table names either. This usually points to a poorly designed data model or irregularly-partitioned tables. Do not use spaces in your table names either. While most database systems can handle names that include spaces, systems such as SQL Server require you to add brackets around the name when referencing it (like [table name] for example) which goes against the rule of keeping things as short and simple as possible.
 
 
 
@@ -276,7 +341,7 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
 **Check Id:** 14
 
 - Avoid repeating the table name except for:
-  - **Table Primary Key:** A table primary key should should include the table name and Id (e.g. PersonId) [See Using ID for Primary Key Column Name](#using-id-for-primary-key-column-name)
+  - **Table Primary Key:** A table primary key should include the table name and Id (e.g. PersonId) [See Using ID for Primary Key Column Name](#using-id-for-primary-key-column-name)
   - **Natural Common Words:** PatientNumber, PurchaseOrderNumber, DriversLicenseNumber
   - **Generic Names:** When using generic names like "Number", "Name", "Description" & "Code" you can use repeat the table name
     - Instead use "AccountNumber", "AddressTypeName", "ProductDescription" & "StateCode"
@@ -291,8 +356,8 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - Start**Date** is the date something started
   - RowCreate**Time** is the date and time something was created
   - RowLastUpdate**Time** is the date and time something was modified
-  - Line**Amount** is a currency amount not dependant on the data type like DECIMAL(19, 4)
-  - Group**Name** is the text string not dependant on the data type like VARCHAR() or NVARCHAR()
+  - Line**Amount** is a currency amount not dependent on the data type like DECIMAL(19, 4)
+  - Group**Name** is the text string not dependent on the data type like VARCHAR() or NVARCHAR()
   - State**Code** indicates the short form of something
   - IsDeleted**Flag** indicates a status
   - Unit**Price**
@@ -308,7 +373,7 @@ Table design matters because it is essential for building software applications 
 ## UNIQUEIDENTIFIER in a Clustered Index
 **Check Id:** 22
 
-UNIQUEIDENTIFIER/GUID columns should not be in a clustered index. Even NEWSEQUENTIALID() should not be used in a clustered index. The sequential UNIQUEIDENTIFIER is based on the SQL Server's MAC address. When an Availability Group fails over the next UNIQUEIDENTIFIER will not be sequential any more.
+UNIQUEIDENTIFIER/GUID columns should not be in a clustered index. Even NEWSEQUENTIALID() should not be used in a clustered index. The sequential UNIQUEIDENTIFIER is based on the SQL Server's MAC address. When an Availability Group fails over the next UNIQUEIDENTIFIER will not be sequential anymore.
 
 SQL Server will page bad page splits when a new record is inserted instead of being inserting on the last page. The clustered index will become fragmented because of randomness of UNIQUEIDENTIFIER.
 
@@ -349,9 +414,9 @@ Add a clustered index.
 
 SQL Server storage is built around the clustered index as a fundamental part of the data storage and retrieval engine. The data itself is stored with the clustered key. All this makes having an appropriate clustered index a vital part of database design. The places where a table without a clustered index is preferable are rare; which is why a missing clustered index is a common code smell in database design.
 
-A 'table' without a clustered index is actually a heap, which is a particularly bad idea when its data is usually returned in an aggregated form, or in a sorted order. Paradoxically, though, it can be rather good for implementing a log or a ‘staging’ table used for bulk inserts, since it is read very infrequently, and there is less overhead in writing to it. 
+A 'table' without a clustered index is a heap, which is a particularly bad idea when its data is usually returned in an aggregated form, or in a sorted order. Paradoxically, though, it can be rather good for implementing a log or a ‘staging’ table used for bulk inserts, since it is read very infrequently, and there is less overhead in writing to it. 
 
-A table with a non-clustered index, but without a clustered index can sometimes perform well even though the index has to reference individual rows via a Row Identifier rather than a more meaningful clustered index. The arrangement can be effective for a table that isn’t often updated if the table is always accessed by a non-clustered index and there is no good candidate for a clustered index.
+A table with a non-clustered index, but without a clustered index can sometimes perform well even though the index must reference individual rows via a Row Identifier rather than a more meaningful clustered index. The arrangement can be effective for a table that isn’t often updated if the table is always accessed by a non-clustered index and there is no good candidate for a clustered index.
 
 Heaps have performance issues like table scans, forward fetches.
 
@@ -359,7 +424,7 @@ Heaps have performance issues like table scans, forward fetches.
 
 # Data Type Conventions
 
-Poor data type choices can have significant impact on a database design and performance. A best practice is to right size the data type by have an understanding of the data.
+Poor data type choices can have significant impact on a database design and performance. A best practice is to right size the data type by understanding of the data.
 
 
 
@@ -373,7 +438,7 @@ User-defined data types should be avoided whenever possible. They are an added p
 ## Using DATETIME Instead of DATETIMEOFFSET
 **Check Id:** [NONE YET]
 
-DATETIMEOFFSET defines a date that is combined with a time of a day that has time zone awareness and is based on a 24-hour clock. This allows you to use "DATETIMEOFFSET AT TIME ZONE [timezonename]" to convert the datetime to a local timezone. 
+DATETIMEOFFSET defines a date that is combined with a time of a day that has time zone awareness and is based on a 24-hour clock. This allows you to use "DATETIMEOFFSET AT TIME ZONE [timezonename]" to convert the datetime to a local time zone. 
 
 Use this query to see all the timezone names:
 
@@ -434,7 +499,7 @@ You can't require everyone to stop using national characters or accents any more
 
 # SQL Code Development
 
-T-SQL code must execute properly and performant. It must be readable, well laid out and it must be robust and resilient. It must not rely on deprecated features of SQL Server, or assume specific database settings.
+T-SQL code must execute properly and performant. It must be readable, well laid out and it must be robust and resilient. It must not rely on deprecated features of SQL Server or assume specific database settings.
 
 
 
@@ -443,9 +508,9 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 
 Your scalar function is not inlineable. This means it will perform poorly.
 
-Review the [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements) to determine what changes you can make so it can go inline. If you cannot you should inline your scalar function in SQL query. This means duplicate the code you would put in the scalar function in your SQL code. SQL Server 2019 & Azure SQL Database (150 database compatibility level) can inline some scalar functions. 
+Review the [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements) to determine what changes you can make so it can go inline. If you cannot, you should inline your scalar function in SQL query. This means duplicate the code you would put in the scalar function in your SQL code. SQL Server 2019 & Azure SQL Database (150 database compatibility level) can inline some scalar functions. 
 
-Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions your should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
+Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
 
 **Run this query to check if your function is inlineable. (SQL Server 2019+ & Azure SQL Server)**
 ```sql
@@ -478,7 +543,7 @@ WHERE
 
 You should inline your scalar function in SQL query. This means duplicate the code you would put in the scalar function in your SQL code. SQL Server 2019 & Azure SQL Database (150 database compatibility level) can inline some scalar functions. 
 
-Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions your should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
+Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
 
 **Run this query to check if your function is inlineable. (SQL Server 2019+ & Azure SQL Server)**
 ```sql
@@ -498,7 +563,7 @@ WHERE
 
 **Iterative invocation:** UDFs are invoked in an iterative manner, once per qualifying tuple. This incurs additional costs of repeated context switching due to function invocation. Especially, UDFs that execute Transact-SQL queries in their definition are severely affected.
 
-**Lack of costing:** During optimization, only relational operators are costed, while scalar operators are not. Prior to the introduction of scalar UDFs, other scalar operators were generally cheap and did not require costing. A small CPU cost added for a scalar operation was enough. There are scenarios where the actual cost is significant, and yet still remains underrepresented.
+**Lack of costing:** During optimization, only relational operators are costed, while scalar operators are not. Prior to the introduction of scalar UDFs, other scalar operators were generally cheap and did not require costing. A small CPU cost added for a scalar operation was enough. There are scenarios where the actual cost is significant, and yet remains underrepresented.
 
 **Interpreted execution:** UDFs are evaluated as a batch of statements, executed statement-by-statement. Each statement itself is compiled, and the compiled plan is cached. Although this caching strategy saves some time as it avoids recompilations, each statement executes in isolation. No cross-statement optimizations are carried out.
 
@@ -513,7 +578,7 @@ Use ```SET NOCOUNT ON;``` at the beginning of your SQL batches, stored procedure
 
 ```SET NOCOUNT ON;``` is a procedural level instructions and as such there is no need to include a corresponding ```SET NOCOUNT OFF;``` command as the last statement in the batch. 
 
-```SET NOCOUNT OFF;``` can be helpfull when debugging your queries in displaying the number of rows impacted when performing INSERTs, UPDATEs and DELETEs.
+```SET NOCOUNT OFF;``` can be helpful when debugging your queries in displaying the number of rows impacted when performing INSERTs, UPDATEs and DELETEs.
 
 ```sql
 CREATE OR ALTER PROCEDURE dbo.PersonInsert
@@ -539,19 +604,19 @@ END;
 ## Using NOLOCK (READ UNCOMMITTED)
 **Check Id:** 15
 
-Using "WITH (NOLOCK)", "WITH (READUNCOMMITTED)" and "TRANSACTION ISOLATION LEVEL READ UNCOMMITTED" does not mean your SELECT query does not take out a lock, it does not obey locks.
+Using ```WITH (NOLOCK)```, ```WITH (READUNCOMMITTED)``` and ```TRANSACTION ISOLATION LEVEL READ UNCOMMITTED``` does not mean your SELECT query does not take out a lock, it does not obey locks.
 
-Can NOLOCK be used when the data is not changing? Nope. It has the same problems.
+Can ```NOLOCK``` be used when the data is not changing? Nope. It has the same problems.
 
 **Problems**
 - You can see rows twice
 - You can skip rows altogether
 - You can see records that were never committed
-- Your query can fail with an error "could not continue scan with nolock due to data movement"
+- Your query can fail with an error "could not continue scan with ```NOLOCK``` due to data movement"
 
 These problems will cause non-reproducible errors. You might end up blaming the issue on user error which will not be accurate.
 
-Only use NOLOCK when the application stakeholders understand the problems and approve of them occurring. Get their approval in writing to CYA.
+Only use ```NOLOCK``` when the application stakeholders understand the problems and approve of them occurring. Get their approval in writing to CYA.
 
 **Alternatives**
 - Index Tuning
@@ -613,9 +678,9 @@ Use block comments instead of single line comments in your T-SQL code. Single li
 ```
 
 
-Stored procedures and functions should include at a minimum a header comment with a brief overview of the batches functionality and author information.
+Stored procedures and functions should include at a minimum a header comment with a brief overview of the batch's functionality and author information.
 
-You can skip including the Author, Created On & Modifed On details when you use source control. (You should be using source control!)
+You can skip including the Author, Created On & Modified On details when you use source control. (You should be using source control!)
 
 ```sql
 /**********************************************************************************************************************
@@ -649,7 +714,7 @@ Reasons not to use ```SELECT *```:
 - **Unnecessary Input / Output** will need to read more SQL Server 8k pages than required
 - **Increased Network Traffic** will take more bandwidth for more data
 - **More Application Memory** will need more memory to hold more data
-- **Dependency on Order of Columns on ResultSet** will mess up the order the columns are returned
+- **Dependency on Order of Columns on Result Set** will mess up the order the columns are returned
 - **Breaks Views While Adding New Columns to a Table** the view columns are created at the time of the view creation, you will need to refresh "sp_refreshview()"
 - **Copying Data From One Table to Another** your SELECT * INTO table will break with new columns
 
@@ -667,7 +732,7 @@ It is common to need a database to operate under different names.
 - When branching database code in source control
   - You might want to name a database after a feature branch on the same SQL Server instance.
 - When building database code
-  - To validate database objects compile from source, it is best to not have the database name hardcoded. If you use a hardcoded names you need to ensure that only one build server can run a build for that database instance.
+  - To validate database objects compile from source, it is best to not have the database name hardcoded. If you use a hardcoded name you need to ensure that only one build server can run a build for that database instance.
 
  
 
@@ -730,7 +795,7 @@ Views do not lend themselves to being deeply nested. Views that reference views 
   - Create a temporary indexed view for performance issues you cannot solve without changing T-SQL code
   - You need to retire a table and use a new table with similar data (still should be a temporary use)
   - For security reasons to expose only a specific data to a database role
-  - As an interface layer for an client that does not support a table or stored procedure data source
+  - As an interface layer for a client that does not support a table or stored procedure data source
   - Abstracting complicated base tables
 
 

@@ -14,7 +14,7 @@ On Azure SQL Server you will need to install the sp_Develop stored procedure in 
 After installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure open SSMS and run in the database you wish to check for database development best practices.
 
 ```sql
-EXECUTE dbo.sp_Develop
+EXEC dbo.sp_Develop
 ```
 
 [Check out the parameter section for more options](#Parameter-Explanations)
@@ -62,7 +62,7 @@ GO
 
 The CheckId column refers to the list below. You can also scroll to the right in the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
 
-You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to insert that record into your skip check table.
+You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to ```INSERT``` that record into your skip check table.
 
 Refer to the example checks below and each comment for its use.
 
@@ -89,7 +89,7 @@ EXEC dbo.sp_Develop
    ,@SkipCheckTable = N'DevelopCheckToSkip';
 ```
 
-You can also centralize this skip checks table by putting it in a central location, setting up a linked server pointing to your central location, and then using the @SkipChecksServer parameter:
+You can also centralize this skip check table by putting it in a central location, setting up a linked server pointing to your central location, and then using the @SkipChecksServer parameter:
 
 ```sql
 EXEC dbo.sp_Develop

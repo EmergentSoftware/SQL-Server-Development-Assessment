@@ -27,20 +27,19 @@
 ** OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **********************************************************************************************************************/
 CREATE OR ALTER PROCEDURE dbo.sp_Develop
-    @DatabaseName        NVARCHAR(128) = NULL /*Defaults to current DB if not specified*/
-   ,@GetAllDatabases     BIT           = 0
-   ,@BringThePain        BIT           = 0
-   ,@SkipChecksServer    NVARCHAR(256) = NULL
-   ,@SkipChecksDatabase  NVARCHAR(256) = NULL
-   ,@SkipChecksSchema    NVARCHAR(256) = NULL
-   ,@SkipChecksTable     NVARCHAR(256) = NULL
-   ,@ShowRememberChecks  BIT           = 0
-   ,@OutputType          VARCHAR(20)   = 'TABLE'
-   ,@OutputXMLasNVARCHAR BIT           = 0
-   ,@Debug               INT           = 0
-   ,@Version             VARCHAR(30)   = NULL OUTPUT
-   ,@VersionDate         DATETIME      = NULL OUTPUT
-   ,@VersionCheckMode    BIT           = 0
+    @DatabaseName       NVARCHAR(128) = NULL /*Defaults to current DB if not specified*/
+   ,@GetAllDatabases    BIT           = 0
+   ,@BringThePain       BIT           = 0
+   ,@SkipCheckServer    NVARCHAR(128) = NULL
+   ,@SkipCheckDatabase  NVARCHAR(128) = NULL
+   ,@SkipCheckSchema    NVARCHAR(128) = NULL
+   ,@SkipCheckTable     NVARCHAR(128) = NULL
+   ,@ShowRememberChecks BIT           = 0
+   ,@OutputType         VARCHAR(20)   = 'TABLE'
+   ,@Debug              INT           = 0
+   ,@Version            VARCHAR(30)   = NULL OUTPUT
+   ,@VersionDate        DATETIME      = NULL OUTPUT
+   ,@VersionCheckMode   BIT           = 0
 WITH RECOMPILE
 AS
     BEGIN
@@ -56,14 +55,12 @@ AS
            ,@NumDatabases      INT
            ,@Message           NVARCHAR(4000)
            ,@StringToExecute   NVARCHAR(MAX)
-           --,@DatabaseToIgnore  NVARCHAR(MAX)
-           --,@ChecksToIgnore    NVARCHAR(MAX)
            ,@ScriptVersionName NVARCHAR(50)
            ,@ErrorSeverity     INT
            ,@ErrorState        INT
            ,@DatabaseId        INT
            ,@CheckId           INT
-           ,@FindingsGroup     VARCHAR(100)
+           ,@FindingGroup      VARCHAR(100)
            ,@Finding           VARCHAR(200)
            ,@URLBase           VARCHAR(100)
            ,@URLAnchor         VARCHAR(400)
@@ -81,29 +78,36 @@ RETURN 0;
 END;
 
         IF @Debug IN (1, 2)
-            RAISERROR(N'Starting run. %s', 0, 1, @ScriptVersionName) WITH NOWAIT;
+            BEGIN
+                RAISERROR(N'Starting run. %s', 0, 1, @ScriptVersionName) WITH NOWAIT;
+            END;
 
         /**********************************************************************************************************************
-	    ** We start by creating #DeveloperResults. It's a temp table that will store all of the results from our checks. 
+	    ** We start by creating #Finding. It's a temp table that will store all of the results from our checks. 
 	    ** Throughout the rest of this stored procedure, we're running a series of checks looking for issues inside the 
-	    ** database. When we find a problem, we insert rows into #DeveloperResults. At the end, we return these results to the 
+	    ** database. When we find a problem, we insert rows into #Finding. At the end, we return these results to the 
 	    ** end user.
 	    ** 
-	    ** #DeveloperResults has a CheckId field, but there's no Check table. As we do checks, we insert data into this table,
+	    ** #Finding has a CheckId field, but there's no Check table. As we do checks, we insert data into this table,
 	    ** and we manually put in the CheckId.		
 	    ** 
 	    ** Create other temp tables
 	    **********************************************************************************************************************/
 
-        IF OBJECT_ID('tempdb..#DeveloperResults') IS NOT NULL
-            DROP TABLE #DeveloperResults;
-        CREATE TABLE #DeveloperResults (
+        -- SQL Prompt formatting off
+        IF OBJECT_ID('tempdb..#Finding') IS NOT NULL
+        BEGIN
+            DROP TABLE #Finding;
+        END;
+        -- SQL Prompt formatting on
+
+        CREATE TABLE #Finding (
             DeveloperResultsId INT            IDENTITY(1, 1) NOT NULL
            ,CheckId            INT            NOT NULL DEFAULT-1
            ,Database_Id        INT            NOT NULL DEFAULT-1
            ,DatabaseName       NVARCHAR(128)  NOT NULL DEFAULT N''
            ,Priority           INT            NOT NULL DEFAULT-1
-           ,FindingsGroup      VARCHAR(100)   NOT NULL
+           ,FindingGroup       VARCHAR(100)   NOT NULL
            ,Finding            VARCHAR(200)   NOT NULL
            ,URL                VARCHAR(2047)  NOT NULL
            ,Details            NVARCHAR(4000) NOT NULL
@@ -114,62 +118,76 @@ END;
            ,ObjectType         NVARCHAR(60)   NOT NULL DEFAULT N''
         );
 
-        IF OBJECT_ID('tempdb..#DatabaseList') IS NOT NULL DROP TABLE #DatabaseList;
+        IF OBJECT_ID('tempdb..#DatabaseList') IS NOT NULL
+            BEGIN
+                DROP TABLE #DatabaseList;
+            END;
+
         CREATE TABLE #DatabaseList (
             DatabaseName                          NVARCHAR(256) NOT NULL
            ,secondary_role_allow_connections_desc NVARCHAR(50)  NULL DEFAULT 'YES'
         );
 
-        IF OBJECT_ID('tempdb..#IgnoreDatabases') IS NOT NULL
-            DROP TABLE #IgnoreDatabases;
-        CREATE TABLE #IgnoreDatabases (DatabaseName NVARCHAR(128) NOT NULL, Reason NVARCHAR(100) NOT NULL);
+        IF OBJECT_ID('tempdb..#DatabaseIgnore') IS NOT NULL
+            BEGIN
+                DROP TABLE #DatabaseIgnore;
+            END;
 
-        IF OBJECT_ID('tempdb..#SkipChecks') IS NOT NULL DROP TABLE #SkipChecks;
-        CREATE TABLE #SkipChecks (
+        CREATE TABLE #DatabaseIgnore (DatabaseName NVARCHAR(128) NOT NULL, Reason NVARCHAR(100) NOT NULL);
+
+        IF OBJECT_ID('tempdb..#SkipCheck') IS NOT NULL
+            BEGIN
+                DROP TABLE #SkipCheck;
+            END;
+
+        CREATE TABLE #SkipCheck (
             ServerName   NVARCHAR(128) NULL
            ,DatabaseName NVARCHAR(128) NULL
-           ,ObjectName   NVARCHAR(256) NULL
+           ,SchemaName   NVARCHAR(128) NULL
+           ,ObjectName   NVARCHAR(128) NULL
            ,CheckId      INT           NULL
         );
+
         CREATE CLUSTERED INDEX CheckId_DatabaseName
-        ON #SkipChecks (CheckId, DatabaseName);
+        ON #SkipCheck (CheckId, DatabaseName);
 
         /**********************************************************************************************************************
         ** Skip Checks
-        ** You can build your own table with a list of checks to skip.
         ** [TODO: LINK TO README.md for instructions]
         **********************************************************************************************************************/
-        IF @SkipChecksTable IS NOT NULL
-           AND @SkipChecksSchema IS NOT NULL
-           AND @SkipChecksDatabase IS NOT NULL
+        IF @SkipCheckTable IS NOT NULL
+           AND @SkipCheckSchema IS NOT NULL
+           AND @SkipCheckDatabase IS NOT NULL
             BEGIN
 
                 IF @Debug IN (1, 2) RAISERROR('Inserting SkipChecks', 0, 1) WITH NOWAIT;
 
                 SET @StringToExecute = N'
 				INSERT INTO
-                    #SkipChecks(ServerName, DatabaseName, ObjectName, CheckId)
+                    #SkipCheck(ServerName, DatabaseName, SchemaName, ObjectName, CheckId)
                 SELECT
-                   ServerName
-                   ,DatabaseName
-                   ,ObjectName
-                   ,CheckId
+                    SK.ServerName
+                   ,SK.DatabaseName
+                   ,SK.SchemaName
+                   ,SK.ObjectName
+                   ,SK.CheckId
                 FROM ';
 
-                IF LTRIM(RTRIM(@SkipChecksServer)) <> ''
+                IF LTRIM(RTRIM(@SkipCheckServer)) <> ''
                     BEGIN
-                        SET @StringToExecute += QUOTENAME(@SkipChecksServer) + N'.';
+                        SET @StringToExecute += QUOTENAME(@SkipCheckServer) + N'.';
                     END;
 
-                SET @StringToExecute += QUOTENAME(@SkipChecksDatabase) + N'.' + QUOTENAME(@SkipChecksSchema) + N'.' + QUOTENAME(@SkipChecksTable) + N'
+                SET @StringToExecute += QUOTENAME(@SkipCheckDatabase) + N'.' + QUOTENAME(@SkipCheckSchema) + N'.' + QUOTENAME(@SkipCheckTable) + N' AS SK
                 WHERE
-                    ServerName IS NULL
-                    OR ServerName = SERVERPROPERTY(''ServerName'')
+                    SK.ServerName IS NULL
+                    OR SK.ServerName = SERVERPROPERTY(''ServerName'')
                 GROUP BY
-                    ServerName
-                   ,DatabaseName
-                   ,ObjectName
-                   ,CheckId
+                    SK.ServerName
+                   ,SK.DatabaseName
+                   ,SK.SchemaName
+                   ,SK.ObjectName
+                   ,SK.CheckId
                 OPTION (RECOMPILE);';
 
                 EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -180,7 +198,7 @@ END;
                     SELECT
                         *
                     FROM
-                        #SkipChecks AS SC
+                        #SkipCheck AS SC
                     WHERE
                         SC.ServerName = SERVERPROPERTY('ServerName')
                         AND SC.DatabaseName IS NULL
@@ -216,34 +234,34 @@ END;
         )
             BEGIN
                 /* Check to skip go here */
-                /* INSERT INTO #SkipChecks (CheckId) VALUES (?); */
+                /* INSERT INTO #SkipCheck (CheckId) VALUES (?); */
 
                 /* Let them know we are skipping checks */
                 INSERT INTO
-                    #DeveloperResults (CheckId, FindingsGroup, Finding, URL, Details)
+                    #Finding (CheckId, FindingGroup, Finding, URL, Details)
                 SELECT
-                    CheckID       = 26
-                   ,FindingsGroup = 'Running Issues'
-                   ,Finding       = 'Some Checks Skipped'
-                   ,URL           = @URLBase + 'some-checks-skipped'
-                   ,Details       = 'Amazon RDS detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
+                    CheckID      = 26
+                   ,FindingGroup = 'Running Issues'
+                   ,Finding      = 'Some Checks Skipped'
+                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,Details      = 'Amazon RDS detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
         /* If the server is Express Edition, skip checks that it doesn't allow */
         IF CAST(SERVERPROPERTY('Edition') AS NVARCHAR(1000)) LIKE N'%Express%'
             BEGIN
                 /* Check to skip go here */
-                /* INSERT INTO #SkipChecks (CheckId) VALUES (?); */
+                /* INSERT INTO #SkipCheck (CheckId) VALUES (?); */
 
                 /* Let them know we are skipping checks */
                 INSERT INTO
-                    #DeveloperResults (CheckId, FindingsGroup, Finding, URL, Details)
+                    #Finding (CheckId, FindingGroup, Finding, URL, Details)
                 SELECT
-                    CheckID       = 26
-                   ,FindingsGroup = 'Running Issues'
-                   ,Finding       = 'Some Checks Skipped'
-                   ,URL           = @URLBase + 'some-checks-skipped'
-                   ,Details       = 'Express Edition detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
+                    CheckID      = 26
+                   ,FindingGroup = 'Running Issues'
+                   ,Finding      = 'Some Checks Skipped'
+                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,Details      = 'Express Edition detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
 
@@ -251,17 +269,17 @@ END;
         IF SERVERPROPERTY('EngineEdition') = 8
             BEGIN
                 /* Check to skip go here */
-                /* INSERT INTO #SkipChecks (CheckId) VALUES (?); */
+                /* INSERT INTO #SkipCheck (CheckId) VALUES (?); */
 
                 /* Let them know we are skipping checks */
                 INSERT INTO
-                    #DeveloperResults (CheckId, FindingsGroup, Finding, URL, Details)
+                    #Finding (CheckId, FindingGroup, Finding, URL, Details)
                 SELECT
-                    CheckID       = 26
-                   ,FindingsGroup = 'Running Issues'
-                   ,Finding       = 'Some Checks Skipped'
-                   ,URL           = @URLBase + 'some-checks-skipped'
-                   ,Details       = 'Managed Instance detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
+                    CheckID      = 26
+                   ,FindingGroup = 'Running Issues'
+                   ,Finding      = 'Some Checks Skipped'
+                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,Details      = 'Managed Instance detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
         /**********************************************************************************************************************
@@ -269,12 +287,12 @@ END;
         TODO: current dev
 	    **********************************************************************************************************************/
         INSERT INTO
-            #IgnoreDatabases (DatabaseName, Reason)
+            #DatabaseIgnore (DatabaseName, Reason)
         SELECT
             SC.DatabaseName
            ,N'Included in skip checks'
         FROM
-            #SkipChecks AS SC
+            #SkipCheck AS SC
         WHERE
             (SC.ServerName = SERVERPROPERTY('ServerName') OR SC.ServerName IS NULL)
             AND SC.ObjectName IS NULL
@@ -342,21 +360,21 @@ END;
                             BEGIN
                                 /**********************************************************************************************************************/
                                 SELECT
-                                    @CheckId       = 17
-                                   ,@Priority      = 10
-                                   ,@FindingsGroup = 'Running Issues'
-                                   ,@Finding       = 'You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node.'
-                                   ,@URLAnchor     = 'ran-on-a-non-readable-availability-group-secondary-databases';
+                                    @CheckId      = 17
+                                   ,@Priority     = 1
+                                   ,@FindingGroup = 'Running Issues'
+                                   ,@Finding      = 'You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node.'
+                                   ,@URLAnchor    = 'ran-on-a-non-readable-availability-group-secondary-databases';
                                 /**********************************************************************************************************************/
                                 INSERT INTO
-                                    #DeveloperResults (CheckId, FindingsGroup, Finding, URL, Priority, Details)
+                                    #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
                                 SELECT
-                                    CheckId       = @CheckId
-                                   ,FindingsGroup = @FindingsGroup
-                                   ,Finding       = @Finding
-                                   ,URL           = @URLBase + @URLAnchor
-                                   ,Priority      = @Priority
-                                   ,Details       = N'To analyze those databases, run sp_Develop on the primary, or on a readable secondary.';
+                                    CheckId      = @CheckId
+                                   ,FindingGroup = @FindingGroup
+                                   ,Finding      = @Finding
+                                   ,URL          = @URLBase + @URLAnchor
+                                   ,Priority     = @Priority
+                                   ,Details      = N'To analyze those databases, run sp_Develop on the primary, or on a readable secondary.';
 
                             END;
                     END;
@@ -379,8 +397,8 @@ END;
             SELECT
                 COUNT(*)
             FROM
-                #DatabaseList                     AS dl
-                LEFT OUTER JOIN #IgnoreDatabases AS i ON dl.DatabaseName = i.DatabaseName
+                #DatabaseList                   AS dl
+                LEFT OUTER JOIN #DatabaseIgnore AS i ON dl.DatabaseName = i.DatabaseName
             WHERE
                 COALESCE(dl.secondary_role_allow_connections_desc, 'OK') <> 'NO'
                 AND i.DatabaseName IS NULL
@@ -390,11 +408,11 @@ END;
 
         /**********************************************************************************************************************/
         SELECT
-            @CheckId       = 18
-           ,@Priority      = 10
-           ,@FindingsGroup = 'Running Issues'
-           ,@Finding       = 'Ran Against 50+ Databases Without @BringThePain = 1'
-           ,@URLAnchor     = 'ran-against-50-databases-without-bringthepain--1';
+            @CheckId      = 18
+           ,@Priority     = 1
+           ,@FindingGroup = 'Running Issues'
+           ,@Finding      = 'Ran Against 50+ Databases Without @BringThePain = 1'
+           ,@URLAnchor    = 'ran-against-50-databases-without-bringthepain--1';
         /**********************************************************************************************************************/
         BEGIN TRY
             IF @NumDatabases >= 50
@@ -402,14 +420,14 @@ END;
                 BEGIN
 
                     INSERT
-                        #DeveloperResults (CheckId, FindingsGroup, Finding, URL, Priority, Details)
+                        #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
                     SELECT
-                        CheckId       = @CheckId
-                       ,FindingsGroup = @FindingsGroup
-                       ,Finding       = @Finding
-                       ,URL           = @URLBase + @URLAnchor
-                       ,Priority      = @Priority
-                       ,Details       = N'You''re trying to run sp_Develop on a server with ' + CAST(@NumDatabases AS NVARCHAR(50)) + ' databases. If you''re sure you want to do this, run again with the parameter @BringThePain = 1.';
+                        CheckId      = @CheckId
+                       ,FindingGroup = @FindingGroup
+                       ,Finding      = @Finding
+                       ,URL          = @URLBase + @URLAnchor
+                       ,Priority     = @Priority
+                       ,Details      = N'You''re trying to run sp_Develop on a server with ' + CAST(@NumDatabases AS NVARCHAR(50)) + ' databases. If you''re sure you want to do this, run again with the parameter @BringThePain = 1.';
                     IF (@OutputType <> 'NONE')
                         BEGIN
 
@@ -418,7 +436,7 @@ END;
                                ,DR.SchemaName
                                ,DR.ObjectName
                                ,DR.ObjectType
-                               ,DR.FindingsGroup
+                               ,DR.FindingGroup
                                ,DR.Finding
                                ,DR.Details
                                ,DR.URL
@@ -428,13 +446,13 @@ END;
                                ,DR.Object_Id
                                ,DR.Priority
                             FROM
-                                #DeveloperResults AS DR
+                                #Finding AS DR
                             ORDER BY
                                 DR.Priority
                                ,DR.DatabaseName
                                ,DR.SchemaName
                                ,DR.ObjectName
-                               ,DR.FindingsGroup
+                               ,DR.FindingGroup
                                ,DR.Finding;
 
                             RAISERROR('Running sp_Develop on a server with 50+ databases may cause temporary insanity for the server', 12, 1);
@@ -462,13 +480,21 @@ END;
 
         /**********************************************************************************************************************/
         SELECT
-            @CheckId       = 16
-           ,@Priority      = 10
-           ,@FindingsGroup = 'Running Issues'
-           ,@Finding       = 'sp_Develop is Over 6 Months Old'
-           ,@URLAnchor     = 'sp_develop-is-over-6-months-old';
+            @CheckId      = 16
+           ,@Priority     = 1
+           ,@FindingGroup = 'Running Issues'
+           ,@Finding      = 'sp_Develop is Over 6 Months Old'
+           ,@URLAnchor    = 'sp_develop-is-over-6-months-old';
         /**********************************************************************************************************************/
-        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+        IF NOT EXISTS (
+            SELECT
+                1
+            FROM
+                #SkipCheck AS SC
+            WHERE
+                SC.CheckId = @CheckId
+                AND SC.ObjectName IS NULL
+        )
            AND DATEDIFF(MONTH, @VersionDate, GETDATE()) > 6
             BEGIN
 
@@ -476,14 +502,14 @@ END;
                     RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 
                 INSERT
-                    #DeveloperResults (CheckId, FindingsGroup, Finding, URL, Priority, Details)
+                    #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
                 SELECT
-                    CheckId       = @CheckId
-                   ,FindingsGroup = @FindingsGroup
-                   ,Finding       = @Finding
-                   ,URL           = @URLBase + @URLAnchor
-                   ,Priority      = @Priority
-                   ,Details       = N'There most likely been some new checks and fixes performed within the last 6 months - time to go download the current one.';
+                    CheckId      = @CheckId
+                   ,FindingGroup = @FindingGroup
+                   ,Finding      = @Finding
+                   ,URL          = @URLBase + @URLAnchor
+                   ,Priority     = @Priority
+                   ,Details      = N'There most likely been some new checks and fixes performed within the last 6 months - time to go download the current one.';
 
             END;
 
@@ -499,13 +525,13 @@ END;
 		        ** Finding:			Not Naming Foreign Key Column the Same as Parent Table
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Naming Conventions'
-                   ,Finding       = 'Not Naming Foreign Key Column the Same as Parent Table'
-                   ,URL           = @URLBase + 'not-naming-foreign-key-column-the-same-as-parent-table'
-                   ,Details       = N'REMEMBER: Name the foreign key column the same as the parent table.';
+                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Naming Conventions'
+                   ,Finding      = 'Not Naming Foreign Key Column the Same as Parent Table'
+                   ,URL          = @URLBase + 'not-naming-foreign-key-column-the-same-as-parent-table'
+                   ,Details      = N'REMEMBER: Name the foreign key column the same as the parent table.';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -513,13 +539,13 @@ END;
 		        ** Finding:			Not Using PascalCase
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Naming Conventions'
-                   ,Finding       = 'Not Using PascalCase'
-                   ,URL           = @URLBase + 'not-using-pascalcase'
-                   ,Details       = N'REMEMBER: Use PascalCase for databse object names.';
+                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Naming Conventions'
+                   ,Finding      = 'Not Using PascalCase'
+                   ,URL          = @URLBase + 'not-using-pascalcase'
+                   ,Details      = N'REMEMBER: Use PascalCase for databse object names.';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -527,13 +553,13 @@ END;
 		        ** Finding:			Using Abbreviation
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Naming Conventions'
-                   ,Finding       = 'Using Abbreviation'
-                   ,URL           = @URLBase + 'using-abbreviation'
-                   ,Details       = N'REMEMBER: Don''t use abbreviation. Use "Account" instead of "Acct"';
+                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Naming Conventions'
+                   ,Finding      = 'Using Abbreviation'
+                   ,URL          = @URLBase + 'using-abbreviation'
+                   ,Details      = N'REMEMBER: Don''t use abbreviation. Use "Account" instead of "Acct"';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -541,13 +567,13 @@ END;
 		        ** Finding:			Stored Procedures & Function Naming
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Naming Conventions'
-                   ,Finding       = 'Stored Procedures & Function Naming'
-                   ,URL           = @URLBase + 'stored-procedures--function-naming'
-                   ,Details       = N'REMEMBER: Stored procedures and functions should be named with ObjectAction. e.g. "ProductGet" or "OrderUpdate".)';
+                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Naming Conventions'
+                   ,Finding      = 'Stored Procedures & Function Naming'
+                   ,URL          = @URLBase + 'stored-procedures--function-naming'
+                   ,Details      = N'REMEMBER: Stored procedures and functions should be named with ObjectAction. e.g. "ProductGet" or "OrderUpdate".)';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -555,13 +581,13 @@ END;
 		        ** Finding:			Non-Affirmative Boolean Name Use
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Naming Conventions'
-                   ,Finding       = 'Non-Affirmative Boolean Name Use'
-                   ,URL           = @URLBase + 'non-affirmative-boolean-name-use'
-                   ,Details       = N'REMEMBER: Bit columns should be given affirmative boolean names like "IsDeleted", "HasPermission", or "IsValid".';
+                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Naming Conventions'
+                   ,Finding      = 'Non-Affirmative Boolean Name Use'
+                   ,URL          = @URLBase + 'non-affirmative-boolean-name-use'
+                   ,Details      = N'REMEMBER: Bit columns should be given affirmative boolean names like "IsDeleted", "HasPermission", or "IsValid".';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -569,13 +595,13 @@ END;
 		        ** Finding:			Using DATETIME Instead of DATETIMEOFFSET
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Data Type Conventions'
-                   ,Finding       = 'Using DATETIME Instead of DATETIMEOFFSET'
-                   ,URL           = @URLBase + 'using-datetime-instead-of-datetimeoffset'
-                   ,Details       = N'REMEMBER: DATETIMEOFFSET defines a date that is combined with a time of a day and time zone. This allows you to use "DATETIMEOFFSET AT TIME ZONE [timezonename]" to convert the datetime to a local timezone.';
+                    PRIORITY     = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Data Type Conventions'
+                   ,Finding      = 'Using DATETIME Instead of DATETIMEOFFSET'
+                   ,URL          = @URLBase + 'using-datetime-instead-of-datetimeoffset'
+                   ,Details      = N'REMEMBER: DATETIMEOFFSET defines a date that is combined with a time of a day and time zone. This allows you to use "DATETIMEOFFSET AT TIME ZONE [timezonename]" to convert the datetime to a local timezone.';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -583,13 +609,13 @@ END;
 		        ** Finding:			DATETIME or DATETIME2 Instead of DATE
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Data Type Conventions'
-                   ,Finding       = 'Using DATETIME or DATETIME2 Instead of DATE'
-                   ,URL           = @URLBase + 'using-datetime-or-datetime2-instead-of-date'
-                   ,Details       = N'REMEMBER: When appropriate, use the DATE or SMALLDATETIME type.';
+                    PRIORITY     = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Data Type Conventions'
+                   ,Finding      = 'Using DATETIME or DATETIME2 Instead of DATE'
+                   ,URL          = @URLBase + 'using-datetime-or-datetime2-instead-of-date'
+                   ,Details      = N'REMEMBER: When appropriate, use the DATE or SMALLDATETIME type.';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -597,13 +623,13 @@ END;
 		        ** Finding:			DATETIME or DATETIME2 Instead of TIME
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Data Type Conventions'
-                   ,Finding       = 'Using DATETIME or DATETIME2 Instead of TIME'
-                   ,URL           = @URLBase + 'using-datetime-or-datetime2-instead-of-time'
-                   ,Details       = N'REMEMBER: When appropriate, use the TIME or SMALLDATETIME type.';
+                    PRIORITY     = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Data Type Conventions'
+                   ,Finding      = 'Using DATETIME or DATETIME2 Instead of TIME'
+                   ,URL          = @URLBase + 'using-datetime-or-datetime2-instead-of-time'
+                   ,Details      = N'REMEMBER: When appropriate, use the TIME or SMALLDATETIME type.';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -611,13 +637,13 @@ END;
 		        ** Finding:			Using VARCHAR Instead of NVARCHAR for Unicode Data
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'Data Type Conventions'
-                   ,Finding       = 'Using VARCHAR Instead of NVARCHAR for Unicode Data'
-                   ,URL           = @URLBase + 'using-varchar-instead-of-nvarchar-for-unicode-data'
-                   ,Details       = N'REMEMBER: NVARCHAR allows you to store names and addresses with accents and national characters that VARCHAR does not store.';
+                    PRIORITY     = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'Data Type Conventions'
+                   ,Finding      = 'Using VARCHAR Instead of NVARCHAR for Unicode Data'
+                   ,URL          = @URLBase + 'using-varchar-instead-of-nvarchar-for-unicode-data'
+                   ,Details      = N'REMEMBER: NVARCHAR allows you to store names and addresses with accents and national characters that VARCHAR does not store.';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -625,13 +651,13 @@ END;
 		        ** Finding:			Using BETWEEN for DATETIME Ranges
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 203 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'SQL Code Development'
-                   ,Finding       = 'Using BETWEEN for DATETIME Ranges'
-                   ,URL           = @URLBase + 'using-between-for-datetime-ranges'
-                   ,Details       = N'REMEMBER: You never get complete accuracy if you specify dates when using the BETWEEN logical operator with DATETIME values.';
+                    PRIORITY     = 203 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'SQL Code Development'
+                   ,Finding      = 'Using BETWEEN for DATETIME Ranges'
+                   ,URL          = @URLBase + 'using-between-for-datetime-ranges'
+                   ,Details      = N'REMEMBER: You never get complete accuracy if you specify dates when using the BETWEEN logical operator with DATETIME values.';
 
                 /**********************************************************************************************************************
 		        ** Check Id:		[NONE YET]
@@ -639,13 +665,13 @@ END;
 		        ** Finding:			Using Old Sybase JOIN Syntax
 		        **********************************************************************************************************************/
                 INSERT INTO
-                    #DeveloperResults (Priority, FindingsGroup, Finding, URL, Details)
+                    #Finding (Priority, FindingGroup, Finding, URL, Details)
                 SELECT
-                    PRIORITY      = 203 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingsGroup = 'SQL Code Development'
-                   ,Finding       = 'Using Old Sybase JOIN Syntax'
-                   ,URL           = @URLBase + 'using-old-sybase-join-syntax'
-                   ,Details       = N'REMEMBER: Use the ANSI standards "<>, >=" & "INNER JOIN" instead of the deprecated Sybase join syntax: "=*, *=" & "JOIN".';
+                    PRIORITY     = 203 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
+                   ,FindingGroup = 'SQL Code Development'
+                   ,Finding      = 'Using Old Sybase JOIN Syntax'
+                   ,URL          = @URLBase + 'using-old-sybase-join-syntax'
+                   ,Details      = N'REMEMBER: Use the ANSI standards "<>, >=" & "INNER JOIN" instead of the deprecated Sybase join syntax: "=*, *=" & "JOIN".';
 
             END;
 
@@ -659,8 +685,8 @@ END;
         SELECT
             dl.DatabaseName
         FROM
-            #DatabaseList                     AS dl
-            LEFT OUTER JOIN #IgnoreDatabases AS i ON dl.DatabaseName = i.DatabaseName
+            #DatabaseList                   AS dl
+            LEFT OUTER JOIN #DatabaseIgnore AS i ON dl.DatabaseName = i.DatabaseName
         WHERE
             COALESCE(dl.secondary_role_allow_connections_desc, 'OK') <> 'NO'
             AND i.DatabaseName IS NULL;
@@ -690,36 +716,6 @@ END;
                     AND state_desc       = 'ONLINE';
 
                 /**********************************************************************************************************************
-		        ** Skip checks for specific database versions
-		        **********************************************************************************************************************/
-
-                --/* Skip the checks that would break due to lesser than 2019 (150 database compatibility level). */
-                --IF EXISTS (
-                --    SELECT
-                --        *
-                --    FROM
-                --        sys.databases
-                --    WHERE
-                --        compatibility_level < 150
-                --        AND database_id     = @DatabaseId
-                --)
-                --BEGIN
-                --    /* Check to skip go here */
-                --    INSERT INTO #SkipChecks (CheckId) VALUES (25); /* Scalar Function Is Not Inlineable */
-
-                --    /* Let them know we are skipping checks */
-                --    INSERT INTO
-                --        #DeveloperResults (CheckId, Database_Id, FindingsGroup, Finding, URL, Details)
-                --    SELECT
-                --        CheckID       = 26
-                --       ,Database_Id   = @DatabaseId
-                --       ,FindingsGroup = 'Running Issues'
-                --       ,Finding       = 'Some Checks Skipped'
-                --       ,URL           = 'some-checks-skipped'
-                --       ,Details       = 'Since you have databases with compatibility_level < 150, we can not run some checks: SELECT * FROM sys.databases WHERE compatibility_level < 150';
-                --END;
-
-                /**********************************************************************************************************************
                 **  ██████ ██   ██ ███████  ██████ ██   ██ ███████     ███████ ████████  █████  ██████  ████████
                 ** ██      ██   ██ ██      ██      ██  ██  ██          ██         ██    ██   ██ ██   ██    ██    
                 ** ██      ███████ █████   ██      █████   ███████     ███████    ██    ███████ ██████     ██    
@@ -732,23 +728,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 1
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@Priority      = 20
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Using Plural in Names'
 		           ,@URLAnchor     = 'using-plural-in-name';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'			
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -775,22 +771,22 @@ END;
 		        SELECT
 			        @CheckId       = 14
 		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Column Naming'
 		           ,@URLAnchor     = 'column-naming';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'			
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -817,22 +813,22 @@ END;
 		        SELECT
 			        @CheckId       = 2
 		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Using Prefix in Name'
 		           ,@URLAnchor     = 'using-prefix-in-name';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -864,12 +860,12 @@ END;
 
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -897,12 +893,12 @@ END;
 
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -929,23 +925,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 5
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@Priority      = 5
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Including Special Characters in Name'
 		           ,@URLAnchor     = 'including-special-characters-in-name';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -973,23 +969,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 13
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@Priority      = 50
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Concatenating Two Table Names'
 		           ,@URLAnchor     = 'including-special-characters-in-name';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1019,23 +1015,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 11
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@Priority      = 30
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Including Numbers in Table Name'
 		           ,@URLAnchor     = 'including-numbers-in-table-name';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1060,22 +1056,22 @@ END;
 		        SELECT
 			        @CheckId       = 12
 		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Column Named Same as Table'
 		           ,@URLAnchor     = 'column-named-same-as-table';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1099,25 +1095,25 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 4
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Using Reserved Words in Name'
 		           ,@URLAnchor     = 'using-reserved-words-in-name';
 		        /**********************************************************************************************************************/
 
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 						
 			        /* SQL Server and Azure SQL Data Warehouse Reserved Keywords */
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1140,12 +1136,12 @@ END;
 			        /* ODBC Reserved Keywords */
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1168,12 +1164,12 @@ END;
 			        /* Future Reserved Keywords */
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1198,23 +1194,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 3
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Table Conventions'
+		           ,@Priority      = 40
+		           ,@FindingGroup = 'Table Conventions'
 		           ,@Finding       = 'Wide Table'
 		           ,@URLAnchor     = 'wide-table';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1238,23 +1234,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 6
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Table Conventions'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'Table Conventions'
 		           ,@Finding       = 'Heap'
 		           ,@URLAnchor     = 'heap';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1280,23 +1276,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 7
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Naming Conventions'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'Naming Conventions'
 		           ,@Finding       = 'Using ID for Primary Key Column Name'
 		           ,@URLAnchor     = 'using-id-for-primary-key-column-name';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1323,23 +1319,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 8
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Table Conventions'
+		           ,@Priority      = 5
+		           ,@FindingGroup = 'Table Conventions'
 		           ,@Finding       = 'UNIQUEIDENTIFIER For Primary Key'
 		           ,@URLAnchor     = 'uniqueidentifier-for-primary-key';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1368,23 +1364,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 22
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Table Conventions'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'Table Conventions'
 		           ,@Finding       = 'UNIQUEIDENTIFIER in a Clustered Index'
 		           ,@URLAnchor     = 'uniqueidentifier-in-a-clustered-index';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 		
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1414,23 +1410,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 21
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Table Conventions'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'Table Conventions'
 		           ,@Finding       = 'Missing Index for Foreign Key'
 		           ,@URLAnchor     = 'missing-index-for-foreign-key';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 		
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1458,23 +1454,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 20
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Table Conventions'
+		           ,@Priority      = 5
+		           ,@FindingGroup = 'Table Conventions'
 		           ,@Finding       = 'Missing Primary Key'
 		           ,@URLAnchor     = 'missing-primary-key';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 		
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1500,23 +1496,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 10
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'Data Type Conventions'
+		           ,@Priority      = 20
+		           ,@FindingGroup = 'Data Type Conventions'
 		           ,@Finding       = 'Using User-Defined Data Type'
 		           ,@URLAnchor     = 'using-user-defined-data-type';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1539,24 +1535,24 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 25
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'SQL Code Development'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'SQL Code Development'
 		           ,@Finding       = 'Scalar Function Is Not Inlineable'
 		           ,@URLAnchor     = 'scalar-function-is-not-inlineable';
 		        /**********************************************************************************************************************/	
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 			        AND EXISTS(SELECT * FROM sys.databases WHERE compatibility_level >= 150 AND database_id = @DatabaseId)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1581,24 +1577,24 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 24
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'SQL Code Development'
+		           ,@Priority      = 5
+		           ,@FindingGroup = 'SQL Code Development'
 		           ,@Finding       = 'Using User-Defined Scalar Function'
 		           ,@URLAnchor     = 'using-user-defined-scalar-function';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 			        AND EXISTS(SELECT * FROM sys.databases WHERE compatibility_level < 150 AND database_id = @DatabaseId)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1621,23 +1617,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 23
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'SQL Code Development'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'SQL Code Development'
 		           ,@Finding       = 'Using SELECT *'
 		           ,@URLAnchor     = 'using-select-*';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1670,23 +1666,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 9
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'SQL Code Development'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'SQL Code Development'
 		           ,@Finding       = 'Using Hardcoded Database Name Reference'
 		           ,@URLAnchor     = 'using-hardcoded-database-name-reference';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1710,24 +1706,24 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 19
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'SQL Code Development'
+		           ,@Priority      = 5
+		           ,@FindingGroup = 'SQL Code Development'
 		           ,@Finding       = 'Not Using SET NOCOUNT ON in Stored Procedure or Trigger'
 		           ,@URLAnchor     = 'not-using-set-nocount-on-in-stored-procedure-or-trigger';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        /* Trigger */
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1751,12 +1747,12 @@ END;
 			        /* Stored Procedure */
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1781,23 +1777,23 @@ END;
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 15
-		           ,@Priority      = 10
-		           ,@FindingsGroup = 'SQL Code Development'
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'SQL Code Development'
 		           ,@Finding       = 'Using NOLOCK (READ UNCOMMITTED)'
 		           ,@URLAnchor     = 'using-nolock-read-uncommitted';
 		        /**********************************************************************************************************************/
-		        IF NOT EXISTS (SELECT 1 FROM #SkipChecks WHERE CheckId = @CheckId)
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
 			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 			
 			        SET @StringToExecute = N'
 				        INSERT INTO
-					        #DeveloperResults (CheckId, Database_Id, DatabaseName, FindingsGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
 				        SELECT
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingsGroup = ''' + CAST(@FindingsGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1841,7 +1837,7 @@ END;
 
         /**********************************************************************************************************************
 	    ** Output the results
-	    ** After populating the #DeveloperResults table, time to dump it out.
+	    ** After populating the #Finding table, time to dump it out.
 	    **********************************************************************************************************************/
         DECLARE @Separator AS CHAR(1);
         IF @OutputType = 'RSV' SET @Separator = CHAR(31);
@@ -1849,161 +1845,122 @@ END;
 
         IF @OutputType = 'COUNT'
             BEGIN
-                SELECT Warnings = COUNT(*)FROM #DeveloperResults;
+                SELECT Warnings = COUNT(*)FROM #Finding;
             END;
         ELSE IF @OutputType IN ('CSV', 'RSV')
                  BEGIN
-
+                    -- SQL Prompt formatting off
                      SELECT
-                         Result = CAST(Priority AS NVARCHAR(100)) + @Separator + CAST(CheckId AS NVARCHAR(100)) + @Separator + COALESCE(FindingsGroup, '(N/A)') + @Separator + COALESCE(Finding, '(N/A)') + @Separator + COALESCE(DatabaseName, '(N/A)') + @Separator + COALESCE(URL, '(N/A)') + @Separator + COALESCE(Details, '(N/A)')
+                         Result =
+                            COALESCE(F.DatabaseName, '(N/A)') + @Separator +
+                            COALESCE(F.SchemaName, '(N/A)') + @Separator +
+                            COALESCE(F.ObjectName, '(N/A)') + @Separator +
+                            COALESCE(F.ObjectType, '(N/A)') + @Separator +
+                            COALESCE(F.FindingGroup, '(N/A)') + @Separator +
+                            COALESCE(F.Finding, '(N/A)') + @Separator +
+                            COALESCE(F.Details, '(N/A)') + @Separator +
+                            COALESCE(F.URL, '(N/A)') + @Separator +
+                            CAST(F.CheckId AS NVARCHAR(100)) + @Separator +
+                            CAST(F.Database_Id AS NVARCHAR(100)) + @Separator +
+                            CAST(F.Schema_Id AS NVARCHAR(100)) + @Separator +
+                            CAST(F.Object_Id AS NVARCHAR(100)) + @Separator +
+                            CAST(F.Priority AS NVARCHAR(100)) + @Separator +
+                            COALESCE(F.URL, '(N/A)') + @Separator +
+                            'INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ')'
                      FROM
-                         #DeveloperResults
+                         #Finding AS F
                      ORDER BY
-                         Priority
-                        ,FindingsGroup
-                        ,Finding
-                        ,DatabaseName
-                        ,Details;
-                 END;
-        ELSE IF @OutputXMLasNVARCHAR = 1
-                AND @OutputType <> 'NONE'
-                 BEGIN
-                     SELECT
-                         Priority
-                        ,FindingsGroup
-                        ,Finding
-                        ,DatabaseName
-                        ,URL
-                        ,Details
-                        ,CheckId
-                     FROM
-                         #DeveloperResults
-                     ORDER BY
-                         Priority
-                        ,FindingsGroup
-                        ,Finding
-                        ,DatabaseName
-                        ,Details;
-                 END;
-        ELSE IF @OutputType = 'MARKDOWN'
-                 BEGIN;
-                     WITH Results
-                       AS (
-                           SELECT
-                               rownum = ROW_NUMBER() OVER (ORDER BY DR.Priority, DR.FindingsGroup, DR.Finding, DR.DatabaseName, DR.Details)
-                              ,DR.DeveloperResultsId
-                              ,DR.CheckId
-                              ,DR.DatabaseName
-                              ,DR.Priority
-                              ,DR.FindingsGroup
-                              ,DR.Finding
-                              ,DR.URL
-                              ,DR.Details
-                           FROM
-                               #DeveloperResults AS DR
-                           WHERE
-                               DR.Priority          > 0
-                               AND DR.Priority      < 255
-                               AND DR.FindingsGroup IS NOT NULL
-                               AND DR.Finding IS NOT NULL
-                               AND DR.FindingsGroup <> 'Security' /* Specifically excluding security checks for public exports */
-                       )
-                     SELECT
-                         CASE
-                             WHEN r.Priority <> COALESCE(rPrior.Priority, 0)
-                                  OR r.FindingsGroup <> rPrior.FindingsGroup THEN
-                                 @LineFeed + N'**Priority ' + CAST(COALESCE(r.Priority, N'') AS NVARCHAR(5)) + N': ' + COALESCE(r.FindingsGroup, N'') + N'**:' + @LineFeed + @LineFeed
-                             ELSE
-                                 N''
-                         END + CASE
-                                   WHEN r.Finding <> COALESCE(rPrior.Finding, N'')
-                                        AND r.Finding <> rNext.Finding THEN
-                                       N'- ' + COALESCE(r.Finding, N'') + N' ' + COALESCE(r.DatabaseName, N'') --+ N' - ' + COALESCE(r.Details, N'') + @LineFeed
-                                   WHEN r.Finding <> COALESCE(rPrior.Finding, N'')
-                                        AND r.Finding = rNext.Finding
-                                        AND r.Details = rNext.Details THEN
-                                       N'- ' + COALESCE(r.Finding, N'') + N' - ' + COALESCE(r.Details, N'') + @LineFeed + @LineFeed + N'    * ' + COALESCE(r.DatabaseName, N'') + @LineFeed
-                                   WHEN r.Finding <> COALESCE(rPrior.Finding, N'')
-                                        AND r.Finding = rNext.Finding THEN
-                                       N'- ' + COALESCE(r.Finding, N'') + @LineFeed + CASE
-                                                                                          WHEN r.DatabaseName IS NULL THEN
-                                                                                              N''
-                                                                                          ELSE
-                                                                                              N'    * ' + COALESCE(r.DatabaseName, N'')
-                                                                                      END + CASE
-                                                                                                WHEN r.Details <> rPrior.Details THEN
-                                                                                                    N' - ' + COALESCE(r.Details, N'') + @LineFeed
-                                                                                                ELSE
-                                                                                                    ''
-                                                                                            END
-                                   ELSE
-                                       CASE
-                                           WHEN r.DatabaseName IS NULL THEN
-                                               N''
-                                           ELSE
-                                               N'    * ' + COALESCE(r.DatabaseName, N'')
-                                       END + CASE
-                                                 WHEN r.Details <> rPrior.Details THEN
-                                                     N' - ' + COALESCE(r.Details, N'') + @LineFeed
-                                                 ELSE
-                                                     N'' + @LineFeed
-                                             END
-                               END + @LineFeed
-                     FROM
-                         Results                 AS r
-                         LEFT OUTER JOIN Results AS rPrior ON r.rownum = rPrior.rownum + 1
-                         LEFT OUTER JOIN Results AS rNext ON r.rownum  = rNext.rownum - 1
-                     ORDER BY
-                         r.rownum
-                     FOR XML PATH(N'');
+                         F.DatabaseName
+                        ,F.SchemaName
+                        ,F.ObjectName
+                        ,F.ObjectType
+                        ,F.FindingGroup
+                        ,F.Finding;
+                    -- SQL Prompt formatting on
                  END;
         ELSE IF @OutputType = 'XML'
                  BEGIN
                      SELECT
-                         Priority
-                        ,FindingsGroup
-                        ,Finding
-                        ,DatabaseName
-                        ,URL
-                        ,Details
-                        ,CheckId
+                         F.DatabaseName
+                        ,F.SchemaName
+                        ,F.ObjectName
+                        ,F.ObjectType
+                        ,F.FindingGroup
+                        ,F.Finding
+                        ,F.Details
+                        ,F.URL
+                        ,F.CheckId
+                        ,F.Database_Id
+                        ,F.Schema_Id
+                        ,F.Object_Id
+                        ,F.Priority
+                        ,SkipCheckTSQL = 'INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');'
                      FROM
-                         #DeveloperResults
+                         #Finding AS F
                      ORDER BY
-                         Priority
-                        ,FindingsGroup
-                        ,Finding
-                        ,DatabaseName
-                        ,Details
-                     FOR XML PATH('Result'), ROOT('sp_Develop_Output');
+                         F.DatabaseName
+                        ,F.SchemaName
+                        ,F.ObjectName
+                        ,F.ObjectType
+                        ,F.FindingGroup
+                        ,F.Finding
+                     FOR XML PATH('Finding'), ROOT('sp_Develop_Output');
                  END;
         ELSE IF @OutputType <> 'NONE'
                  BEGIN
                      SELECT
-                         DR.DatabaseName
-                        ,DR.SchemaName
-                        ,DR.ObjectName
-                        ,DR.ObjectType
-                        ,DR.FindingsGroup
-                        ,DR.Finding
-                        ,DR.Details
-                        ,DR.URL
-                        ,DR.CheckId
-                        ,DR.Database_Id
-                        ,DR.Schema_Id
-                        ,DR.Object_Id
-                        ,DR.Priority
+                         F.DatabaseName
+                        ,F.SchemaName
+                        ,F.ObjectName
+                        ,F.ObjectType
+                        ,F.FindingGroup
+                        ,F.Finding
+                        ,F.Details
+                        ,F.URL
+                        ,F.CheckId
+                        ,F.Database_Id
+                        ,F.Schema_Id
+                        ,F.Object_Id
+                        ,F.Priority
+                        ,SkipCheckTSQL = 'INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');'
                      FROM
-                         #DeveloperResults AS DR
+                         #Finding AS F
+                     WHERE
+                         NOT EXISTS (
+                         SELECT
+                             SC.ServerName
+                            ,SC.DatabaseName
+                            ,SC.ObjectName
+                            ,SC.CheckId
+                         FROM
+                             #SkipCheck AS SC
+                         WHERE
+                             (SC.SchemaName    = F.SchemaName OR SC.SchemaName IS NULL)
+                             AND SC.ObjectName = F.ObjectName
+                             AND SC.CheckId    = F.CheckId
+                     )
+                         AND NOT EXISTS (
+                         SELECT
+                             SC.ServerName
+                            ,SC.DatabaseName
+                            ,SC.ObjectName
+                            ,SC.CheckId
+                         FROM
+                             #SkipCheck AS SC
+                         WHERE
+                             (SC.SchemaName    = F.SchemaName OR SC.SchemaName IS NULL)
+                             AND SC.ObjectName = F.ObjectName
+                             AND SC.CheckId IS NULL
+                     )
                      ORDER BY
-                         DR.Priority
-                        ,DR.DatabaseName
-                        ,DR.SchemaName
-                        ,DR.ObjectName
-                        ,DR.FindingsGroup
-                        ,DR.Finding;
+                         F.DatabaseName
+                        ,F.SchemaName
+                        ,F.ObjectName
+                        ,F.ObjectType
+                        ,F.FindingGroup
+                        ,F.Finding;
                  END;
 
-        DROP TABLE #DeveloperResults;
+        DROP TABLE #Finding;
 
     END;

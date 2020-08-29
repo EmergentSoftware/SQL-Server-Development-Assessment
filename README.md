@@ -253,7 +253,7 @@ FROM
 
 Table and view names should be singular, for example, "Customer" instead of "Customers". This rule is applicable because tables are patterns for storing an entity as a record – they are analogous to Classes serving up class instances. And if for no other reason than readability, you avoid errors due to the pluralization of English nouns in the process of database development. For instance, activity becomes activities, ox becomes oxen, person becomes people or persons, alumnus becomes alumni, while data remains data.
 
-If writing code for n data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
+If writing code for a data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
 
 
 

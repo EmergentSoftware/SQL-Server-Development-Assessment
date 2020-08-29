@@ -1865,8 +1865,7 @@ END;
                             CAST(F.Schema_Id AS NVARCHAR(100)) + @Separator +
                             CAST(F.Object_Id AS NVARCHAR(100)) + @Separator +
                             CAST(F.Priority AS NVARCHAR(100)) + @Separator +
-                            COALESCE(F.URL, '(N/A)') + @Separator +
-                            'INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ')'
+                            COALESCE(F.URL, '(N/A)')
                      FROM
                          #Finding AS F
                      ORDER BY
@@ -1894,7 +1893,7 @@ END;
                         ,F.Schema_Id
                         ,F.Object_Id
                         ,F.Priority
-                        ,SkipCheckTSQL = 'INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');'
+                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
                      FROM
                          #Finding AS F
                      ORDER BY
@@ -1922,7 +1921,7 @@ END;
                         ,F.Schema_Id
                         ,F.Object_Id
                         ,F.Priority
-                        ,SkipCheckTSQL = 'INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');'
+                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
                      FROM
                          #Finding AS F
                      WHERE

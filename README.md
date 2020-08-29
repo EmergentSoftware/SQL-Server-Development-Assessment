@@ -27,8 +27,8 @@ EXECUTE dbo.sp_Develop
 |@GetAllDatabases|Runs checks across all of the databases on the server instead of just your current database context. Does not work on Azure SQL Server.|
 |@SkipChecksServer|The linked server name that stores the skip checks|
 |@SkipChecksDatabase|The database that stores the skip checks|
-|@SkipChecksSchema|The schema for the skip check table|
-|@SkipChecksTable|The table that stores the skip checks|
+|@SkipChecksSchema|The schema for the skip check table, when you pass in a value the SkipCheckTSQL column will be used|
+|@SkipChecksTable|The table that stores the skip checks, when you pass in a value the SkipCheckTSQL column will be used|
 |@BringThePain |If you’ve got more than 50 databases on the server, this only works if you also pass in @BringThePain = 1, because it’s gonna be slow.|
 |@OutputType|TABLE = table<br/>COUNT = row with number found<br/>MARKDOWN = bulleted list<br/>XML = table output as XML<br/>NONE = none|
 |@OutputXMLasNVARCHAR|Set to 1 if you like your XML out as NVARCHAR.|
@@ -62,7 +62,7 @@ GO
 
 The CheckId column refers to the list below. You can also scroll to the right in the sp_Develop 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
 
-You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to insert that record into your skip checks table.
+You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to insert that record into your skip check table.
 
 Refer to the example checks below and each comment for its use.
 

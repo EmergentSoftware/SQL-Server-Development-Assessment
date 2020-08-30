@@ -1859,10 +1859,9 @@ END;
                             COALESCE(F.FindingGroup, '(N/A)') + @Separator +
                             COALESCE(F.Finding, '(N/A)') + @Separator +
                             COALESCE(F.Details, '(N/A)') + @Separator +
-                            COALESCE(F.URL, '(N/A)') + @Separator +
-                            CAST(F.CheckId AS NVARCHAR(100)) + @Separator +
+                            COALESCE(F.URL, '(N/A)') + @Separator +                            
                             CAST(F.Priority AS NVARCHAR(100)) + @Separator +
-                            COALESCE(F.URL, '(N/A)')
+                            CAST(F.CheckId AS NVARCHAR(100))
                      FROM
                          #Finding AS F
                      ORDER BY
@@ -1885,9 +1884,9 @@ END;
                         ,F.Finding
                         ,F.Details
                         ,F.URL
-                        ,F.CheckId
-                        ,F.Priority
                         ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
+                        ,F.Priority
+                        ,F.CheckId
                      FROM
                          #Finding AS F
                      ORDER BY
@@ -1910,9 +1909,9 @@ END;
                         ,F.Finding
                         ,F.Details
                         ,F.URL
-                        ,F.CheckId
-                        ,F.Priority
                         ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
+                        ,F.Priority
+                        ,F.CheckId
                      FROM
                          #Finding AS F
                      WHERE

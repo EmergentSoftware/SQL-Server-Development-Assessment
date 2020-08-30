@@ -1845,7 +1845,7 @@ END;
 
         IF @OutputType = 'COUNT'
             BEGIN
-                SELECT Warnings = COUNT(*)FROM #Finding;
+                SELECT Warnings = COUNT(*) FROM #Finding;
             END;
         ELSE IF @OutputType IN ('CSV', 'RSV')
                  BEGIN
@@ -1861,9 +1861,6 @@ END;
                             COALESCE(F.Details, '(N/A)') + @Separator +
                             COALESCE(F.URL, '(N/A)') + @Separator +
                             CAST(F.CheckId AS NVARCHAR(100)) + @Separator +
-                            CAST(F.Database_Id AS NVARCHAR(100)) + @Separator +
-                            CAST(F.Schema_Id AS NVARCHAR(100)) + @Separator +
-                            CAST(F.Object_Id AS NVARCHAR(100)) + @Separator +
                             CAST(F.Priority AS NVARCHAR(100)) + @Separator +
                             COALESCE(F.URL, '(N/A)')
                      FROM
@@ -1889,9 +1886,6 @@ END;
                         ,F.Details
                         ,F.URL
                         ,F.CheckId
-                        ,F.Database_Id
-                        ,F.Schema_Id
-                        ,F.Object_Id
                         ,F.Priority
                         ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
                      FROM
@@ -1917,9 +1911,6 @@ END;
                         ,F.Details
                         ,F.URL
                         ,F.CheckId
-                        ,F.Database_Id
-                        ,F.Schema_Id
-                        ,F.Object_Id
                         ,F.Priority
                         ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
                      FROM

@@ -69,14 +69,14 @@ Another use case for skipping checks is to indicate that you have acknowledged a
 #### Create a table to hold the list of checks you want to skip
 
 ```sql
-CREATE TABLE dbo.DevelopChecksToSkip (
-    DevelopChecksToSkipId INT           IDENTITY(1, 1) NOT NULL
+CREATE TABLE dbo.DevelopCheckToSkip (
+    DevelopCheckToSkipId INT           IDENTITY(1, 1) NOT NULL
    ,ServerName            NVARCHAR(128) NULL
    ,DatabaseName          NVARCHAR(128) NULL
    ,SchemaName            NVARCHAR(128) NULL
    ,ObjectName            NVARCHAR(128) NULL
    ,CheckId               INT           NULL
-   ,CONSTRAINT DevelopChecksToSkip_DevelopChecksToSkipId PRIMARY KEY CLUSTERED (DevelopChecksToSkipId ASC)
+   ,CONSTRAINT DevelopCheckToSkip_DevelopChecksToSkipId PRIMARY KEY CLUSTERED (DevelopCheckToSkipId ASC)
 );
 GO
 ```
@@ -91,7 +91,7 @@ Refer to the example checks below and each comment for its use.
 
 ```sql
 INSERT INTO
-    dbo.DevelopChecksToSkip (ServerName, DatabaseName, SchemaName, ObjectName, CheckId)
+    dbo.DevelopCheckToSkip (ServerName, DatabaseName, SchemaName, ObjectName, CheckId)
 VALUES
      (N'SQL2008', NULL, NULL, NULL, NULL)                             /* Skips all checks, for every database, on the SQL2008 SQL Server */
     ,(N'SQL2012', N'AdventureWorks2012', NULL, NULL, NULL)            /* Skips all checks, in the AdventureWorks2012 database, on the SQL2012 SQL Server */

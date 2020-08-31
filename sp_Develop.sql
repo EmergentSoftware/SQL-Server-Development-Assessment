@@ -744,7 +744,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -786,7 +786,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -828,7 +828,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -865,7 +865,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -898,7 +898,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -941,7 +941,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -985,7 +985,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1031,7 +1031,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1071,7 +1071,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1113,7 +1113,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1141,7 +1141,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1169,7 +1169,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1210,7 +1210,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1250,7 +1250,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1292,7 +1292,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1335,7 +1335,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1380,7 +1380,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1426,7 +1426,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1470,7 +1470,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1512,7 +1512,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1552,7 +1552,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1594,7 +1594,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1633,7 +1633,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1682,7 +1682,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1723,7 +1723,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1752,7 +1752,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1793,7 +1793,7 @@ END;
 					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
 				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
 				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
-				           ,FindingGroup = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
 				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
@@ -1845,7 +1845,7 @@ END;
 
         IF @OutputType = 'COUNT'
             BEGIN
-                SELECT Warnings = COUNT(*)FROM #Finding;
+                SELECT Warnings = COUNT(*) FROM #Finding;
             END;
         ELSE IF @OutputType IN ('CSV', 'RSV')
                  BEGIN
@@ -1859,13 +1859,9 @@ END;
                             COALESCE(F.FindingGroup, '(N/A)') + @Separator +
                             COALESCE(F.Finding, '(N/A)') + @Separator +
                             COALESCE(F.Details, '(N/A)') + @Separator +
-                            COALESCE(F.URL, '(N/A)') + @Separator +
-                            CAST(F.CheckId AS NVARCHAR(100)) + @Separator +
-                            CAST(F.Database_Id AS NVARCHAR(100)) + @Separator +
-                            CAST(F.Schema_Id AS NVARCHAR(100)) + @Separator +
-                            CAST(F.Object_Id AS NVARCHAR(100)) + @Separator +
+                            COALESCE(F.URL, '(N/A)') + @Separator +                            
                             CAST(F.Priority AS NVARCHAR(100)) + @Separator +
-                            COALESCE(F.URL, '(N/A)')
+                            CAST(F.CheckId AS NVARCHAR(100))
                      FROM
                          #Finding AS F
                      ORDER BY
@@ -1888,12 +1884,9 @@ END;
                         ,F.Finding
                         ,F.Details
                         ,F.URL
-                        ,F.CheckId
-                        ,F.Database_Id
-                        ,F.Schema_Id
-                        ,F.Object_Id
-                        ,F.Priority
                         ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
+                        ,F.Priority
+                        ,F.CheckId
                      FROM
                          #Finding AS F
                      ORDER BY
@@ -1916,12 +1909,9 @@ END;
                         ,F.Finding
                         ,F.Details
                         ,F.URL
-                        ,F.CheckId
-                        ,F.Database_Id
-                        ,F.Schema_Id
-                        ,F.Object_Id
-                        ,F.Priority
                         ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
+                        ,F.Priority
+                        ,F.CheckId
                      FROM
                          #Finding AS F
                      WHERE

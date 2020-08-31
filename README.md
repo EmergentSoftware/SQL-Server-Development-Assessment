@@ -1,17 +1,17 @@
 # SQL Server Assess Overview
 The SQL Server Assess project contains the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure. It can be used by database developers, software developers and for performing database code (smell) reviews.
 
-This lists the database development best practice checks and naming conventions checks for the stored procedure named sp_Develop.
+This lists the database development best practice checks and naming conventions checks for the stored procedure named [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql).
 
 ## sp_Develop Install Instructions
 
 It is recommend installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine. 
 
-On Azure SQL Server you will need to install the sp_Develop stored procedure in the user database.
+On Azure SQL Server you will need to install the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure in the user database.
 
 ## sp_Develop Usage Instructions
 
-After installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure open SSMS and run in the database you wish to check for database development best practices.
+After installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure open SQL Server Management Studio and run in the database you wish to check for database development best practices.
 
 ```sql
 EXEC dbo.sp_Develop
@@ -19,20 +19,43 @@ EXEC dbo.sp_Develop
 
 [Check out the parameter section for more options](#Parameter-Explanations)
 
+## sp_Develop Results
+
+After running [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) the 'Results' tab will contain the checks findings.
+
+![sp_Develop Results](Images/sp_Develop_Results.png)
+
+The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectType, FindingGroup, Finding. This allows you to review all the checks for an object at the same time.
+
+#### Column Results Details
+
+|Column Name|Details|
+|--|--|
+|DatabaseName|Can be run for multiple databases so this will show you the database with the potential issue|
+|SchemaName|This is the schema for the object that might have an issue|
+|ObjectName|This can be anything from user tables, views stored procedures, functions, …|
+|FindingGroup|The high level grouping for the check<br/> - Naming Conventions<br/>- Table Conventions<br/>- Data Type Conventions<br/>- SQL Code Development<br/>- Running Issues|
+|Finding|The specific potential issue we the check is looking for|
+|Details|Additional details about the potential issue. This does not go into in-depth details of the potential issue but should give you a heads up of what to look for.|
+|URL|Copy and paste this link into a browser to view the README.md write up for the potential issue|
+|SkipCheckTSQL|In this column you will find a generated TSQL script INSERT |
+|Priority|The lower the number the more severe the potential issue is to address|
+|CheckId|Every check is uniquely numbered|
+
+
 ## sp_Develop Parameter Explanations
 
 |Parameter|Details|
 |--|--|
 |@DatabaseName|Defaults to current DB if not specified|
 |@GetAllDatabases|Runs checks across all of the databases on the server instead of just your current database context. Does not work on Azure SQL Server.|
+|@BringThePain |If you’ve got more than 50 databases on the server, this only works if you also pass in @BringThePain = 1, because it’s gonna be slow.|
 |@SkipChecksServer|The linked server name that stores the skip checks|
 |@SkipChecksDatabase|The database that stores the skip checks|
 |@SkipChecksSchema|The schema for the skip check table, when you pass in a value the SkipCheckTSQL column will be used|
 |@SkipChecksTable|The table that stores the skip checks, when you pass in a value the SkipCheckTSQL column will be used|
-|@BringThePain |If you’ve got more than 50 databases on the server, this only works if you also pass in @BringThePain = 1, because it’s gonna be slow.|
 |@OutputType|TABLE = table<br/>COUNT = row with number found<br/>MARKDOWN = bulleted list<br/>XML = table output as XML<br/>NONE = none|
-|@OutputXMLasNVARCHAR|Set to 1 if you like your XML out as NVARCHAR.|
-|@Debug|Default 0. When 1, we print out messages of what we're doing in the messages tab of SSMS. When 2, we print out the dynamic SQL query of the check.|
+|@Debug|Default 0. When 1, we print out messages of what we're doing in the messages tab of SQL Server Management Studio. When 2, we print out the dynamic SQL query of the check.|
 |@Version|Output variable to check the version number.|
 |@VersionDate|Output variable to check the version date.|
 |@VersionCheckMode|Will set the version output variables and return without running the stored procedure.|
@@ -107,7 +130,7 @@ The 'Test Database' folder contains the RedGate SQL Source Control. Use this dat
 **Quick Steps to Setup and Use:**
 
 1. Create new database 'spDevelop' and select in Object Browser
-2. Open RedGate SQL Source Control in SSMS
+2. Open RedGate SQL Source Control in SQL Server Management Studio
 3. Click 'Setup' tab
 4. Select 'Link to my source control system' and click 'Next'
 5. Browser to '..\Test Database' cloned folder and click 'Link'
@@ -116,7 +139,7 @@ The 'Test Database' folder contains the RedGate SQL Source Control. Use this dat
 8. Develop objects to use when you create a new check
 9. Click 'Commit' tab
 10. Select objects to be pulled back into the branch, add comment, click the 'Commit' button and click the 'Push' button
-11. **Note:** there are exclude fiters setup for invalid objects created in the post script. Do not check these objects back into the branch.
+11. **Note:** there are exclude filters setup for invalid objects created in the post script. Do not check these objects back into the branch.
 
 
 **RedGate SQL Source Control Documentation**
@@ -133,7 +156,7 @@ Included in this project are settings you can use for database development. Usin
 The settings are located in the project "[\SQL-Server-Assess\Development Application Settings\Microsoft\SQL Server Management Studio\General Settings](https://github.com/EmergentSoftware/SQL-Server-Assess/tree/master/Development%20Application%20Settings/Microsoft/SQL%20Server%20Management%20Studio/General%20Settings)"
 
 1. Cloned or forked the repo
-2. In SSMS navigate to "Tools > Options > Environment > Import and Export Settings"
+2. In SQL Server Management Studio navigate to "Tools > Options > Environment > Import and Export Settings"
 3. Check "Use team settings file" and browse to "..\SQL-Server-Assess\Development Application Settings\Microsoft\SQL Server Management Studio\General Settings\SSMS.vssettings"
 4. Click the "OK" button
 
@@ -253,7 +276,7 @@ FROM
 
 Table and view names should be singular, for example, "Customer" instead of "Customers". This rule is applicable because tables are patterns for storing an entity as a record – they are analogous to Classes serving up class instances. And if for no other reason than readability, you avoid errors due to the pluralization of English nouns in the process of database development. For instance, activity becomes activities, ox becomes oxen, person becomes people or persons, alumnus becomes alumni, while data remains data.
 
-If writing code for n data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
+If writing code for a data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
 
 
 
@@ -264,9 +287,9 @@ Never use a descriptive prefix such as tbl_. This 'reverse-Hungarian' notation h
 
 The use of the tbl_prefix for a table, often called "tibbling", came from databases imported from Access when SQL Server was first introduced. Unfortunately, this was an access convention inherited from Visual Basic, a loosely typed language. 
 
-SQL Server is a strongly typed language. There is never a doubt what type of object something is in SQL Server if you know its name, schema and database, because its type is there in sys.objects: Also it is obvious from the usage. Columns can be easily identified as such and character columns would have to be checked for length in the Object Browser anyway or Intellisense tooltip hover in SSMS.
+SQL Server is a strongly typed language. There is never a doubt what type of object something is in SQL Server if you know its name, schema and database, because its type is there in sys.objects: Also it is obvious from the usage. Columns can be easily identified as such and character columns would have to be checked for length in the Object Browser anyway or Intellisense tool-tip hover in SQL Server Management Studio.
 
-Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvious in SQL statements which items are columns (before or after the FROM clause). Do not use a data type prefix for the column either, for example, "IntCustomerId" for a numeric type or "VcName" for a varchar type.
+Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvious in SQL statements which items are columns (before or after the FROM clause). Do not use a data type prefix for the column either, for example, "IntCustomerId" for a numeric type or "VcName" for a VARCHAR type.
 
 
 
@@ -508,7 +531,7 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 
 Your scalar function is not inlineable. This means it will perform poorly.
 
-Review the [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements) to determine what changes you can make so it can go inline. If you cannot, you should inline your scalar function in SQL query. This means duplicate the code you would put in the scalar function in your SQL code. SQL Server 2019 & Azure SQL Database (150 database compatibility level) can inline some scalar functions. 
+Review the [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements) to determine what changes you can make so it can go inline. If you cannot, you should in-line your scalar function in SQL query. This means duplicate the code you would put in the scalar function in your SQL code. SQL Server 2019 & Azure SQL Database (150 database compatibility level) can inline some scalar functions. 
 
 Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
 
@@ -803,7 +826,7 @@ Views do not lend themselves to being deeply nested. Views that reference views 
 ## Invalid Objects
 **Check Id:** [NONE YET]
 
-This check found objects that were deleted, renamed. Use can also run "Find Invalid Objects" with RedGate SQL Prompt in SSMS.
+This check found objects that were deleted, renamed. Use can also run "Find Invalid Objects" with RedGate SQL Prompt in SQL Server Management Studio.
 
 Try running EXEC sp_refreshsqlmodule or sp_refreshview.
 

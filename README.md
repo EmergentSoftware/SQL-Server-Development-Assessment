@@ -76,7 +76,7 @@ CREATE TABLE dbo.DevelopCheckToSkip (
    ,SchemaName            NVARCHAR(128) NULL
    ,ObjectName            NVARCHAR(128) NULL
    ,CheckId               INT           NULL
-   ,CONSTRAINT DevelopCheckToSkip_DevelopChecksToSkipId PRIMARY KEY CLUSTERED (DevelopCheckToSkipId ASC)
+   ,CONSTRAINT DevelopCheckToSkip_DevelopCheckToSkipId PRIMARY KEY CLUSTERED (DevelopCheckToSkipId ASC)
 );
 GO
 ```

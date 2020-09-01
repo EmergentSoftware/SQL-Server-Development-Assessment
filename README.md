@@ -298,8 +298,8 @@ Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvio
 
 No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 
-* Names should be "TableName_Column1_Column2_Column3" 
-* Names should indicate if there are included columns with "TableName_Column1_Column2_Column3_Includes"
+* Names should be "Column1_Column2_Column3" 
+* Names should indicate if there are included columns with "Column1_Column2_Column3_Includes"
 
 
 

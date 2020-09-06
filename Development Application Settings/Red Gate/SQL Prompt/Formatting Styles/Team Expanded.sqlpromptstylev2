@@ -17,12 +17,12 @@
   <ClosingParenthesisAlignment>ToOpeningBracket</ClosingParenthesisAlignment>
   <CollapseCaseExpressionIfShort>false</CollapseCaseExpressionIfShort>
   <CollapseCaseIfShortCharacterCount>75</CollapseCaseIfShortCharacterCount>
-  <CollapseIfShortControlFlowCharacterCount>78</CollapseIfShortControlFlowCharacterCount>
+  <CollapseIfShortControlFlowCharacterCount>120</CollapseIfShortControlFlowCharacterCount>
   <CollapseIfShortDdlCharacterCount>78</CollapseIfShortDdlCharacterCount>
   <CollapseIfShortDmlCharacterCount>78</CollapseIfShortDmlCharacterCount>
   <CollapseIfShortParenthesesContentsCharacterCount>78</CollapseIfShortParenthesesContentsCharacterCount>
   <CollapseIfShortSubqueryCharacterCount>78</CollapseIfShortSubqueryCharacterCount>
-  <CollapseShortControlFlowStatements>true</CollapseShortControlFlowStatements>
+  <CollapseShortControlFlowStatements>false</CollapseShortControlFlowStatements>
   <CollapseShortDdlStatements>true</CollapseShortDdlStatements>
   <CollapseShortDmlStatements>true</CollapseShortDmlStatements>
   <CollapseShortParenthesesContents>true</CollapseShortParenthesesContents>

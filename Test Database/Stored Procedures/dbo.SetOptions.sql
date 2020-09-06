@@ -1,0 +1,34 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[SetOptions]
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET NOEXEC ON;
+	SET QUOTED_IDENTIFIER OFF;
+    SET ARITHABORT OFF;
+    SET ANSI_DEFAULTS OFF;
+    SET ANSI_NULLS OFF;
+    SET ANSI_NULL_DFLT_ON OFF;
+    SET ANSI_WARNINGS OFF;
+    SET ANSI_PADDING OFF;
+    SET NUMERIC_ROUNDABORT ON;
+    SET CONCAT_NULL_YIELDS_NULL OFF;
+    SET ROWCOUNT 100;
+    SET XACT_ABORT ON;
+    SET IMPLICIT_TRANSACTIONS ON;
+    SET ARITHIGNORE OFF;
+    SET LOCK_TIMEOUT 1;
+    SET FMTONLY ON;
+    --SET PARSEONLY OFF;
+
+    SELECT 1;
+END;
+GO

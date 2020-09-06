@@ -47,35 +47,47 @@ AS
         SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
         /**********************************************************************************************************************
-	    ** Declare some varibles	
+	    ** Declare some varibles
 	    **********************************************************************************************************************/
 
         DECLARE
-            @LineFeed          NVARCHAR(5)
-           ,@NumDatabases      INT
-           ,@Message           NVARCHAR(4000)
-           ,@StringToExecute   NVARCHAR(MAX)
-           ,@ScriptVersionName NVARCHAR(50)
-           ,@ErrorSeverity     INT
-           ,@ErrorState        INT
-           ,@DatabaseId        INT
-           ,@CheckId           INT
-           ,@FindingGroup      VARCHAR(100)
-           ,@Finding           VARCHAR(200)
-           ,@URLBase           VARCHAR(100)
-           ,@URLAnchor         VARCHAR(400)
-           ,@Priority          INT;
+            @LineFeed            NVARCHAR(5)
+           ,@NumDatabases        INT
+           ,@Message             NVARCHAR(4000)
+           ,@StringToExecute     NVARCHAR(MAX)
+           ,@ScriptVersionName   NVARCHAR(50)
+           ,@ErrorSeverity       INT
+           ,@ErrorState          INT
+           ,@DatabaseId          INT
+           ,@CheckId             INT
+           ,@FindingGroup        VARCHAR(100)
+           ,@Finding             VARCHAR(200)
+           ,@URLBase             VARCHAR(100)
+           ,@URLAnchor           VARCHAR(400)
+           ,@Priority            INT
+           ,@ProductVersion      NVARCHAR(128)
+           ,@ProductVersionMajor DECIMAL(10, 2)
+           ,@ProductVersionMinor DECIMAL(10, 2);
 
-        SET @Version = '0.10.1';
-        SET @VersionDate = '20200829';
+
+        /**********************************************************************************************************************
+	    ** Setting some varibles
+	    **********************************************************************************************************************/
+
+        SET @Version = '0.11.5';
+        SET @VersionDate = '20200906';
         SET @URLBase = 'https://github.com/EmergentSoftware/SQL-Server-Assess#';
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);
         SET @ScriptVersionName = N'sp_Develop v' + @Version + N' - ' + DATENAME(MONTH, @VersionDate) + N' ' + RIGHT('0' + DATENAME(DAY, @VersionDate), 2) + N', ' + DATENAME(YEAR, @VersionDate);
+        SET @ProductVersion = CAST(SERVERPROPERTY('ProductVersion') AS NVARCHAR(128));
+        SET @ProductVersionMajor = SUBSTRING(@ProductVersion, 1, CHARINDEX('.', @ProductVersion) + 1);
+        SET @ProductVersionMinor = PARSENAME(CONVERT(VARCHAR(32), @ProductVersion), 2);
 
-        IF @VersionCheckMode = 1 BEGIN
-RETURN 0;
-END;
+        IF @VersionCheckMode = 1
+            BEGIN
+                RETURN 0;
+            END;
 
         IF @Debug IN (1, 2)
             BEGIN
@@ -93,13 +105,10 @@ END;
 	    ** 
 	    ** Create other temp tables
 	    **********************************************************************************************************************/
-
-        -- SQL Prompt formatting off
         IF OBJECT_ID('tempdb..#Finding') IS NOT NULL
-        BEGIN
-            DROP TABLE #Finding;
-        END;
-        -- SQL Prompt formatting on
+            BEGIN
+                DROP TABLE #Finding;
+            END;
 
         CREATE TABLE #Finding (
             DeveloperResultsId INT            IDENTITY(1, 1) NOT NULL
@@ -153,14 +162,14 @@ END;
 
         /**********************************************************************************************************************
         ** Skip Checks
-        ** [TODO: LINK TO README.md for instructions]
         **********************************************************************************************************************/
-        IF @SkipCheckTable IS NOT NULL
-           AND @SkipCheckSchema IS NOT NULL
-           AND @SkipCheckDatabase IS NOT NULL
+        IF (@SkipCheckTable IS NOT NULL AND RTRIM(LTRIM(@SkipCheckTable)) <> '')
+           AND (@SkipCheckSchema IS NOT NULL AND RTRIM(LTRIM(@SkipCheckSchema)) <> '')
+           AND (@SkipCheckDatabase IS NOT NULL AND RTRIM(LTRIM(@SkipCheckDatabase)) <> '')
             BEGIN
-
-                IF @Debug IN (1, 2) RAISERROR('Inserting SkipChecks', 0, 1) WITH NOWAIT;
+            
+                IF @Debug IN (1, 2)
+                    RAISERROR('Inserting SkipChecks', 0, 1) WITH NOWAIT;
 
                 SET @StringToExecute = N'
 				INSERT INTO
@@ -191,7 +200,9 @@ END;
                 OPTION (RECOMPILE);';
 
                 EXEC sys.sp_executesql @stmt = @StringToExecute;
-                IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+                IF @Debug = 2
+                   AND @StringToExecute IS NOT NULL
+                    PRINT @StringToExecute;
 
                 /* Check if we should be running checks on this server, exit out if not. */
                 IF EXISTS (
@@ -284,7 +295,6 @@ END;
 
         /**********************************************************************************************************************
 	    ** What databases are we going to ignore?
-        TODO: current dev
 	    **********************************************************************************************************************/
         INSERT INTO
             #DatabaseIgnore (DatabaseName, Reason)
@@ -404,7 +414,8 @@ END;
                 AND i.DatabaseName IS NULL
         );
         SET @Message = N'Number of databases to examine: ' + CAST(@NumDatabases AS NVARCHAR(50));
-        IF @Debug IN (1, 2) RAISERROR(@Message, 0, 1) WITH NOWAIT;
+        IF @Debug IN (1, 2)
+            RAISERROR(@Message, 0, 1) WITH NOWAIT;
 
         /**********************************************************************************************************************/
         SELECT
@@ -759,8 +770,8 @@ END;
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
 					        O.type IN (''U'', ''V'')
-					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AI, 1) = ''S''
-					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AI, 2) <> ''SS''
+					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 1) = ''S''
+					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 2) <> ''SS''
 					        AND O.NAME NOT IN (''sysdiagrams'', ''database_firewall_rules'');';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -801,9 +812,9 @@ END;
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id = T.object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
 				        WHERE
-					        C.name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ''%'' + T.name COLLATE SQL_Latin1_General_CP1_CI_AI + ''%''
+					        C.name COLLATE SQL_Latin1_General_CP1_CI_AS LIKE ''%'' + T.name COLLATE SQL_Latin1_General_CP1_CI_AS + ''%''
 					        AND C.name NOT IN (''InvoiceDate'', ''InvoiceNumber'', ''PartNumber'', ''CustomerNumber'', ''GroupName'', ''StateCode'', ''PhoneNumber'')
-					        AND C.name COLLATE SQL_Latin1_General_CP1_CI_AI <> T.name COLLATE SQL_Latin1_General_CP1_CI_AI + ''Id'';';
+					        AND C.name COLLATE SQL_Latin1_General_CP1_CI_AS <> T.name COLLATE SQL_Latin1_General_CP1_CI_AS + ''Id'';';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -844,9 +855,9 @@ END;
 				        WHERE
 					        O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'')
 					        AND (
-							        LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AI, 4) IN (''tab_'')
-							        OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AI, 3) IN (''tbl'', ''sp_'', ''xp_'', ''dt_'', ''fn_'', ''tr_'', ''usp'', ''usr'')
-							        OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AI, 2) IN (''tb'', ''t_'', ''vw'', ''fn'')
+							        LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 4) IN (''tab_'')
+							        OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 3) IN (''tbl'', ''sp_'', ''xp_'', ''dt_'', ''fn_'', ''tr_'', ''usp'', ''usr'')
+							        OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 2) IN (''tb'', ''t_'', ''vw'', ''fn'')
 							        OR O.name LIKE ''[v][A-Z]%'' COLLATE Latin1_General_BIN
 							        OR O.name LIKE ''[t][A-Z]%'' COLLATE Latin1_General_BIN
 							        OR O.name LIKE ''[s][p][A-Z]%'' COLLATE Latin1_General_BIN
@@ -880,8 +891,8 @@ END;
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T ON T.object_id = C.object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
 				        WHERE
-					        LEFT(C.name COLLATE SQL_Latin1_General_CP1_CI_AI, 4) IN (''fld_'', ''col_'')
-					        OR LEFT(C.name COLLATE SQL_Latin1_General_CP1_CI_AI, 2) IN (''u_'', ''c_'')
+					        LEFT(C.name COLLATE SQL_Latin1_General_CP1_CI_AS, 4) IN (''fld_'', ''col_'')
+					        OR LEFT(C.name COLLATE SQL_Latin1_General_CP1_CI_AS, 2) IN (''u_'', ''c_'')
 					        OR C.name LIKE ''[f][A-Z]%'' COLLATE Latin1_General_BIN
 					        OR C.name LIKE ''[c][A-Z]%'' COLLATE Latin1_General_BIN
 					        OR C.name LIKE ''[u][A-Z]%'' COLLATE Latin1_General_BIN;';
@@ -914,7 +925,7 @@ END;
 				        WHERE
 					        T.is_user_defined = 1
 					        AND (
-						         LEFT(T.name COLLATE SQL_Latin1_General_CP1_CI_AI, 3) IN (''ud_'')
+						         LEFT(T.name COLLATE SQL_Latin1_General_CP1_CI_AS, 3) IN (''ud_'')
 						         OR T.name LIKE ''[u][d][A-Z]%'' COLLATE Latin1_General_BIN
 						         );';
 
@@ -956,7 +967,7 @@ END;
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
 					        O.type_desc NOT IN (''DEFAULT_CONSTRAINT'', ''FOREIGN_KEY_CONSTRAINT'', ''PRIMARY_KEY_CONSTRAINT'', ''INTERNAL_TABLE'', ''CHECK_CONSTRAINT'', ''UNIQUE_CONSTRAINT'', ''SQL_INLINE_TABLE_VALUED_FUNCTION'', ''TYPE_TABLE'', ''SEQUENCE_OBJECT'')
-					        AND O.name NOT IN (''__RefactorLog'', ''__MigrationLog'', ''__MigrationLogCurrent'', ''__SchemaSnapshot'', ''__SchemaSnapshotDateDefault'', ''fn_diagramobjects'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''database_firewall_rules'', ''sp_Develop'', ''sp_WhoIsActive'')
+					        AND O.name NOT IN (''__RefactorLog'', ''__MigrationLog'', ''__MigrationLogCurrent'', ''__SchemaSnapshot'', ''__SchemaSnapshotDateDefault'', ''fn_diagramobjects'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''database_firewall_rules'', ''sp_Develop'', ''sp_WhoIsActive'', ''__EFMigrationsHistory'')
 					        AND (
 						        O.name LIKE ''%[^A-Z0-9@$#]%'' COLLATE Latin1_General_CI_AI /* contains illegal characters */
 						        OR O.name NOT LIKE ''[A-Z]%'' COLLATE Latin1_General_CI_AI /* doesn''t start with a character */
@@ -1310,7 +1321,7 @@ END;
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S ON S.schema_id     = T.schema_id				
 				        WHERE
 					        I.is_primary_key  = 1
-					        AND C.name COLLATE SQL_Latin1_General_CP1_CI_AI = ''id'';';
+					        AND C.name COLLATE SQL_Latin1_General_CP1_CI_AS = ''id'';';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1652,10 +1663,10 @@ END;
 					        LEFT OUTER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T ON T.object_id = O.parent_object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
-					        SM.definition LIKE ''%SELECT%*%'' COLLATE SQL_Latin1_General_CP1_CI_AI
-					        AND SM.definition NOT LIKE ''%IF%EXISTS%(%SELECT%*%'' COLLATE SQL_Latin1_General_CP1_CI_AI
-					        AND SM.definition NOT LIKE ''%COUNT%(%*%)%'' COLLATE SQL_Latin1_General_CP1_CI_AI
-					        AND SM.definition NOT LIKE ''%SELECT%=%*%'' COLLATE SQL_Latin1_General_CP1_CI_AI
+					        SM.definition LIKE ''%SELECT%*%'' COLLATE SQL_Latin1_General_CP1_CI_AS
+					        AND SM.definition NOT LIKE ''%IF%EXISTS%(%SELECT%*%'' COLLATE SQL_Latin1_General_CP1_CI_AS
+					        AND SM.definition NOT LIKE ''%COUNT%(%*%)%'' COLLATE SQL_Latin1_General_CP1_CI_AS
+					        AND SM.definition NOT LIKE ''%SELECT%=%*%'' COLLATE SQL_Latin1_General_CP1_CI_AS
 					        AND SM.definition NOT LIKE ''%SELECT%[0-9]%[*]%[0-9]%''
 					        --O.name LIKE ''[t][A-Z]%'' COLLATE Latin1_General_BIN;'
 			
@@ -1697,7 +1708,7 @@ END;
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = SM.object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
-					        PATINDEX(CONCAT(''%FROM%'', ''' + @DatabaseName + N''', ''.%.%'') COLLATE SQL_Latin1_General_CP1_CI_AI, SM.definition COLLATE SQL_Latin1_General_CP1_CI_AI) > 0;';
+					        PATINDEX(CONCAT(''%FROM%'', ''' + @DatabaseName + N''', ''.%.%'') COLLATE SQL_Latin1_General_CP1_CI_AS, SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0;';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1739,7 +1750,7 @@ END;
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.triggers    AS TR ON TR.parent_id = T.object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.sql_modules AS M  ON TR.object_id = M.object_id
 				        WHERE
-					        M.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AI;';
+					        M.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS;';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1768,7 +1779,7 @@ END;
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
 					        O.type IN (''P'')
-					        AND SM.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AI;'
+					        AND SM.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS;'
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1810,14 +1821,209 @@ END;
 				        WHERE
 					        O.name NOT IN (''sp_Develop'', ''sp_WhoIsActive'')
 					        AND (
-						        PATINDEX(''%(%NOLOCK%)%'', SM.definition COLLATE SQL_Latin1_General_CP1_CI_AI) > 0
-						        OR PATINDEX(''%(%READUNCOMMITTED%)%'', SM.definition COLLATE SQL_Latin1_General_CP1_CI_AI) > 0
-						        OR PATINDEX(''%READ UNCOMMITTED%'', SM.definition COLLATE SQL_Latin1_General_CP1_CI_AI) > 0
+						        PATINDEX(''%(%NOLOCK%)%'', SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0
+						        OR PATINDEX(''%(%READUNCOMMITTED%)%'', SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0
+						        OR PATINDEX(''%READ UNCOMMITTED%'', SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0
 					        );';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
 		        END;
+
+
+		        /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 27
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'Data Issue'
+		           ,@Finding       = 'Unencrypted Data'
+		           ,@URLAnchor     = 'unencrypted-data';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+
+                    IF OBJECT_ID('tempdb..#TableList') IS NOT NULL
+                        BEGIN
+                            DROP TABLE #TableList;
+                        END;
+
+                    CREATE TABLE #TableList (
+                        TableSearchId        INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+                       ,object_id            INT           NOT NULL
+                       ,schema_id            INT           NOT NULL
+                       ,SchemaName           NVARCHAR(128) NOT NULL
+                       ,TableName            NVARCHAR(128) NOT NULL
+                       ,ColumnName           NVARCHAR(128) NOT NULL
+                       ,StandardColumnLength INT           NOT NULL
+                       ,MinimumColumnLength  INT           NOT NULL DEFAULT (0)
+                       ,encryption_type      INT           NULL DEFAULT (0) /* 0 = Unknown | 1 = Deterministic encryption | 2 = Randomized encryption | NULL = None */
+                       ,IsProcessedFlag      BIT           NOT NULL DEFAULT (0)
+                    );
+
+                    CREATE NONCLUSTERED INDEX object_id ON #TableList (object_id);
+                    CREATE NONCLUSTERED INDEX IsProcessedFlag ON #TableList (IsProcessedFlag);
+
+			        SET @StringToExecute = N'
+                        INSERT INTO
+                            #TableList (object_id, Schema_Id, SchemaName, TableName, ColumnName, StandardColumnLength)
+                        SELECT
+                            object_id            = C.object_id
+                           ,schema_id            = S.schema_id
+                           ,SchemaName           = S.name
+                           ,TableName            = T.name
+                           ,ColumnName           = C.name
+                           ,StandardColumnLength = CASE
+                                                       WHEN C.name LIKE ''%password%'' COLLATE SQL_Latin1_General_CP1_CI_AS THEN 15
+                                                       WHEN C.name LIKE ''%creditcard%'' COLLATE SQL_Latin1_General_CP1_CI_AS THEN 16
+                                                       WHEN C.name LIKE ''%ssn%'' OR C.name LIKE ''%socialsecuritynumber%'' COLLATE SQL_Latin1_General_CP1_CI_AS THEN 11
+                                                       WHEN C.name LIKE ''%passport%'' COLLATE SQL_Latin1_General_CP1_CI_AS THEN 9
+                                                       WHEN C.name LIKE ''%dll%'' OR C.name LIKE ''%license%'' COLLATE SQL_Latin1_General_CP1_CI_AS THEN 15
+                                                       ELSE 15
+                                                   END
+                        FROM
+                            ' + QUOTENAME(@DatabaseName) + N'.sys.columns            AS C
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON T.object_id = C.object_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+                        WHERE (
+                            C.name LIKE ''%password%''
+                            AND C.name NOT LIKE ''%date%''
+                            AND C.name NOT LIKE ''%config%''
+                            AND C.name NOT LIKE ''%complexity%''
+                            AND C.name NOT LIKE ''%expir%''
+                            AND C.name NOT LIKE ''%flag%''
+                            AND C.name NOT LIKE ''%last%''
+                            AND C.name NOT LIKE ''%failed%''
+                            AND C.name NOT LIKE ''%max%''
+                            AND C.name NOT LIKE ''%min%''
+                            AND C.name NOT LIKE ''%length%''
+                            AND C.name NOT LIKE ''%requir%''                            
+                            AND C.name NOT LIKE ''%count%''
+                            AND C.name NOT LIKE ''%salt%''
+                            AND C.name <> ''is_password_protected'' COLLATE SQL_Latin1_General_CP1_CI_AS
+                        )
+                            OR ((C.name LIKE ''%creditcard%'' OR C.name LIKE ''%ccn%'')
+                                AND C.name NOT LIKE ''%token%''
+                                AND C.name NOT LIKE ''%approv%''
+                                AND C.name NOT LIKE ''%code%''
+                                AND C.name <> ''creditcardid''
+                                COLLATE SQL_Latin1_General_CP1_CI_AS
+                            )
+                            OR (C.name = ''ssn'' OR C.name = ''socialsecuritynumber'' COLLATE SQL_Latin1_General_CP1_CI_AS)
+                            OR (C.name LIKE ''%passport%'' COLLATE SQL_Latin1_General_CP1_CI_AS)
+                            OR (C.name LIKE ''dll'' COLLATE SQL_Latin1_General_CP1_CI_AS)
+                            OR (C.name LIKE ''%license%'' AND C.name NOT LIKE ''%count%'' COLLATE SQL_Latin1_General_CP1_CI_AS);'
+
+                    EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+
+                    /* Edition Check for Available Feature */
+                    IF ((@ProductVersionMajor >= 14) /* Any Edition SQL Server 2017+ */
+                        OR (@ProductVersionMajor >= 13 AND @@VERSION LIKE '%Enterprise Edition%') /* Enterprise Edition SQL Server 2016+ */
+                        OR (
+                            @ProductVersionMajor = 13
+                            AND @ProductVersionMinor >= 4001
+                            AND @@VERSION LIKE '%Standard Edition%'
+                        ) /* Standard Edition 2016 SP1+*/
+                    )
+                        BEGIN
+                            /* Find columns that are using Always Encrypt */
+        			        SET @StringToExecute = N'
+                                UPDATE
+                                    TL
+                                SET
+                                    encryption_type = C.encryption_type
+                                   ,IsProcessedFlag = 1
+                                FROM
+                                    ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C
+                                    INNER JOIN #TableList   AS TL ON TL.object_id = C.object_id
+                                WHERE
+                                    C.encryption_type IS NOT NULL;'
+                        
+                            EXEC sys.sp_executesql @stmt = @StringToExecute;
+			                IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+
+                        END;
+
+                    /* Loop through #TableList to figure out if the non-Always Encrypt columns have some sort of hashing or encryption */
+
+                    DECLARE
+                        @TableSearchId INT
+                       ,@SchemaName    NVARCHAR(128)
+                       ,@TableName     NVARCHAR(128)
+                       ,@ColumnName    NVARCHAR(128);
+
+                    WHILE EXISTS (SELECT * FROM #TableList WHERE IsProcessedFlag = 0 AND encryption_type = 0)
+                        BEGIN
+                            SELECT TOP (1)
+                                   @TableSearchId = TL.TableSearchId
+                                  ,@SchemaName    = TL.SchemaName
+                                  ,@TableName     = TL.TableName
+                                  ,@ColumnName    = TL.ColumnName
+                            FROM
+                                #TableList AS TL
+                            WHERE
+                                TL.IsProcessedFlag = 0
+                            ORDER BY
+                                TL.TableSearchId;
+
+                            SET @StringToExecute = N'
+			                    UPDATE
+				                    TL
+			                    SET
+				                     TL.MinimumColumnLength = ISNULL(T.MinimumColumnLength, 0)
+				                    ,TL.encryption_type     = NULL
+			                    FROM
+				                    #TableList AS TL
+			                    CROSS JOIN (
+						                    SELECT
+							                    MinimumColumnLength = MIN(LEN(' + QUOTENAME(@ColumnName) + N'))
+						                    FROM
+							                    ' + QUOTENAME(@DatabaseName) + N'.' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + N'
+                                            WHERE
+                                                ' + QUOTENAME(@ColumnName) + N' IS NOT NULL
+                                        ) AS T
+			                    WHERE
+				                    TL.TableSearchId = ' + CAST(@TableSearchId AS NVARCHAR(MAX)) + N';';
+
+                            EXEC sys.sp_executesql @stmt = @StringToExecute;
+			                IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+
+                            UPDATE
+                                #TableList
+                            SET
+                                IsProcessedFlag = 1
+                            WHERE
+                                TableSearchId = @TableSearchId;
+                        END;
+
+                    /* Find columns with potential unencrypted data */			        
+                    INSERT INTO
+                        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+                    SELECT
+					     CheckId       = @CheckId
+				        ,Database_Id   = @DatabaseId
+				        ,DatabaseName  = @DatabaseName
+				        ,FindingGroup  = @FindingGroup
+				        ,Finding       = @Finding
+				        ,URL           = @URLBase + @URLAnchor
+				        ,Priority      = @Priority
+				        ,Schema_Id     = TL.schema_id
+				        ,SchemaName    = TL.SchemaName
+				        ,Object_Id     = TL.object_id
+				        ,ObjectName    = TL.TableName + '.' + TL.ColumnName
+				        ,ObjectType    = 'COLUMN'
+				        ,Details       = N'The column might have unencrypted data that you might want to have encrypted.'
+                    FROM
+                        #TableList AS TL
+                    WHERE
+                        TL.encryption_type IS NULL
+                        AND TL.MinimumColumnLength <= TL.StandardColumnLength * 1.3
+
+                    DROP TABLE #TableList;
+			       
+		        END;
+
 
 		        -- SQL Prompt formatting on
                 /**********************************************************************************************************************
@@ -1840,12 +2046,14 @@ END;
 	    ** After populating the #Finding table, time to dump it out.
 	    **********************************************************************************************************************/
         DECLARE @Separator AS CHAR(1);
-        IF @OutputType = 'RSV' SET @Separator = CHAR(31);
-        ELSE SET @Separator = ',';
+        IF @OutputType = 'RSV'
+            SET @Separator = CHAR(31);
+        ELSE
+            SET @Separator = ',';
 
         IF @OutputType = 'COUNT'
             BEGIN
-                SELECT Warnings = COUNT(*) FROM #Finding;
+                SELECT Warnings = COUNT(*)FROM #Finding;
             END;
         ELSE IF @OutputType IN ('CSV', 'RSV')
                  BEGIN

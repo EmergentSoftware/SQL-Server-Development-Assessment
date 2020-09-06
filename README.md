@@ -822,7 +822,6 @@ Views do not lend themselves to being deeply nested. Views that reference views 
   - Abstracting complicated base tables
 
 
-
 ## Invalid Objects
 **Check Id:** [NONE YET]
 

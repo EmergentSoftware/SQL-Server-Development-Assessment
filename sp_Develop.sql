@@ -2024,7 +2024,46 @@ AS
 			       
 		        END;
 
+                /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 28
+		           ,@Priority      = 1
+		           ,@FindingGroup = 'Data Type Conventions'
+		           ,@Finding       = 'Using MONEY data type'
+		           ,@URLAnchor     = 'using-money-data-type';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+			
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = O.object_id
+				           ,ObjectName    = O.name + ''.'' + C.Name
+				           ,ObjectType    = ''COLUMN''
+				           ,Details       = N''Column ''+ C.Name + N'' uses the '' + UPPER(t.name)  +N'' data type, which has limited precision and can lead to roundoff errors. Consider using Decimal(19.4) instead.''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id = O.object_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.types   AS T on T.user_type_id = C.user_type_id
+				        WHERE
+					        t.name  IN (''money'', ''smallmoney'');';
 
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
 		        -- SQL Prompt formatting on
                 /**********************************************************************************************************************
 		        **  ██████ ██   ██ ███████  ██████ ██   ██ ███████     ███████ ███    ██ ██████  

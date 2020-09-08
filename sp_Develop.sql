@@ -1849,7 +1849,7 @@ AS
                         END;
 
                     CREATE TABLE #TableList (
-                        TableSearchId        INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+                        TableListId          INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
                        ,object_id            INT           NOT NULL
                        ,schema_id            INT           NOT NULL
                        ,SchemaName           NVARCHAR(128) NOT NULL
@@ -1948,7 +1948,7 @@ AS
                     /* Loop through #TableList to figure out if the non-Always Encrypt columns have some sort of hashing or encryption */
 
                     DECLARE
-                        @TableSearchId INT
+                        @TableListId INT
                        ,@SchemaName    NVARCHAR(128)
                        ,@TableName     NVARCHAR(128)
                        ,@ColumnName    NVARCHAR(128);
@@ -1956,7 +1956,7 @@ AS
                     WHILE EXISTS (SELECT * FROM #TableList WHERE IsProcessedFlag = 0 AND encryption_type = 0)
                         BEGIN
                             SELECT TOP (1)
-                                   @TableSearchId = TL.TableSearchId
+                                   @TableListId = TL.TableListId
                                   ,@SchemaName    = TL.SchemaName
                                   ,@TableName     = TL.TableName
                                   ,@ColumnName    = TL.ColumnName
@@ -1965,7 +1965,7 @@ AS
                             WHERE
                                 TL.IsProcessedFlag = 0
                             ORDER BY
-                                TL.TableSearchId;
+                                TL.TableListId;
 
                             SET @StringToExecute = N'
 			                    UPDATE
@@ -1984,7 +1984,7 @@ AS
                                                 ' + QUOTENAME(@ColumnName) + N' IS NOT NULL
                                         ) AS T
 			                    WHERE
-				                    TL.TableSearchId = ' + CAST(@TableSearchId AS NVARCHAR(MAX)) + N';';
+				                    TL.TableListId = ' + CAST(@TableListId AS NVARCHAR(MAX)) + N';';
 
                             EXEC sys.sp_executesql @stmt = @StringToExecute;
 			                IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1994,7 +1994,7 @@ AS
                             SET
                                 IsProcessedFlag = 1
                             WHERE
-                                TableSearchId = @TableSearchId;
+                                TableListId = @TableListId;
                         END;
 
                     /* Find columns with potential unencrypted data */			        
@@ -2018,7 +2018,7 @@ AS
                         #TableList AS TL
                     WHERE
                         TL.encryption_type IS NULL
-                        AND TL.MinimumColumnLength <= TL.StandardColumnLength * 1.3
+                        AND TL.MinimumColumnLength <= TL.StandardColumnLength * 1.3 /* The "* 1.3" is allowing a 30% buffer above standard column length to look for encryption/hashing. */
 
                     DROP TABLE #TableList;
 			       

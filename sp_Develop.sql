@@ -2028,7 +2028,7 @@ AS
 		        SELECT
 			        @CheckId       = 28
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Data Type Conventions'
+		           ,@FindingGroup  = 'Data Type Conventions'
 		           ,@Finding       = 'Using MONEY data type'
 		           ,@URLAnchor     = 'using-money-data-type';
 		        /**********************************************************************************************************************/
@@ -2052,18 +2052,20 @@ AS
 				           ,Object_Id     = O.object_id
 				           ,ObjectName    = O.name + ''.'' + C.Name
 				           ,ObjectType    = ''COLUMN''
-				           ,Details       = N''Column ''+ C.Name + N'' uses the '' + UPPER(t.name)  +N'' data type, which has limited precision and can lead to roundoff errors. Consider using Decimal(19.4) instead.''
+				           ,Details       = N''This column uses the '' + UPPER(T.name) + N'' data type, which has limited precision and can lead to roundoff errors. Consider using DECIMAL(19, 4) instead.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
                             INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id = O.object_id
                             INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.types   AS T on T.user_type_id = C.user_type_id
 				        WHERE
-					        t.name  IN (''money'', ''smallmoney'');';
+					        T.name IN (''money'', ''smallmoney'');';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
 		        END;
+
+
 		        -- SQL Prompt formatting on
                 /**********************************************************************************************************************
 		        **  ██████ ██   ██ ███████  ██████ ██   ██ ███████     ███████ ███    ██ ██████  

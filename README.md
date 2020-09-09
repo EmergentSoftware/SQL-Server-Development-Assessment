@@ -171,7 +171,7 @@ The settings are located in the project "[\SQL-Server-Assess\Development Applica
 
 # Current High Check Id
 
-## Next Check Id: 28
+## Next Check Id: 29
 
 # Naming Conventions
 
@@ -486,7 +486,7 @@ Being frugal with memory is important for large tables, not only to save space b
 
 
 ## Using MONEY Data Type
-**Check Id:** [NONE YET]
+**Check Id:** 28
 
 The MONEY data type confuses the storage of data values with their display, though it clearly suggests, by its name, the sort of data held. Use DECIMAL(19, 4) instead. It is proprietary to SQL Server. 
 

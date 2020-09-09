@@ -26,7 +26,14 @@
 ** OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 ** OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **********************************************************************************************************************/
-CREATE OR ALTER PROCEDURE dbo.sp_Develop
+IF OBJECT_ID('dbo.sp_Develop') IS NULL
+    BEGIN
+        EXEC dbo.sp_executesql
+            @stmt = N'CREATE PROCEDURE dbo.sp_Develop AS BEGIN SET NOCOUNT ON; END';
+    END;
+GO
+
+ALTER PROCEDURE dbo.sp_Develop
     @DatabaseName       NVARCHAR(128) = NULL /*Defaults to current DB if not specified*/
    ,@GetAllDatabases    BIT           = 0
    ,@BringThePain       BIT           = 0
@@ -74,8 +81,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '0.11.5';
-        SET @VersionDate = '20200906';
+        SET @Version = '0.11.6';
+        SET @VersionDate = '20200909';
         SET @URLBase = 'https://github.com/EmergentSoftware/SQL-Server-Assess#';
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);
@@ -167,7 +174,7 @@ AS
            AND (@SkipCheckSchema IS NOT NULL AND RTRIM(LTRIM(@SkipCheckSchema)) <> '')
            AND (@SkipCheckDatabase IS NOT NULL AND RTRIM(LTRIM(@SkipCheckDatabase)) <> '')
             BEGIN
-            
+
                 IF @Debug IN (1, 2)
                     RAISERROR('Inserting SkipChecks', 0, 1) WITH NOWAIT;
 
@@ -1849,7 +1856,7 @@ AS
                         END;
 
                     CREATE TABLE #TableList (
-                        TableSearchId        INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+                        TableListId          INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
                        ,object_id            INT           NOT NULL
                        ,schema_id            INT           NOT NULL
                        ,SchemaName           NVARCHAR(128) NOT NULL
@@ -1948,7 +1955,7 @@ AS
                     /* Loop through #TableList to figure out if the non-Always Encrypt columns have some sort of hashing or encryption */
 
                     DECLARE
-                        @TableSearchId INT
+                        @TableListId INT
                        ,@SchemaName    NVARCHAR(128)
                        ,@TableName     NVARCHAR(128)
                        ,@ColumnName    NVARCHAR(128);
@@ -1956,7 +1963,7 @@ AS
                     WHILE EXISTS (SELECT * FROM #TableList WHERE IsProcessedFlag = 0 AND encryption_type = 0)
                         BEGIN
                             SELECT TOP (1)
-                                   @TableSearchId = TL.TableSearchId
+                                   @TableListId = TL.TableListId
                                   ,@SchemaName    = TL.SchemaName
                                   ,@TableName     = TL.TableName
                                   ,@ColumnName    = TL.ColumnName
@@ -1965,7 +1972,7 @@ AS
                             WHERE
                                 TL.IsProcessedFlag = 0
                             ORDER BY
-                                TL.TableSearchId;
+                                TL.TableListId;
 
                             SET @StringToExecute = N'
 			                    UPDATE
@@ -1984,7 +1991,7 @@ AS
                                                 ' + QUOTENAME(@ColumnName) + N' IS NOT NULL
                                         ) AS T
 			                    WHERE
-				                    TL.TableSearchId = ' + CAST(@TableSearchId AS NVARCHAR(MAX)) + N';';
+				                    TL.TableListId = ' + CAST(@TableListId AS NVARCHAR(MAX)) + N';';
 
                             EXEC sys.sp_executesql @stmt = @StringToExecute;
 			                IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1994,7 +2001,7 @@ AS
                             SET
                                 IsProcessedFlag = 1
                             WHERE
-                                TableSearchId = @TableSearchId;
+                                TableListId = @TableListId;
                         END;
 
                     /* Find columns with potential unencrypted data */			        
@@ -2018,10 +2025,51 @@ AS
                         #TableList AS TL
                     WHERE
                         TL.encryption_type IS NULL
-                        AND TL.MinimumColumnLength <= TL.StandardColumnLength * 1.3
+                        AND TL.MinimumColumnLength <= TL.StandardColumnLength * 1.3 /* The "* 1.3" is allowing a 30% buffer above standard column length to look for encryption/hashing. */
 
                     DROP TABLE #TableList;
 			       
+		        END;
+
+                /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 28
+		           ,@Priority      = 1
+		           ,@FindingGroup  = 'Data Type Conventions'
+		           ,@Finding       = 'Using MONEY data type'
+		           ,@URLAnchor     = 'using-money-data-type';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+			
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = O.object_id
+				           ,ObjectName    = O.name + ''.'' + C.Name
+				           ,ObjectType    = ''COLUMN''
+				           ,Details       = N''This column uses the '' + UPPER(T.name) + N'' data type, which has limited precision and can lead to roundoff errors. Consider using DECIMAL(19, 4) instead.''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id = O.object_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.types   AS T on T.user_type_id = C.user_type_id
+				        WHERE
+					        T.name IN (''money'', ''smallmoney'');';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
 		        END;
 
 

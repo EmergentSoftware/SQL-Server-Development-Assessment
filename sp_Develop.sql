@@ -26,7 +26,14 @@
 ** OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 ** OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **********************************************************************************************************************/
-CREATE OR ALTER PROCEDURE dbo.sp_Develop
+IF OBJECT_ID('dbo.sp_Develop') IS NULL
+    BEGIN
+        EXEC dbo.sp_executesql
+            @stmt = N'CREATE PROCEDURE dbo.sp_Develop AS BEGIN SET NOCOUNT ON; END';
+    END;
+GO
+
+ALTER PROCEDURE dbo.sp_Develop
     @DatabaseName       NVARCHAR(128) = NULL /*Defaults to current DB if not specified*/
    ,@GetAllDatabases    BIT           = 0
    ,@BringThePain       BIT           = 0
@@ -74,8 +81,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '0.11.5';
-        SET @VersionDate = '20200906';
+        SET @Version = '0.11.6';
+        SET @VersionDate = '20200909';
         SET @URLBase = 'https://github.com/EmergentSoftware/SQL-Server-Assess#';
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);
@@ -167,7 +174,7 @@ AS
            AND (@SkipCheckSchema IS NOT NULL AND RTRIM(LTRIM(@SkipCheckSchema)) <> '')
            AND (@SkipCheckDatabase IS NOT NULL AND RTRIM(LTRIM(@SkipCheckDatabase)) <> '')
             BEGIN
-            
+
                 IF @Debug IN (1, 2)
                     RAISERROR('Inserting SkipChecks', 0, 1) WITH NOWAIT;
 

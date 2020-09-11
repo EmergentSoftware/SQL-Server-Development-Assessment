@@ -180,7 +180,7 @@ The purpose of naming and style convention allows you and others to identify the
 ## Using System-Generated Object Names
 **Check Id:** [NONE YET]
 
-Create your only logical names and do not let SQL Server name objects.
+Create logical names and do not let SQL Server name objects.
 
 If you do not specify an object name SQL Server will create one for you. This causes issues when comparing different environments that would have differently generated names.
 
@@ -645,6 +645,18 @@ You can't require everyone to stop using national characters or accents any more
 
 T-SQL code must execute properly and performant. It must be readable, well laid out and it must be robust and resilient. It must not rely on deprecated features of SQL Server or assume specific database settings.
 
+## Using ORDER BY
+**Check Id:** [NONE YET]
+
+SQL Server is the second most expensive sorting system, remind the developer they can sort in the application layer
+
+#### 2020 Pricing
+
+- Oracle Enterprise Edition = $47,500 per core
+- Microsoft SQL Server Enterprise Edition = $7,128 per core 
+- ⬇
+- Microsoft Access $159.99
+
 ## Cursors
 **Check Id:** [NONE YET]
 
@@ -890,7 +902,7 @@ AS
     BEGIN
         SET NOCOUNT ON;
 
-		/* [T-SQL GOES HERE] */
+        /* [T-SQL GOES HERE] */
 
     END;
 GO

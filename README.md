@@ -168,15 +168,39 @@ The settings are located in the project "[\SQL-Server-Assess\Development Applica
 2. Follow [these directions](https://documentation.red-gate.com/sp/managing-sql-prompt-behavior/sharing-your-settings)
 
 
-
 # Current High Check Id
 
 ## Next Check Id: 29
+
 
 # Naming Conventions
 
 The purpose of naming and style convention allows you and others to identify the type and purpose of database objects. Our goal is to create legible, concise and consistent names for our database objects.
 
+## Using System-Generated Object Names
+**Check Id:** [NONE YET]
+
+Create your only logical names and do not let SQL Server name objects.
+
+If you do not specify an object name SQL Server will create one for you. This causes issues when comparing different environments that would have differently generated names.
+
+```sql
+CREATE TABLE dbo.TableName (
+    TableNameId INT         NOT NULL PRIMARY KEY                           /* This creates a primary key with a name like "PK__TableNam__38F491856B661278" */
+   ,SpecialCode CHAR(1)     NOT NULL CHECK (SpecialCode IN ('A', 'B', 'C'))/* This creates a SpecialCode constraint with a name like "CK__TableName__Speci__49C3F6B7" */
+   ,SomeName    VARCHAR(50) NOT NULL DEFAULT ('')                          /* This creates a SomeName default constraint with a name like "DF__TableName__SomeN__4AB81AF0" */
+);
+
+/* Drop the bad version of the table */
+DROP TABLE dbo.TableName;
+
+/* Create a better version of the table with actual constraint names */
+CREATE TABLE dbo.TableName (
+    TableNameId INT         NOT NULL CONSTRAINT TableNameId PRIMARY KEY
+   ,SpecialCode CHAR(1)     NOT NULL CONSTRAINT SpecialCodeInList CHECK (SpecialCode IN ('A', 'B', 'C'))
+   ,SomeName    VARCHAR(50) NOT NULL CONSTRAINT SomeNameEmpty DEFAULT ('')
+);
+```
 
 ## Concatenating Two Table Names
 **Check Id:** 13
@@ -201,7 +225,7 @@ Variable names should contain only letters and numbers. No special characters or
 ## Stored Procedures & Function Naming
 **Check Id:** [NONE YET]
 
-Stored procedures and functions should be named so they can be ordered by the table/business entity (ObjectAction) they perform a database operation on, and adding the database activity "Get, Update, Insert, Delete, Merge" as a suffix, e.g., ("ProductGet" or "OrderUpdate").
+Stored procedures and functions should be named so they can be ordered by the table/business entity (ObjectAction) they perform a database operation on, and adding the database activity "Get, Update, Insert, Upsert, Delete, Merge" as a suffix, e.g., ("ProductGet" or "OrderUpdate").
 
 
 
@@ -306,7 +330,7 @@ No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 ## Not Using PascalCase
 **Check Id:** [NONE YET]
 
-For all parts of the table name, including prefixes, use Pascal Case. PascalCase also reduces the need for underscores to visually separate words in names.
+For all parts of the table name, including prefixes, use Pascal Case. ```PascalCase``` also reduces the need for underscores to visually separate words in names.
 
 
 
@@ -345,7 +369,7 @@ Do not give a table the same name as one of its columns.
 ## Using Abbreviation
 **Check Id:** [NONE YET]
 
-Use "Account" instead of "Acct" and "Hour" instead of "Hr". Not everyone will always agree with you on what your abbreviations stand for - and - this makes it simple to read and understand for both developers and non-developers.
+Avoid using abbreviation if possible. Use "Account" instead of "Acct" and "Hour" instead of "Hr". Not everyone will always agree with you on what your abbreviations stand for - and - this makes it simple to read and understand for both developers and non-developers.
 
 ```
 Acct, AP, AR, Hr, Rpt, Assoc, Desc
@@ -386,12 +410,71 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - Unit**Price**
 
 
-
 # Table Conventions
 
 Table design matters because it is essential for building software applications that are scalable and capable of performing during high workload.
 
+## Column Named ????Id But No FK Exists
+**Check Id:** [NONE YET]
 
+We found a column following the naming convention of ????Id and is not the PK but no FK exists, you might be missing a relationship to a parent table.
+
+## More Than 5 Indexes
+**Check Id:** [NONE YET]
+
+Your table might be over indexed.
+
+## Less than 2 Indexes
+**Check Id:** [NONE YET]
+
+Your table might be under indexed.
+
+## Disabled Index
+**Check Id:** [NONE YET]
+
+An index rebuild or reorganization will enabled disabled indexes. It is now best practices to delete instead of disable if not needed.
+
+## Leftover Fake Index
+**Check Id:** [NONE YET]
+
+The Index Tuning Wizard and Database Tuning Advisor create fake indexes, then getting a new execution plan for a query. These fake indexes stay behind sometimes.
+
+To fix the issue ```DROP``` the indexes.
+
+There are better ways to performance tune than using the wizards.
+
+## Column Has a Different Collation Than Database
+**Check Id:** [NONE YET]
+
+This could cause issues if the code is not aware of different collations and does include features to work with them correctly.
+
+## Low Index Fill-Factor
+**Check Id:** [NONE YET]
+
+The default fill factor is (100 or 0) for SQL Server. This check is alerting you to a fill factor of 80% or lower.
+
+Best practice is to ONLY use a low fill factor on indexes where you know you need it. Setting a low fill factor on too many indexes will hurt your performance:
+
+- Wasted space in storage
+- Wasted space in memory (and therefore greater memory churn)
+- More IO, and with it higher CPU usage
+
+Review indexes diagnosed with low fill factor. Check how much they’re written to. Look at the keys and determine whether insert and update patterns are likely to cause page splits.
+
+
+## Untrusted Foreign Key
+**Check Id:** [NONE YET]
+
+SQL Server is not going to use untrusted constraints to compile a better execution plan.
+
+You might have disabled a constraint instead of dropping and recreating it for bulk loading data. This is fine, as long as your remember to enable it correctly.
+
+```sql
+ALTER TABLE dbo.TableName WITH CHECK CHECK CONSTRAINT ConstraintName;
+GO
+```
+
+The ```CHECK CHECK``` syntax is correct. The 1st ```CHECK``` is the end of ```WITH CHECK``` statement. The 2nd ```CHECK``` is the start of the ```CHECK CONSTRAINT``` clause to enable the constraint
 
 ## UNIQUEIDENTIFIER in a Clustered Index
 **Check Id:** 22
@@ -444,12 +527,51 @@ A table with a non-clustered index, but without a clustered index can sometimes 
 Heaps have performance issues like table scans, forward fetches.
 
 
-
 # Data Type Conventions
 
 Poor data type choices can have significant impact on a database design and performance. A best practice is to right size the data type by understanding of the data.
 
+## Using of Deprecated Data Type
+**Check Id:** [NONE YET]
 
+- Use of deprecated data types such as TEXT/NTEXT
+- There is no good reason to use TEXT or NTEXT. They were a flawed attempt at BLOB storage and are there only for backward compatibility. Likewise, the WRITETEXT, UPDATETEXT and READTEXT statements are also deprecated. All this complexity has been replaced by the VARCHAR(MAX) and NVARCHAR(MAX) data types, which work with all of SQL Server’s string functions.
+
+## Email Address Column
+**Check Id:** [NONE YET]
+
+An email address column should be set to NVARCHAR(254) to leave 2 characters for <> if needed.
+
+## URL Column
+**Check Id:** [NONE YET]
+
+A URL column should be set to NVARCHAR(2083).
+
+## Overuse of (N)VARCHAR(MAX)
+**Check Id:** [NONE YET]
+
+You might be overusing (N)VARCHAR(MAX) on your table.
+
+(N)VARCHAR(MAX) columns can be included in an index but not as a key. Queries will not be able to perform an index seek on this column. 
+
+(N)VARCHAR(MAX) should only every be used if the size of the field is known to be over [8K for VARCHAR | 4K for NVARCHAR]
+
+Since SQL Server 2016 if the size of the cell is < 8K characters for VARCHAR(MAX) it will be treated as Row data. If > 8K it will be treated as a Large Object (LOB) for storage purposes.
+
+## Boolean Column Not Using BIT
+**Check Id:** [NONE YET]
+
+Use the ```BIT``` data type for boolean columns. These columns will have names like IsSpecialSaleFlag. 
+
+## Using FLOAT or REAL
+**Check Id:** [NONE YET]
+
+The FLOAT (8 byte) and REAL (4 byte) data types are suitable only for specialist scientific use since they are approximate types with an enormous range (-1.79E+308 to -2.23E-308, 0 and 2.23E-308 to 1.79E+308, in the case of FLOAT). Any other use needs to be regarded as suspect, and a FLOAT or REAL used as a key or found in an index needs to be investigated. The DECIMAL type is an exact data type and has an impressive range from -10^38+1 through 10^38-1. Although it requires more storage than the FLOAT or REAL types, it is generally a better choice.
+
+## Using SQL_VARIANT
+**Check Id:** [NONE YET]
+
+The SQL_VARIANT type is not your typical data type. It stores values from a number of different data types and is used internally by SQL Server. It is hard to imagine a valid use in a relational database. It cannot be returned to an application via ODBC except as binary data, and it isn’t supported in Microsoft Azure SQL Database.
 
 ## Using User-Defined Data Type
 **Check Id:** 10
@@ -519,12 +641,415 @@ You can't require everyone to stop using national characters or accents any more
 - ProvinceName
 
 
-
 # SQL Code Development
 
 T-SQL code must execute properly and performant. It must be readable, well laid out and it must be robust and resilient. It must not rely on deprecated features of SQL Server or assume specific database settings.
 
+## Cursors
+**Check Id:** [NONE YET]
 
+#### Overview
+Even though you'll hear DBAs and other experts say, "never use cursors!", there are a few cases were cursors come in handy and there are a few important pointers.
+
+SQL Server originally supported cursors to more easily port dBase II applications to SQL Server, but even then, you can sometimes use a ```WHILE``` loop (See [Using WHILE Loop](#Using-WHILE-Loop)) as an effective substitute. Modern versions of SQL Server provide window functions and the CROSS/OUTER APPLY syntax to cope with some of the traditional valid uses of the cursor.
+
+#### Valid Use Cases
+- Executing a complex stored procedure or series of stored procedures based on a set of data. It is true this can be handled with a ```WHILE``` loop and grabbing each record from the database, but a read-only, fast-forward cursor well and can be easier to manage.
+- Import scripts
+
+#### Cursor Type
+It is likely a bad idea to use any cursor other than one that is read-only and fast-forward. However, you need to declare your cursor correctly in order to create the right type:
+```DECLARE MyCursor CURSOR LOCAL FAST_FORWARD FOR```
+
+#### Full Cursor Syntax
+
+```sql
+DECLARE
+    @MyId          INT
+   ,@MyName        NVARCHAR(50)
+   ,@MyDescription NVARCHAR(MAX);
+
+DECLARE MyCursor CURSOR LOCAL FAST_FORWARD FOR
+SELECT
+    MT.MyId
+   ,MT.MyName
+   ,MT.MyDescription
+FROM
+    dbo.MyTable AS MT
+WHERE
+    MT.DoProcess = 1;
+
+OPEN MyCursor;
+
+FETCH NEXT FROM MyCursor
+INTO
+    @MyId
+   ,@MyName
+   ,@MyDescription;
+
+WHILE @@FETCH_STATUS = 0
+    BEGIN
+        --Do something or a series of things for each record
+        DECLARE @Result INT;
+        EXEC @Result = dbo.SomeStoredProcedure @MyId = @MyId;
+
+        FETCH NEXT FROM MyCursor
+        INTO
+            @MyId
+           ,@MyName
+           ,@MyDescription;
+    END;
+
+CLOSE MyCursor;
+DEALLOCATE MyCursor;
+```
+
+## Using WHILE Loop
+**Check Id:** [NONE YET]
+
+```WHILE``` loop is really a type of cursor. Although a ```WHILE``` loop can be useful for several inherently procedural tasks, you can usually find a better relational way of achieving the same results. The database engine is heavily optimized to perform set-based operations rapidly.
+
+Here is a ```WHILE``` loop pattern. You might be able to create a SQL statement that does a bulk update instead.
+```sql
+CREATE TABLE #Person (
+    PersonId        INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+   ,FirstName       NVARCHAR(100) NOT NULL
+   ,LastName        NVARCHAR(128) NOT NULL
+   ,IsProcessedFlag BIT           NOT NULL DEFAULT (0)
+);
+
+INSERT INTO
+    #Person (FirstName, LastName, IsProcessedFlag)
+VALUES
+     (N'Joel', N'Miller', 0);
+
+DECLARE
+    @PersonId  INT
+   ,@FirstName NVARCHAR(100)
+   ,@LastName  NVARCHAR(100);
+
+WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
+    BEGIN
+        SELECT TOP (1)
+               @PersonId  = P.PersonId
+              ,@FirstName = P.FirstName
+              ,@LastName  = P.LastName
+        FROM
+            #Person AS P
+        WHERE
+            P.IsProcessedFlag = 0
+        ORDER BY
+            P.PersonId;
+
+        UPDATE
+            dbo.Person
+        SET
+            FirstName = @FirstName
+           ,LastName = @LastName
+        WHERE
+            PersonId = @PersonId;
+
+        UPDATE #Person SET IsProcessedFlag = 1 WHERE PersonId = @PersonId;
+    END;
+```
+
+## Temporary Tables and Table Variables
+**Check Id:** [NONE YET]
+
+Use Temporary Tables and not Table Variables.
+
+- There are optimization limitation like lack of statistics that very frequently lead to performance issues. The advice of "use table variables if you have less than NNN rows" is flawed. It might seem like temporary tables are performant but they are not scalable with a couple more years of data.
+- There are two use cases for table variable and are infrequently called for.
+  1. Extremely highly-called code where recompiles from temporary table activity is a problem
+  2. Audit scenarios when you need to keep data after a transaction is rolled back.
+
+```sql
+CREATE TABLE #UseMe (
+    UseMeId   INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+   ,FirstName NVARCHAR(100) NOT NULL
+   ,LastName  NVARCHAR(100) NOT NULL
+);
+
+DECLARE @DoNotUseMe TABLE (
+    DoNotUseMeId INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+   ,FirstName    NVARCHAR(100) NOT NULL
+   ,LastName     NVARCHAR(100) NOT NULL
+);
+```
+
+## Using Hints
+**Check Id:** [NONE YET]
+
+Because the SQL Server Query Optimizer typically selects the best execution plan for a query, we recommend that [hints](https://docs.microsoft.com/en-us/sql/t-sql/queries/hints-transact-sql-table) be used only as a last resort by experienced developers and database administrators.
+
+## Using Brackets
+**Check Id:** [NONE YET]
+
+You might being using square brackets [] unnecessarily for object names. If object names are valid and not reserved words, there is no need to use square brackets. Use them only for invalid names.
+
+```sql
+SELECT 
+    P.[FirstName]
+   ,P.[MiddleName]
+   ,P.[LastName]
+FROM 
+    [dbo].[Person] AS P
+
+/* Use this instead */
+SELECT 
+    P.FirstName
+   ,P.MiddleName
+   ,P.LastName
+FROM 
+	dbo.Person AS P
+```
+
+## Using '== NULL' or '<> NULL' to Filter a Nullable Column
+**Check Id:** [NONE YET]
+
+To determine whether an expression is ```NULL```, use ```IS NULL``` or ```IS NOT NULL``` instead of comparison operators (such as ```=``` or ```<>```). Comparison operators return UNKNOWN when either or both arguments are ```NULL```.
+
+## Using the NOT IN Predicate in the WHERE Clause
+**Check Id:** [NONE YET]
+
+Use ```EXISTS``` instead of ```IN```. 
+
+```EXISTS``` used to be faster than ```IN``` when comparing data from a subquery. Using ```EXISTS``` would stop searching as soon as it found the first row. ```IN``` would collect all the results. SQL Server got smarter and treats ```EXISTS``` and ```IN``` the same way so performance is not an issue.
+
+The ```NOT IN``` operator cause issues when the subquery data contains ```NULL``` values. ```NOT EXIST``` or ```LEFT JOIN / IS NULL``` should be used.
+
+Option 2 (```LEFT JOIN / IS NULL```) & 3 (```NOT EXISTS```) are semantically equivalent.
+
+```sql
+/* Option 1 (NOT IN)*/
+SELECT
+    P.FirstName
+   ,P.LastName
+FROM
+    dbo.Person AS P
+WHERE
+    P.PersonId NOT IN (SELECT L.PersonId FROM dbo.List AS L);
+
+/* Option 2 (LEFT JOIN / IS NULL) */
+SELECT
+    P.FirstName
+   ,P.LastName
+FROM
+    dbo.Person                    AS P
+    LEFT OUTER JOIN dbo.List AS L ON P.PersonId = L.PersonId
+WHERE
+    L.PersonId IS NULL;
+
+/* Option 3 (NOT EXISTS) */
+SELECT
+    P.FirstName
+   ,P.LastName
+FROM
+    dbo.Person AS P
+WHERE
+    NOT EXISTS (SELECT * FROM dbo.List AS L WHERE P.PersonId = L.PersonId);
+```
+
+## Not Using Semicolon to Terminate Statements
+**Check Id:** [NONE YET]
+
+Although the semicolon isn't required for most statements prior to SQL Server 2016, it will be required in a future version. If you do not include them now database migration in the future will need to add them.
+
+```sql
+SELECT P.FirstName FROM Person.Person AS P; /* <-- semicolon goes at the end here */
+```
+
+
+## Using a Non-SARGable Expression in a WHERE Clause
+**Check Id:** [NONE YET]
+
+Search ARGument..able. Avoid having a column or variable used within an expression or used as a function parameter. Columns are best used its self on one side of the operator. You will get a table scan instead of a index seek which will hurt performance.
+
+![Non-SARGable Scan vs. SARGable Seek](Images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
+
+
+## Mixing Data Types in JOIN or WHERE Clauses
+**Check Id:** [NONE YET]
+
+Mixing data types cause implicit conversion and they are bad for performance. Implicit conversions ruin SARGability, makes index unusable and utilize more CPU resource than required.
+
+In the ```WHERE``` clause below you will notice the "!" mark on the SELECT indicating there is an implicit conversion. In this example the EmailPromotion column is an ```INT``` but we are treating it like a string by performing a ```LIKE```. We get a slow table scan instead of a faster index seek.
+
+![Implicit conversions in Execution Plan](Images/Mixing_Data_Types_in_JOIN_or_WHERE_Clauses.png)
+
+
+## Stored Procedures not Using BEGIN END
+**Check Id:** [NONE YET]
+
+The ```BEGIN``` and ```END``` block is optional for stored procedures but is required for multi-line user-defined functions. It is best to avoid confusion and be consistent.
+
+**Use this:**
+```sql
+CREATE OR ALTER PROCEDURE dbo.BusinessEntityAction
+AS
+    BEGIN
+        SET NOCOUNT ON;
+
+		/* [T-SQL GOES HERE] */
+
+    END;
+GO
+```
+
+**Instead of this:**
+```sql
+CREATE OR ALTER PROCEDURE dbo.BusinessEntityAction
+AS
+SET NOCOUNT ON;
+
+/* [T-SQL GOES HERE] */
+
+GO
+```
+
+## SET ANSI_NULLS OFF
+**Check Id:** [NONE YET]
+
+You should be using SET ANSI_NULLS ON; unless you have a good reason not to.
+
+## Using Types of Variable Length That Are Size 1 or 2
+**Check Id:** [NONE YET]
+
+If the length of the type will be very small (size 1 or 2) and consistent, declare them as a type of fixed length, such as ```CHAR```, ```NCHAR```, and ```BINARY```.
+
+When you use data types of variable length such as ```VARCHAR```, ```NVARCHAR```, and ```VARBINARY```, you incur an additional storage cost to track the length of the value stored in the data type. In addition, columns of variable length are stored after all columns of fixed length, which can have performance implications.
+
+## Data Type Without Length
+**Check Id:** [NONE YET]
+
+Always specify lengths for a data type.
+
+- A ```VARCHAR```, or ```NVARCHAR``` that is declared without an explicit length will use a default length. It is safer to be explicit.
+- When you convert a data type to a ```VARCHAR```, you do not have to specify the length. SQL Server will use a ```VARCHAR``` length large enough to hold the text. It is better to specify the length because SQL Server does not know the length you may subsequently need.
+- ```DECIMAL```, ```NUMERIC```. If no precision and scale are provided, SQL Server will use (18, 0)
+
+
+## COALESCE vs ISNULL
+**Check Id:** [NONE YET]
+
+The ISNULL function and the COALESCE expression have a similar purpose but can behave differently.
+
+1. Because ```ISNULL``` is a function, it's evaluated only once. As described above, the input values for the ```COALESCE``` expression can be evaluated multiple times.
+2. Data type determination of the resulting expression is different. ```ISNULL``` uses the data type of the first parameter, ```COALESCE``` follows the ```CASE``` expression rules and returns the data type of value with the highest precedence.
+3. The NULLability of the result expression is different for ```ISNULL``` and ```COALESCE```.
+4. Validations for ```ISNULL``` and ```COALESCE``` are also different. For example, a NULL value for ```ISNULL``` is converted to INT though for ```COALESCE```, you must provide a data type.
+5. ```ISNULL``` takes only two parameters. By contrast ```COALESCE``` takes a variable number of parameters.
+6. ```COALESCE``` is faster but your results could depend on different circumstances.
+
+
+Source: [Microsoft Docs: Comparing COALESCE and ISNULL](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/coalesce-transact-sql?view=sql-server-ver15#comparing-coalesce-and-isnull)
+
+## Using ISNUMERIC
+**Check Id:** [NONE YET]
+
+Avoid using the ```ISNUMERIC()``` function, because it can often lead to data type conversion errors. If you’re working on SQL Server 2012 or later, it’s much better to use the ```TRY_CONVERT()``` or ```TRY_CAST()``` function instead. On earlier SQL Server versions, the only way to avoid it is by using LIKE expressions.
+
+
+## Using SELECT DISTINCT
+**Check Id:** [NONE YET]
+
+So while DISTINCT and GROUP BY are identical in a lot of scenarios, there is one case where the GROUP BY approach leads to better performance (at the cost of less clear declarative intent in the query itself).
+
+You also might be using SELECT DISTINCT to mask a JOIN problem. It’s much better to determine why rows are being duplicated and fix the problem.
+
+## IN/NOT VS EXISTS/NOT EXISTS
+**Check Id:** [NONE YET]
+
+Use EXISTS or NOT EXISTS if referencing a subquery, and IN/NOT IN when using a list of literal values.
+
+## Using Keyword Abbreviation
+**Check Id:** [NONE YET]
+
+Use the full name like in DATEDIFF(**YEAR**, StartDate, EndDate) vs DATEDIFF(**YY**, StartDate, EndDate).
+
+## Using Percent at the Start of LIKE Predicate
+**Check Id:** [NONE YET]
+
+You will not get an index seek using the percent wildcard (%) first in your search predicate.
+
+```sql
+SELECT
+    P.FirstName
+   ,P.MiddleName
+   ,P.LastName
+FROM
+    dbo.Person AS P
+WHERE
+    P.LastName LIKE '%son';
+```
+
+
+## Using Unfinished Notes
+**Check Id:** [NONE YET]
+
+You might have still have some work to do. One of the codetags below was found.
+
+- TODO
+- FIXME
+- HACK
+- CLEVER
+- MAGIC
+- XXX
+- BUG
+- BUGFIX
+- OPTIMIZE
+- LAZY
+- BROKEN
+- REFACTOR
+- REFACT
+- RFCTR
+- OOPS
+- SMELL
+- NEEDSWORK
+- INSPECT
+- RFE 
+- FEETCH
+- FR
+- FTRQ
+- FTR
+- IDEA
+- QUESTION
+- QUEST
+- QSTN
+- WTF
+- ???
+- !!!
+- NOTE 
+- HELP
+- TODOC 
+- DOCDO
+- DODOC
+- NEEDSDOC
+- EXPLAIN
+- DOCUMENT
+
+## Missing Index on WHERE Clause
+**Check Id:** [NONE YET]
+
+Check WHERE clauses for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) amount of records.
+
+## Missing Index on IN Columns
+**Check Id:** [NONE YET]
+
+Check IN() predicates for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) amount of records.
+
+## Converting Dates to String to Compare
+**Check Id:** [NONE YET]
+
+Don't convert dates to strings to compare. Dates should be stored with the pattern YYYY-MM-DD. Not all are and string comparisons can provide the wrong results.
+
+## Not Using SET XACT_ABORT ON
+**Check Id:** [NONE YET]
+
+- When ```SET XACT_ABORT ON```, if a T-SQL statement raises a run-time error, the entire transaction is terminated and rolled back.
+- When ```SET XACT_ABORT OFF```, in some cases only the T-SQL statement that raised the error is rolled back and the transaction continues processing. Depending upon the severity of the error, the entire transaction may be rolled back even when SET XACT_ABORT is OFF. OFF is the default setting in a T-SQL statement, while ON is the default setting in a trigger.
+
+A use case for ```SET XACT_ABORT OFF``` is when debugging to trap an error.
 
 ## Scalar Function Is Not Inlineable
 **Check Id:** 25
@@ -680,6 +1205,38 @@ Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https:
 
 See [RedGate SQL Server Prompt](https://github.com/EmergentSoftware/SQL-Server-Assess#redgate-sql-server-prompt)
 
+## Not Using UPPERCASE for Keywords
+**Check Id:** [NONE YET]
+
+Keywords like ```SELECT```, ```FROM```, ```GROUP BY``` should be in UPPERCASE. See [Not Using SQL Formatting](#not-using-sql-formatting)
+
+## Set Option Cause Recompile
+**Check Id:** [NONE YET]
+
+Setting options in batches, stored procedures and triggers cause recompilation. They should be compiled just once and have their plans reused for subsequent calls. The query will be more performant and use less memory.
+
+## Using Column Number in ORDER BY
+**Check Id:** [NONE YET]
+
+Use the column name in your ORDER BY instead of the column number. It makes it difficult to understand the code at a glance and leads to issue when alter the order of the columns in the SELECT.
+
+```sql
+SELECT
+     P.FirstName
+    ,P.LastName
+FROM
+    dbo.Person AS P
+ORDER BY
+    2;
+
+SELECT
+     P.FirstName
+    ,P.LastName
+FROM
+    dbo.Person AS P
+ORDER BY
+    P.LastName;
+```
 
 ## Not Using Code Comments
 **Check Id:** [NONE YET]
@@ -829,6 +1386,7 @@ This check found objects that were deleted, renamed. Use can also run "Find Inva
 
 Try running EXEC sp_refreshsqlmodule or sp_refreshview.
 
+
 # Data Issue
 
 ## Unencrypted Data
@@ -841,6 +1399,21 @@ The table column returned for this check might have unencrypted data that you mi
 - [SQL Server Always Encrypt](https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-database-engine)
 - [SQL Server Transparent Data Encryption (TDE)](https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption)
 - You could develop your own or utilize a development framework pattern to implement a custom one-way hashing, hashing with salting or encryption using AES-128, AES-192, AES-256.
+
+
+# Configuration Issue
+
+## Object Not Owned by dbo
+**Check Id:** [NONE YET]
+
+Using dbo as the owner of all the database objects simplifies object management. dbo will always be a user in the database. If an object is owned by an account other than dbo, you must transfer ownership account needs to be deleted.
+
+## Database Compatibility Level is Lower Than the SQL Server
+**Check Id:** [NONE YET]
+
+The database compatibility level lower than the SQL Server it is running on.
+
+There might be query optimization your are not getting running on an older database compatibility level. You might also introduce issues with a more modern database compatibility level.
 
 
 # Running Issues

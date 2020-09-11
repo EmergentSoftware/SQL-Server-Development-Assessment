@@ -20,23 +20,23 @@
 ** Modified On: $DATE$
 ** Description: Description
 **********************************************************************************************************************/
-CREATE OR ALTER PROCEDURE dbo.<Procedure Name, SYSNAME, BusinessEntityAction>
+CREATE OR ALTER PROCEDURE <Schema Name, SYSNAME, dbo>.<Procedure Name, SYSNAME, BusinessEntityAction>
 	-- @ParameterName AS DataType [ = DefaultValue ]
 -- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'
 AS
-BEGIN
-	SET NOCOUNT ON;
+	BEGIN
+		SET NOCOUNT ON;
 	
-	$SELECTIONSTART$--SELECT
-	--	TableId     = TN.TableId
-	--   ,ColumnName1 = TN.Column1
-	--   ,ColumnName2 = TN.Column2
-	--FROM
-	--	SchemaName.TableName AS TN
-	--WHERE
-	--	TN.TableId = @TableId;$SELECTIONEND$
+		$SELECTIONSTART$--SELECT
+		--	TableId     = TN.TableId
+		--   ,ColumnName1 = TN.Column1
+		--   ,ColumnName2 = TN.Column2
+		--FROM
+		--	SchemaName.TableName AS TN
+		--WHERE
+		--	TN.TableId = @TableId;$SELECTIONEND$
 
-END
+	END
 GO
 --SET QUOTED_IDENTIFIER ON|OFF
 --SET ANSI_NULLS ON|OFF]]></Code>

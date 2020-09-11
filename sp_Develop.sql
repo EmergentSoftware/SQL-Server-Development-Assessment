@@ -8,8 +8,7 @@
 ** Copyright for portions of sp_Develop are held by Phil Factor (real name withheld) as part of project 
 ** SQLCodeSmells https://github.com/Phil-Factor/SQLCodeSmells
 **
-** All other copyrights for sp_Develop are held by 
-** Emergent Software, LLC as described below.
+** All other copyrights for sp_Develop are held by Emergent Software, LLC as described below.
 ** 
 ** Copyright (c) 2020 Emergent Software, LLC
 ** 

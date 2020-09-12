@@ -1,17 +1,43 @@
-# SQL Server Assess Overview
-The SQL Server Assess project contains the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure. It can be used by database developers, software developers and for performing database code (smell) reviews.
 
-This lists the database development best practice checks and naming conventions checks for the stored procedure named [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql).
+# Table of Contents
+
+- [SQL Server Assess (sp_Develop) Overview](#SQL-Server-Assess-Overview)
+  - [Install Instructions](#sp_Develop-Install-Instructions)
+  - [Usage Instructions](#sp_Develop-Usage-Instructions)
+  - [Results Explanations](#sp_Develop-Results)
+  - [Parameter Explanations](#sp_Develop-Parameter-Explanations)
+  - [How to Skip Checks](#How-to-Skip-Checks-Across-Your-Estate)
+- [Test Database Install](#Test-Database-Install)
+- [Configure Development Application Settings](#Configure-Development-Application-Settings)
+- Best Practice Finding Groups
+  - [Current High Check Id](#Current-High-Check-Id)
+  - [Naming Conventions](#Naming-Conventions)
+  - [Table Conventions](#Table-Conventions)
+  - [Data Type Conventions](#Data-Type-Conventions)
+  - [SQL Code Development](#SQL-Code-Development)
+  - [Data Issue](#Data-Issue)
+  - [Configuration Issue](#Configuration-Issue)
+  - [Running Issues](#Running-Issues)
+
+
+# SQL Server Assess Overview
+The open source SQL Server Assess project contains the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) stored procedure. It can be used by database developers, software developers and for performing database code (smell) assessments to adhere to best practices.
+
+The sections below are where you will find the details for each of the checks performed in [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql). 
+
+You can use the link in the [results tab](#sp_Develop-Results) to navigate to the specific check details. Also, feel free to read through the sections as there might not be a check created yet to incorporate other best practices in your development.
+
+Please consider [Contributing to the SQL Server Assess](CONTRIBUTING.md) project.
 
 ## sp_Develop Install Instructions
 
-It is recommend installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine. 
+It is recommend installing the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) stored procedures in the master database for full SQL Servers, but if you want to use another one, that's totally fine. 
 
-On Azure SQL Server you will need to install the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure in the user database.
+On Azure SQL Server you will need to install the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) stored procedure in the user database.
 
 ## sp_Develop Usage Instructions
 
-After installing the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) stored procedure open SQL Server Management Studio and run in the database you wish to check for database development best practices.
+After installing the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) stored procedure open SQL Server Management Studio and run in the database you wish to check for database development best practices.
 
 ```sql
 EXEC dbo.sp_Develop
@@ -21,7 +47,7 @@ EXEC dbo.sp_Develop
 
 ## sp_Develop Results
 
-After running [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) the 'Results' tab will contain the checks findings.
+After running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) the 'Results' tab will contain the checks findings.
 
 ![sp_Develop Results](Images/sp_Develop_Results.png)
 
@@ -34,7 +60,7 @@ The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectTy
 |DatabaseName|Can be run for multiple databases so this will show you the database with the potential issue|
 |SchemaName|This is the schema for the object that might have an issue|
 |ObjectName|This can be anything from user tables, views stored procedures, functions, …|
-|FindingGroup|The high level grouping for the check<br/> - Naming Conventions<br/>- Table Conventions<br/>- Data Type Conventions<br/>- SQL Code Development<br/>- Running Issues|
+|FindingGroup|The high level grouping for the check<br/> - Naming Conventions<br/>- Table Conventions<br/>- Data Type Conventions<br/>- SQL Code Development<br/>- Data Issue<br/>- Configuration Issue<br/>- Running Issues|
 |Finding|The specific potential issue we the check is looking for|
 |Details|Additional details about the potential issue. This does not go into in-depth details of the potential issue but should give you a heads up of what to look for.|
 |URL|Copy and paste this link into a browser to view the README.md write up for the potential issue|
@@ -64,7 +90,7 @@ The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectTy
 
 Sometimes there are checks, databases or servers that you want to skip. For example, say a database is from a vendor and you are not responsible for the database development. 
 
-Another use case for skipping checks is to indicate that you have acknowledged a potential issue and you are OK with it. You can skip that check for that specific object. Using [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) with this pattern allows you to perform your database development and iteratively check for issues.
+Another use case for skipping checks is to indicate that you have acknowledged a potential issue and you are OK with it. You can skip that check for that specific object. Using [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) with this pattern allows you to perform your database development and iteratively check for issues.
 
 #### Create a table to hold the list of checks you want to skip
 
@@ -83,7 +109,7 @@ GO
 
 #### Checks to Skip
 
-The CheckId column refers to the list below. You can also scroll to the right in the [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
+The CheckId column refers to the list below. You can also scroll to the right in the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
 
 You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to ```INSERT``` that record into your skip check table.
 
@@ -169,6 +195,8 @@ The settings are located in the project "[\SQL-Server-Assess\Development Applica
 
 
 # Current High Check Id
+
+If you want to add a new check, use this number then add +1 for the next one.
 
 ## Next Check Id: 29
 
@@ -1430,13 +1458,13 @@ There might be query optimization your are not getting running on an older datab
 
 # Running Issues
 
-These are some issues you might run into when running [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql).
+These are some issues you might run into when running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql).
 
 
 ## Some Checks Skipped
 **Check Id:** 26
 
-We skipped some checks that are not currently possible, relevant, or practical for the SQL Server [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) is running against. This could be due to the SQL Server version/edition or the database compatibility level.
+We skipped some checks that are not currently possible, relevant, or practical for the SQL Server [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) is running against. This could be due to the SQL Server version/edition or the database compatibility level.
 
 
 
@@ -1455,13 +1483,13 @@ There most likely been some new checks and fixes performed within the last 6 mon
 ## Ran on a Non-Readable Availability Group Secondary Databases
 **Check Id:** 17
 
-You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node. To analyze those databases, run [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) on the primary, or on a readable secondary.
+You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node. To analyze those databases, run [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) on the primary, or on a readable secondary.
 
  
 ## Ran Against 50+ Databases Without @BringThePain = 1
 **Check Id:** 18
 
-Running [sp_Develop](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/sp_Develop.sql) on a server with 50+ databases may cause temporary insanity for the server and/or user. If you're sure you want to do this, run again with the parameter @BringThePain = 1.
+Running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) on a server with 50+ databases may cause temporary insanity for the server and/or user. If you're sure you want to do this, run again with the parameter @BringThePain = 1.
 
 
 

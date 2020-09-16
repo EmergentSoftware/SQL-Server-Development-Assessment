@@ -147,7 +147,7 @@
   </SpacesAroundParenthesesContents>
   <SpacesOrTabs>OnlySpaces</SpacesOrTabs>
   <SubsequentInsertColumnsListItemsBreakType>ChopAlways</SubsequentInsertColumnsListItemsBreakType>
-  <SubsequentInsertValuesListItemsBreakType>ChopIfLong</SubsequentInsertValuesListItemsBreakType>
+  <SubsequentInsertValuesListItemsBreakType>ChopAlways</SubsequentInsertValuesListItemsBreakType>
   <SubsequentListItemsBreakType>ChopAlways</SubsequentListItemsBreakType>
   <UseGlobalListOptionsForDmlStatements>false</UseGlobalListOptionsForDmlStatements>
   <UseObjectDefinitionCase>true</UseObjectDefinitionCase>

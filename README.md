@@ -43,7 +43,7 @@ After installing the [sp_Develop](https://raw.githubusercontent.com/EmergentSoft
 EXEC dbo.sp_Develop
 ```
 
-[Check out the parameter section for more options](#Parameter-Explanations)
+[Check out the parameter section for more options](#sp_develop-parameter-explanations)
 
 ## sp_Develop Results
 

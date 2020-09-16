@@ -74,7 +74,7 @@ The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectTy
 |Parameter|Details|
 |--|--|
 |@DatabaseName|Defaults to current DB if not specified|
-|@GetAllDatabases|Runs checks across all of the databases on the server instead of just your current database context. Does not work on Azure SQL Server.|
+|@GetAllDatabases|Runs checks across all the databases on the server instead of just your current database context. Does not work on Azure SQL Server.|
 |@BringThePain |If you’ve got more than 50 databases on the server, this only works if you also pass in @BringThePain = 1, because it’s gonna be slow.|
 |@SkipChecksServer|The linked server name that stores the skip checks|
 |@SkipChecksDatabase|The database that stores the skip checks|

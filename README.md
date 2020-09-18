@@ -559,6 +559,18 @@ Heaps have performance issues like table scans, forward fetches.
 
 Poor data type choices can have significant impact on a database design and performance. A best practice is to right size the data type by understanding of the data.
 
+## Columns Named the Same Have Different Data Types
+**Check Id:** [NONE YET]
+
+There are two situations where this is going to hurt performance. When you have a mismatch of data types in a JOIN and a WHERE clause. SQL Server will need to convert one of them to match the others data type. This is called implicit conversion.
+
+**What will it hurt**
+
+- Indexes will not be used correctly
+- Missing index requests will not be logged in the DMV
+- Extra CPU cycles are going to be required for the conversion
+
+
 ## Using of Deprecated Data Type
 **Check Id:** [NONE YET]
 

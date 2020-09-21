@@ -189,10 +189,10 @@ AS
 
                 IF LTRIM(RTRIM(@SkipCheckServer)) <> ''
                     BEGIN
-                        SET @StringToExecute += QUOTENAME(@SkipCheckServer) + N'.';
+                        SET @StringToExecute = @StringToExecute + QUOTENAME(@SkipCheckServer) + N'.';
                     END;
 
-                SET @StringToExecute += QUOTENAME(@SkipCheckDatabase) + N'.' + QUOTENAME(@SkipCheckSchema) + N'.' + QUOTENAME(@SkipCheckTable) + N' AS SK
+                SET @StringToExecute = @StringToExecute + QUOTENAME(@SkipCheckDatabase) + N'.' + QUOTENAME(@SkipCheckSchema) + N'.' + QUOTENAME(@SkipCheckTable) + N' AS SK
                 WHERE
                     SK.ServerName IS NULL
                     OR SK.ServerName = SERVERPROPERTY(''ServerName'')

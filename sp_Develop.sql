@@ -1552,7 +1552,7 @@ AS
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = SM.object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
-					        PATINDEX(CONCAT(''%FROM%'', ''' + @DatabaseName + N''', ''.%.%'') COLLATE SQL_Latin1_General_CP1_CI_AS, SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0;';
+					        PATINDEX(''%FROM%'' + ''' + @DatabaseName + N''' + ''.%.%'' COLLATE SQL_Latin1_General_CP1_CI_AS, SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0;';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;

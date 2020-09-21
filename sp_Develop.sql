@@ -80,8 +80,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '0.11.6';
-        SET @VersionDate = '20200909';
+        SET @Version = '0.11.7';
+        SET @VersionDate = '20200920';
         SET @URLBase = 'https://github.com/EmergentSoftware/SQL-Server-Assess#';
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);
@@ -1625,7 +1625,8 @@ AS
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
-					        O.type = ''FN'';'
+					        O.type = ''FN''
+                            AND O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'');'
 			
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1785,6 +1786,7 @@ AS
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
 					        O.type IN (''P'')
+                            AND O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'')
 					        AND SM.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS;'
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;

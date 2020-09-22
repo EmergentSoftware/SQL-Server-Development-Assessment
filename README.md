@@ -113,7 +113,7 @@ GO
 
 The CheckId column refers to the list below. You can also scroll to the right in the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
 
-You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to ```INSERT``` that record into your skip check table.
+You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to `INSERT` that record into your skip check table.
 
 Refer to the example checks below and each comment for its use.
 
@@ -154,6 +154,8 @@ EXEC dbo.sp_Develop
 # Test Database Install
 
 The 'Test Database' folder contains the RedGate SQL Source Control. Use this database for creating and testing checks.
+
+SQL Server 2008+ is supported. You can script out the test database and downgrade schema features like `DATETIME2` that is not supported.
 
 **Quick Steps to Setup and Use:**
 
@@ -360,7 +362,7 @@ No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 ## Not Using PascalCase
 **Check Id:** [NONE YET]
 
-For all parts of the table name, including prefixes, use Pascal Case. ```PascalCase``` also reduces the need for underscores to visually separate words in names.
+For all parts of the table name, including prefixes, use Pascal Case. `PascalCase` also reduces the need for underscores to visually separate words in names.
 
 
 
@@ -469,7 +471,7 @@ An index rebuild or reorganization will enabled disabled indexes. It is now best
 
 The Index Tuning Wizard and Database Tuning Advisor create fake indexes, then getting a new execution plan for a query. These fake indexes stay behind sometimes.
 
-To fix the issue ```DROP``` the indexes.
+To fix the issue `DROP` the indexes.
 
 There are better ways to performance tune than using the wizards.
 
@@ -504,7 +506,7 @@ ALTER TABLE dbo.TableName WITH CHECK CHECK CONSTRAINT ConstraintName;
 GO
 ```
 
-The ```CHECK CHECK``` syntax is correct. The 1st ```CHECK``` is the end of ```WITH CHECK``` statement. The 2nd ```CHECK``` is the start of the ```CHECK CONSTRAINT``` clause to enable the constraint
+The `CHECK CHECK` syntax is correct. The 1st `CHECK` is the end of `WITH CHECK` statement. The 2nd `CHECK` is the start of the `CHECK CONSTRAINT` clause to enable the constraint
 
 ## UNIQUEIDENTIFIER in a Clustered Index
 **Check Id:** 22
@@ -603,7 +605,7 @@ Since SQL Server 2016 if the size of the cell is < 8K characters for VARCHAR(MAX
 ## Boolean Column Not Using BIT
 **Check Id:** [NONE YET]
 
-Use the ```BIT``` data type for boolean columns. These columns will have names like IsSpecialSaleFlag. 
+Use the `BIT` data type for boolean columns. These columns will have names like IsSpecialSaleFlag. 
 
 ## Using FLOAT or REAL
 **Check Id:** [NONE YET]
@@ -705,15 +707,15 @@ SQL Server is the second most expensive sorting system, remind the developer the
 #### Overview
 Even though you'll hear DBAs and other experts say, "never use cursors!", there are a few cases were cursors come in handy and there are a few important pointers.
 
-SQL Server originally supported cursors to more easily port dBase II applications to SQL Server, but even then, you can sometimes use a ```WHILE``` loop (See [Using WHILE Loop](#Using-WHILE-Loop)) as an effective substitute. Modern versions of SQL Server provide window functions and the CROSS/OUTER APPLY syntax to cope with some of the traditional valid uses of the cursor.
+SQL Server originally supported cursors to more easily port dBase II applications to SQL Server, but even then, you can sometimes use a `WHILE` loop (See [Using WHILE Loop](#Using-WHILE-Loop)) as an effective substitute. Modern versions of SQL Server provide window functions and the CROSS/OUTER APPLY syntax to cope with some of the traditional valid uses of the cursor.
 
 #### Valid Use Cases
-- Executing a complex stored procedure or series of stored procedures based on a set of data. It is true this can be handled with a ```WHILE``` loop and grabbing each record from the database, but a read-only, fast-forward cursor well and can be easier to manage.
+- Executing a complex stored procedure or series of stored procedures based on a set of data. It is true this can be handled with a `WHILE` loop and grabbing each record from the database, but a read-only, fast-forward cursor well and can be easier to manage.
 - Import scripts
 
 #### Cursor Type
 It is likely a bad idea to use any cursor other than one that is read-only and fast-forward. However, you need to declare your cursor correctly in order to create the right type:
-```DECLARE MyCursor CURSOR LOCAL FAST_FORWARD FOR```
+`DECLARE MyCursor CURSOR LOCAL FAST_FORWARD FOR`
 
 #### Full Cursor Syntax
 
@@ -761,9 +763,10 @@ DEALLOCATE MyCursor;
 ## Using WHILE Loop
 **Check Id:** [NONE YET]
 
-```WHILE``` loop is really a type of cursor. Although a ```WHILE``` loop can be useful for several inherently procedural tasks, you can usually find a better relational way of achieving the same results. The database engine is heavily optimized to perform set-based operations rapidly.
+`WHILE` loop is really a type of cursor. Although a `WHILE` loop can be useful for several inherently procedural tasks, you can usually find a better relational way of achieving the same results. The database engine is heavily optimized to perform set-based operations rapidly.
 
-Here is a ```WHILE``` loop pattern. You might be able to create a SQL statement that does a bulk update instead.
+Here is a `WHILE` loop pattern. You might be able to create a SQL statement that does a bulk update instead.
+
 ```sql
 CREATE TABLE #Person (
     PersonId        INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
@@ -861,18 +864,18 @@ FROM
 ## Using '== NULL' or '<> NULL' to Filter a Nullable Column
 **Check Id:** [NONE YET]
 
-To determine whether an expression is ```NULL```, use ```IS NULL``` or ```IS NOT NULL``` instead of comparison operators (such as ```=``` or ```<>```). Comparison operators return UNKNOWN when either or both arguments are ```NULL```.
+To determine whether an expression is `NULL`, use `IS NULL` or `IS NOT NULL` instead of comparison operators (such as `=` or `<>`). Comparison operators return UNKNOWN when either or both arguments are `NULL`.
 
 ## Using the NOT IN Predicate in the WHERE Clause
 **Check Id:** [NONE YET]
 
-Use ```EXISTS``` instead of ```IN```. 
+Use `EXISTS` instead of `IN`. 
 
-```EXISTS``` used to be faster than ```IN``` when comparing data from a subquery. Using ```EXISTS``` would stop searching as soon as it found the first row. ```IN``` would collect all the results. SQL Server got smarter and treats ```EXISTS``` and ```IN``` the same way so performance is not an issue.
+`EXISTS` used to be faster than `IN` when comparing data from a subquery. Using `EXISTS` would stop searching as soon as it found the first row. `IN` would collect all the results. SQL Server got smarter and treats `EXISTS` and `IN` the same way so performance is not an issue.
 
-The ```NOT IN``` operator cause issues when the subquery data contains ```NULL``` values. ```NOT EXIST``` or ```LEFT JOIN / IS NULL``` should be used.
+The `NOT IN` operator cause issues when the subquery data contains `NULL` values. `NOT EXIST` or `LEFT JOIN / IS NULL` should be used.
 
-Option 2 (```LEFT JOIN / IS NULL```) & 3 (```NOT EXISTS```) are semantically equivalent.
+Option 2 (`LEFT JOIN / IS NULL`) & 3 (`NOT EXISTS`) are semantically equivalent.
 
 ```sql
 /* Option 1 (NOT IN)*/
@@ -927,7 +930,7 @@ Search ARGument..able. Avoid having a column or variable used within an expressi
 
 Mixing data types cause implicit conversion and they are bad for performance. Implicit conversions ruin SARGability, makes index unusable and utilize more CPU resource than required.
 
-In the ```WHERE``` clause below you will notice the "!" mark on the SELECT indicating there is an implicit conversion. In this example the EmailPromotion column is an ```INT``` but we are treating it like a string by performing a ```LIKE```. We get a slow table scan instead of a faster index seek.
+In the `WHERE` clause below you will notice the "!" mark on the SELECT indicating there is an implicit conversion. In this example the EmailPromotion column is an `INT` but we are treating it like a string by performing a `LIKE`. We get a slow table scan instead of a faster index seek.
 
 ![Implicit conversions in Execution Plan](Images/Mixing_Data_Types_in_JOIN_or_WHERE_Clauses.png)
 
@@ -935,7 +938,7 @@ In the ```WHERE``` clause below you will notice the "!" mark on the SELECT indic
 ## Stored Procedures not Using BEGIN END
 **Check Id:** [NONE YET]
 
-The ```BEGIN``` and ```END``` block is optional for stored procedures but is required for multi-line user-defined functions. It is best to avoid confusion and be consistent.
+The `BEGIN` and `END` block is optional for stored procedures but is required for multi-line user-defined functions. It is best to avoid confusion and be consistent.
 
 **Use this:**
 ```sql
@@ -969,18 +972,18 @@ You should be using SET ANSI_NULLS ON; unless you have a good reason not to.
 ## Using Types of Variable Length That Are Size 1 or 2
 **Check Id:** [NONE YET]
 
-If the length of the type will be very small (size 1 or 2) and consistent, declare them as a type of fixed length, such as ```CHAR```, ```NCHAR```, and ```BINARY```.
+If the length of the type will be very small (size 1 or 2) and consistent, declare them as a type of fixed length, such as `CHAR`, `NCHAR`, and `BINARY`.
 
-When you use data types of variable length such as ```VARCHAR```, ```NVARCHAR```, and ```VARBINARY```, you incur an additional storage cost to track the length of the value stored in the data type. In addition, columns of variable length are stored after all columns of fixed length, which can have performance implications.
+When you use data types of variable length such as `VARCHAR`, `NVARCHAR`, and `VARBINARY`, you incur an additional storage cost to track the length of the value stored in the data type. In addition, columns of variable length are stored after all columns of fixed length, which can have performance implications.
 
 ## Data Type Without Length
 **Check Id:** [NONE YET]
 
 Always specify lengths for a data type.
 
-- A ```VARCHAR```, or ```NVARCHAR``` that is declared without an explicit length will use a default length. It is safer to be explicit.
+- A `VARCHAR`, or `NVARCHAR` that is declared without an explicit length will use a default length. It is safer to be explicit.
 - When you convert a data type to a ```VARCHAR```, you do not have to specify the length. SQL Server will use a ```VARCHAR``` length large enough to hold the text. It is better to specify the length because SQL Server does not know the length you may subsequently need.
-- ```DECIMAL```, ```NUMERIC```. If no precision and scale are provided, SQL Server will use (18, 0)
+- `DECIMAL`, `NUMERIC`. If no precision and scale are provided, SQL Server will use (18, 0)
 
 
 ## COALESCE vs ISNULL
@@ -988,12 +991,12 @@ Always specify lengths for a data type.
 
 The ISNULL function and the COALESCE expression have a similar purpose but can behave differently.
 
-1. Because ```ISNULL``` is a function, it's evaluated only once. As described above, the input values for the ```COALESCE``` expression can be evaluated multiple times.
-2. Data type determination of the resulting expression is different. ```ISNULL``` uses the data type of the first parameter, ```COALESCE``` follows the ```CASE``` expression rules and returns the data type of value with the highest precedence.
-3. The NULLability of the result expression is different for ```ISNULL``` and ```COALESCE```.
-4. Validations for ```ISNULL``` and ```COALESCE``` are also different. For example, a NULL value for ```ISNULL``` is converted to INT though for ```COALESCE```, you must provide a data type.
-5. ```ISNULL``` takes only two parameters. By contrast ```COALESCE``` takes a variable number of parameters.
-6. ```COALESCE``` is faster but your results could depend on different circumstances.
+1. Because `ISNULL` is a function, it's evaluated only once. As described above, the input values for the `COALESCE` expression can be evaluated multiple times.
+2. Data type determination of the resulting expression is different. `ISNULL` uses the data type of the first parameter, `COALESCE` follows the `CASE` expression rules and returns the data type of value with the highest precedence.
+3. The NULLability of the result expression is different for `ISNULL` and `COALESCE`.
+4. Validations for `ISNULL` and `COALESCE` are also different. For example, a NULL value for `ISNULL` is converted to INT though for `COALESCE`, you must provide a data type.
+5. `ISNULL` takes only two parameters. By contrast `COALESCE` takes a variable number of parameters.
+6. `COALESCE` is faster but your results could depend on different circumstances.
 
 
 Source: [Microsoft Docs: Comparing COALESCE and ISNULL](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/coalesce-transact-sql?view=sql-server-ver15#comparing-coalesce-and-isnull)
@@ -1001,7 +1004,7 @@ Source: [Microsoft Docs: Comparing COALESCE and ISNULL](https://docs.microsoft.c
 ## Using ISNUMERIC
 **Check Id:** [NONE YET]
 
-Avoid using the ```ISNUMERIC()``` function, because it can often lead to data type conversion errors. If you’re working on SQL Server 2012 or later, it’s much better to use the ```TRY_CONVERT()``` or ```TRY_CAST()``` function instead. On earlier SQL Server versions, the only way to avoid it is by using LIKE expressions.
+Avoid using the `ISNUMERIC()` function, because it can often lead to data type conversion errors. If you’re working on SQL Server 2012 or later, it’s much better to use the `TRY_CONVERT()` or `TRY_CAST()` function instead. On earlier SQL Server versions, the only way to avoid it is by using LIKE expressions.
 
 
 ## Using SELECT DISTINCT
@@ -1100,10 +1103,10 @@ Don't convert dates to strings to compare. Dates should be stored with the patte
 ## Not Using SET XACT_ABORT ON
 **Check Id:** [NONE YET]
 
-- When ```SET XACT_ABORT ON```, if a T-SQL statement raises a run-time error, the entire transaction is terminated and rolled back.
-- When ```SET XACT_ABORT OFF```, in some cases only the T-SQL statement that raised the error is rolled back and the transaction continues processing. Depending upon the severity of the error, the entire transaction may be rolled back even when SET XACT_ABORT is OFF. OFF is the default setting in a T-SQL statement, while ON is the default setting in a trigger.
+- When `SET XACT_ABORT ON`, if a T-SQL statement raises a run-time error, the entire transaction is terminated and rolled back.
+- When `SET XACT_ABORT OFF`, in some cases only the T-SQL statement that raised the error is rolled back and the transaction continues processing. Depending upon the severity of the error, the entire transaction may be rolled back even when SET XACT_ABORT is OFF. OFF is the default setting in a T-SQL statement, while ON is the default setting in a trigger.
 
-A use case for ```SET XACT_ABORT OFF``` is when debugging to trap an error.
+A use case for `SET XACT_ABORT OFF` is when debugging to trap an error.
 
 ## Scalar Function Is Not Inlineable
 **Check Id:** 25
@@ -1115,6 +1118,7 @@ Review the [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-u
 Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
 
 **Run this query to check if your function is inlineable. (SQL Server 2019+ & Azure SQL Server)**
+
 ```sql
 SELECT
     [Schema]     = SCHEMA_NAME(O.schema_id)
@@ -1148,6 +1152,7 @@ You should inline your scalar function in SQL query. This means duplicate the co
 Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
 
 **Run this query to check if your function is inlineable. (SQL Server 2019+ & Azure SQL Server)**
+
 ```sql
 SELECT
     [Schema]     = SCHEMA_NAME(O.schema_id)
@@ -1176,11 +1181,11 @@ WHERE
 ## Not Using SET NOCOUNT ON in Stored Procedure or Trigger
 **Check Id:** 19
 
-Use ```SET NOCOUNT ON;``` at the beginning of your SQL batches, stored procedures for report output and triggers in production environments, as this suppresses messages like '(10000 row(s) affected)' after executing INSERT, UPDATE, DELETE and SELECT statements. This improves the performance of stored procedures by reducing network traffic.
+Use `SET NOCOUNT ON;` at the beginning of your SQL batches, stored procedures for report output and triggers in production environments, as this suppresses messages like '(10000 row(s) affected)' after executing INSERT, UPDATE, DELETE and SELECT statements. This improves the performance of stored procedures by reducing network traffic.
 
-```SET NOCOUNT ON;``` is a procedural level instructions and as such there is no need to include a corresponding ```SET NOCOUNT OFF;``` command as the last statement in the batch. 
+`SET NOCOUNT ON;` is a procedural level instructions and as such there is no need to include a corresponding `SET NOCOUNT OFF;` command as the last statement in the batch. 
 
-```SET NOCOUNT OFF;``` can be helpful when debugging your queries in displaying the number of rows impacted when performing INSERTs, UPDATEs and DELETEs.
+`SET NOCOUNT OFF;` can be helpful when debugging your queries in displaying the number of rows impacted when performing INSERTs, UPDATEs and DELETEs.
 
 ```sql
 CREATE OR ALTER PROCEDURE dbo.PersonInsert
@@ -1206,19 +1211,19 @@ END;
 ## Using NOLOCK (READ UNCOMMITTED)
 **Check Id:** 15
 
-Using ```WITH (NOLOCK)```, ```WITH (READUNCOMMITTED)``` and ```TRANSACTION ISOLATION LEVEL READ UNCOMMITTED``` does not mean your SELECT query does not take out a lock, it does not obey locks.
+Using `WITH (NOLOCK)`, `WITH (READUNCOMMITTED)` and `TRANSACTION ISOLATION LEVEL READ UNCOMMITTED` does not mean your SELECT query does not take out a lock, it does not obey locks.
 
-Can ```NOLOCK``` be used when the data is not changing? Nope. It has the same problems.
+Can `NOLOCK` be used when the data is not changing? Nope. It has the same problems.
 
 **Problems**
 - You can see rows twice
 - You can skip rows altogether
 - You can see records that were never committed
-- Your query can fail with an error "could not continue scan with ```NOLOCK``` due to data movement"
+- Your query can fail with an error "could not continue scan with `NOLOCK` due to data movement"
 
 These problems will cause non-reproducible errors. You might end up blaming the issue on user error which will not be accurate.
 
-Only use ```NOLOCK``` when the application stakeholders understand the problems and approve of them occurring. Get their approval in writing to CYA.
+Only use `NOLOCK` when the application stakeholders understand the problems and approve of them occurring. Get their approval in writing to CYA.
 
 **Alternatives**
 - Index Tuning
@@ -1262,7 +1267,7 @@ See [RedGate SQL Server Prompt](https://github.com/EmergentSoftware/SQL-Server-A
 ## Not Using UPPERCASE for Keywords
 **Check Id:** [NONE YET]
 
-Keywords like ```SELECT```, ```FROM```, ```GROUP BY``` should be in UPPERCASE. See [Not Using SQL Formatting](#not-using-sql-formatting)
+Keywords like `SELECT`, `FROM`, `GROUP BY` should be in UPPERCASE. See [Not Using SQL Formatting](#not-using-sql-formatting)
 
 ## Set Option Cause Recompile
 **Check Id:** [NONE YET]
@@ -1340,11 +1345,11 @@ By including the table schema, we avoid certain bugs, minimize the time the engi
 ## Using SELECT *
 **Check Id:** 23
 
-Do not use the ```SELECT *``` in production code unless you have a good reason, instead specify the field names and bring back only those fields you need; this optimizes query performance and eliminates the possibility of unexpected results when fields are added to a table.
+Do not use the `SELECT *` in production code unless you have a good reason, instead specify the field names and bring back only those fields you need; this optimizes query performance and eliminates the possibility of unexpected results when fields are added to a table.
 
-```SELECT *``` in ```IF EXISTS``` statements are OK. "*" in math equations is OK.
+`SELECT *` in `IF EXISTS` statements are OK. "*" in math equations is OK.
 
-Reasons not to use ```SELECT *```:
+Reasons not to use `SELECT *`:
 - **Unnecessary Input / Output** will need to read more SQL Server 8k pages than required
 - **Increased Network Traffic** will take more bandwidth for more data
 - **More Application Memory** will need more memory to hold more data
@@ -1373,7 +1378,7 @@ It is common to need a database to operate under different names.
 ## Using @@IDENTITY Instead of SCOPE_IDENTITY
 **Check Id:** [NONE YET]
 
-The generation of an identity value is not transactional, so in some circumstances, ```@@IDENTITY``` returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The ```SCOPE_IDENTITY``` function is safer because it always relates to the current batch (within the same scope). Also consider using the ```IDENT_CURRENT``` function, which returns the last identity value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
+The generation of an identity value is not transactional, so in some circumstances, `@@IDENTITY` returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The `SCOPE_IDENTITY` function is safer because it always relates to the current batch (within the same scope). Also consider using the `IDENT_CURRENT` function, which returns the last identity value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
 
 
 ## Using BETWEEN for DATETIME Ranges

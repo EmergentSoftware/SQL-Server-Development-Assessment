@@ -2,3 +2,6 @@ title: sp_Develop - SQL Server Assess
 remote_theme: pmarsceill/just-the-docs
 color_scheme: light
 search_enabled: true
+baseurl: "/sql-server-assess"
+url: "https://emergentsoftware.github.io"
+

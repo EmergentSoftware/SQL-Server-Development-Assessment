@@ -27,6 +27,8 @@ The sections below are where you will find the details for each of the checks pe
 
 You can use the link in the [results tab](#sp_Develop-Results) to navigate to the specific check details. Also, feel free to read through the sections as there might not be a check created yet to incorporate other best practices in your development.
 
+sp_Develop runs on SQL Server 2005, 2008, 2008 R2, 2012, 2014,2016, 2017, 2019, Azure SQL Server
+
 Please consider [Contributing to the SQL Server Assess](CONTRIBUTING.md) project.
 
 ## sp_Develop Install Instructions

@@ -1,1 +1,32 @@
+---
+layout: default
+title: Test Database Install
+nav_order: 10
+has_children: true
+permalink: TestDatabaseInstall
+---
+
 # Test Database Install
+
+The 'Test Database' folder contains the RedGate SQL Source Control. Use this database for creating and testing checks.
+
+SQL Server 2008+ is supported. You can script out the test database and downgrade schema features like `DATETIME2` that is not supported.
+
+**Quick Steps to Setup and Use:**
+
+1. Create new database 'spDevelop' and select in Object Browser
+2. Open RedGate SQL Source Control in SQL Server Management Studio
+3. Click 'Setup' tab
+4. Select 'Link to my source control system' and click 'Next'
+5. Browser to '..\Test Database' cloned folder and click 'Link'
+6. Click 'Get latest' tab
+7. Pull or refresh if required and click 'Apply changes' button
+8. Develop objects to use when you create a new check
+9. Click 'Commit' tab
+10. Select objects to be pulled back into the branch, add comment, click the 'Commit' button and click the 'Push' button
+11. **Note:** there are exclude filters setup for invalid objects created in the post script. Do not check these objects back into the branch.
+
+
+**RedGate SQL Source Control Documentation**
+- [Getting Started ](https://documentation.red-gate.com/soc7/getting-started)
+- [Link to Git](https://documentation.red-gate.com/soc7/linking-to-source-control/link-to-git)

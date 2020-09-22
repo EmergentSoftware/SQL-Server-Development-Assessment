@@ -3,7 +3,7 @@ layout: default
 title: Overview
 nav_order: 5
 has_children: true
-permalink: Overview
+permalink: overview
 ---
 
 # SQL Server Assess Overview

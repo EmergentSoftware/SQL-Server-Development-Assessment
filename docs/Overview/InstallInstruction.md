@@ -1,7 +1,9 @@
 ---
 layout: default
-title: sp_Develop Install Instructions
+title: Install Instructions
 parent: Overview
+nav_order: 1
+permalink: install-instructions
 ---
 
 ## sp_Develop Install Instructions

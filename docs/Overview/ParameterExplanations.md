@@ -1,7 +1,9 @@
 ---
 layout: default
-title: sp_Develop Parameter Explanations
+title: Parameter Explanations
 parent: Overview
+nav_order: 15
+permalink: parameter-explanations
 ---
 
 ## sp_Develop Parameter Explanations

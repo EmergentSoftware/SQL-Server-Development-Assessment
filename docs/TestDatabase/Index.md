@@ -2,8 +2,8 @@
 layout: default
 title: Test Database Install
 nav_order: 10
-has_children: true
-permalink: TestDatabaseInstall
+has_children: false
+permalink: test-database-install
 ---
 
 # Test Database Install

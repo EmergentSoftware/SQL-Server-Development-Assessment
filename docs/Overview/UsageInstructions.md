@@ -1,7 +1,9 @@
 ---
 layout: default
-title: sp_Develop Usage Instructions
+title: Usage Instructions
 parent: Overview
+nav_order: 5
+permalink: usage-instructions
 ---
 
 ## sp_Develop Usage Instructions

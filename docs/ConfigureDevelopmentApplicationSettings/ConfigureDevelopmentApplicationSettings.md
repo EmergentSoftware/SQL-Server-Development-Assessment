@@ -2,8 +2,8 @@
 layout: default
 title: Configure Development Application Settings
 nav_order: 15
-has_children: true
-permalink: ConfigureDevelopmentApplicationSettings
+has_children: false
+permalink: configure-development-application-settings
 ---
 
 # Configure Development Application Settings

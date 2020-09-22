@@ -4,4 +4,5 @@ color_scheme: "light""
 search_enabled: "true""
 baseurl: "/SQL-Server-Assess"
 url: "https://emergentsoftware.github.io"
-
+heading_anchors: true
+footer_content: "Footer text"

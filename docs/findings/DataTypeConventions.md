@@ -26,7 +26,7 @@ Poor data type choices can have significant impact on a database design and perf
 ---
 
 ## Columns Named the Same Have Different Data Types
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/123)
 
 There are two situations where this is going to hurt performance. When you have a mismatch of data types in a JOIN and a WHERE clause. SQL Server will need to convert one of them to match the others data type. This is called implicit conversion.
 
@@ -41,7 +41,7 @@ There are two situations where this is going to hurt performance. When you have 
 ---
 
 ## Using of Deprecated Data Type
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/30)
 
 - Use of deprecated data types such as TEXT/NTEXT
 - There is no good reason to use TEXT or NTEXT. They were a flawed attempt at BLOB storage and are there only for backward compatibility. Likewise, the WRITETEXT, UPDATETEXT and READTEXT statements are also deprecated. All this complexity has been replaced by the VARCHAR(MAX) and NVARCHAR(MAX) data types, which work with all of SQL Server’s string functions.
@@ -51,7 +51,7 @@ There are two situations where this is going to hurt performance. When you have 
 ---
 
 ## Email Address Column
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/44)
 
 An email address column should be set to NVARCHAR(254) to leave 2 characters for <> if needed.
 
@@ -60,7 +60,7 @@ An email address column should be set to NVARCHAR(254) to leave 2 characters for
 ---
 
 ## URL Column
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/45)
 
 A URL column should be set to NVARCHAR(2083).
 
@@ -69,7 +69,7 @@ A URL column should be set to NVARCHAR(2083).
 ---
 
 ## Overuse of (N)VARCHAR(MAX)
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/46)
 
 You might be overusing (N)VARCHAR(MAX) on your table.
 
@@ -84,7 +84,7 @@ Since SQL Server 2016 if the size of the cell is < 8K characters for VARCHAR(MAX
 ---
 
 ## Boolean Column Not Using BIT
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/47)
 
 Use the `BIT` data type for boolean columns. These columns will have names like IsSpecialSaleFlag. 
 
@@ -93,7 +93,7 @@ Use the `BIT` data type for boolean columns. These columns will have names like 
 ---
 
 ## Using FLOAT or REAL
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/65)
 
 The FLOAT (8 byte) and REAL (4 byte) data types are suitable only for specialist scientific use since they are approximate types with an enormous range (-1.79E+308 to -2.23E-308, 0 and 2.23E-308 to 1.79E+308, in the case of FLOAT). Any other use needs to be regarded as suspect, and a FLOAT or REAL used as a key or found in an index needs to be investigated. The DECIMAL type is an exact data type and has an impressive range from -10^38+1 through 10^38-1. Although it requires more storage than the FLOAT or REAL types, it is generally a better choice.
 
@@ -102,7 +102,7 @@ The FLOAT (8 byte) and REAL (4 byte) data types are suitable only for specialist
 ---
 
 ## Using SQL_VARIANT
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/67)
 
 The SQL_VARIANT type is not your typical data type. It stores values from a number of different data types and is used internally by SQL Server. It is hard to imagine a valid use in a relational database. It cannot be returned to an application via ODBC except as binary data, and it isn’t supported in Microsoft Azure SQL Database.
 
@@ -121,7 +121,7 @@ User-defined data types should be avoided whenever possible. They are an added p
 ---
 
 ## Using DATETIME Instead of DATETIMEOFFSET
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/80)
 
 DATETIMEOFFSET defines a date that is combined with a time of a day that has time zone awareness and is based on a 24-hour clock. This allows you to use "DATETIMEOFFSET AT TIME ZONE [timezonename]" to convert the datetime to a local time zone. 
 
@@ -137,7 +137,7 @@ SELECT * FROM sys.time_zone_info
 ---
 
 ## Using DATETIME or DATETIME2 Instead of DATE
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/81)
 
 Even with data storage being so cheap, a saving in a data type adds up and makes comparison and calculation easier. When appropriate, use the DATE or SMALLDATETIME type. Narrow tables perform better and use less resources.
 
@@ -147,7 +147,7 @@ Even with data storage being so cheap, a saving in a data type adds up and makes
 ---
 
 ## Using DATETIME or DATETIME2 Instead of TIME
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/82)
 
 Being frugal with memory is important for large tables, not only to save space but also to reduce I/O activity during access. When appropriate, use the TIME or SMALLDATETIME type. Queries too are generally simpler on the appropriate data type.
 
@@ -171,7 +171,7 @@ Although the MONEY data type generally takes less storage and takes less bandwid
 ---
 
 ## Using VARCHAR Instead of NVARCHAR for Unicode Data
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/84)
 
 You can't require everyone to stop using national characters or accents any more. Names are likely to have accents in them if spelled properly, and international addresses and language strings will almost certainly have accents and national characters that can’t be represented by 8-bit ASCII!
 

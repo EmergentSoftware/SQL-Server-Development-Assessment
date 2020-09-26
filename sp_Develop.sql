@@ -81,7 +81,7 @@ AS
 
         SET @Version = '0.11.7';
         SET @VersionDate = '20200920';
-        SET @URLBase = 'https://github.com/EmergentSoftware/SQL-Server-Assess#';
+        SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Assess/findings/';
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);
         SET @ScriptVersionName = N'sp_Develop v' + @Version + N' - ' + DATENAME(MONTH, @VersionDate) + N' ' + RIGHT('0' + DATENAME(DAY, @VersionDate), 2) + N', ' + DATENAME(YEAR, @VersionDate);
@@ -259,7 +259,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
                    ,Details      = 'Amazon RDS detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -276,7 +276,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
                    ,Details      = 'Express Edition detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -294,7 +294,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
                    ,Details      = 'Managed Instance detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -379,7 +379,7 @@ AS
                                    ,@Priority     = 1
                                    ,@FindingGroup = 'Running Issues'
                                    ,@Finding      = 'You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node.'
-                                   ,@URLAnchor    = 'ran-on-a-non-readable-availability-group-secondary-databases';
+                                   ,@URLAnchor    = 'running-issue#ran-on-a-non-readable-availability-group-secondary-databases';
                                 /**********************************************************************************************************************/
                                 INSERT INTO
                                     #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
@@ -428,7 +428,7 @@ AS
            ,@Priority     = 1
            ,@FindingGroup = 'Running Issues'
            ,@Finding      = 'Ran Against 50+ Databases Without @BringThePain = 1'
-           ,@URLAnchor    = 'ran-against-50-databases-without-bringthepain--1';
+           ,@URLAnchor    = 'running-issue#ran-against-50-databases-without-bringthepain--1';
         /**********************************************************************************************************************/
         BEGIN TRY
             IF @NumDatabases >= 50
@@ -500,7 +500,7 @@ AS
            ,@Priority     = 1
            ,@FindingGroup = 'Running Issues'
            ,@Finding      = 'sp_Develop is Over 6 Months Old'
-           ,@URLAnchor    = 'sp_develop-is-over-6-months-old';
+           ,@URLAnchor    = 'running-issue#sp_develop-is-over-6-months-old';
         /**********************************************************************************************************************/
         IF NOT EXISTS (
             SELECT
@@ -583,9 +583,9 @@ AS
 		        SELECT
 			        @CheckId       = 1
 		           ,@Priority      = 20
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using Plural in Names'
-		           ,@URLAnchor     = 'using-plural-in-name';
+		           ,@URLAnchor     = 'naming-conventions#using-plural-in-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -625,9 +625,9 @@ AS
 		        SELECT
 			        @CheckId       = 14
 		           ,@Priority      = 10
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Column Naming'
-		           ,@URLAnchor     = 'column-naming';
+		           ,@URLAnchor     = 'naming-conventions#column-naming';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -667,9 +667,9 @@ AS
 		        SELECT
 			        @CheckId       = 2
 		           ,@Priority      = 10
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using Prefix in Name'
-		           ,@URLAnchor     = 'using-prefix-in-name';
+		           ,@URLAnchor     = 'naming-conventions#using-prefix-in-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -780,9 +780,9 @@ AS
 		        SELECT
 			        @CheckId       = 5
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Including Special Characters in Name'
-		           ,@URLAnchor     = 'including-special-characters-in-name';
+		           ,@URLAnchor     = 'naming-conventions#including-special-characters-in-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -824,9 +824,9 @@ AS
 		        SELECT
 			        @CheckId       = 13
 		           ,@Priority      = 50
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Concatenating Two Table Names'
-		           ,@URLAnchor     = 'including-special-characters-in-name';
+		           ,@URLAnchor     = 'naming-conventions#including-special-characters-in-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -870,9 +870,9 @@ AS
 		        SELECT
 			        @CheckId       = 11
 		           ,@Priority      = 30
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Including Numbers in Table Name'
-		           ,@URLAnchor     = 'including-numbers-in-table-name';
+		           ,@URLAnchor     = 'naming-conventions#including-numbers-in-table-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -910,9 +910,9 @@ AS
 		        SELECT
 			        @CheckId       = 12
 		           ,@Priority      = 10
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Column Named Same as Table'
-		           ,@URLAnchor     = 'column-named-same-as-table';
+		           ,@URLAnchor     = 'naming-conventions#column-named-same-as-table';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -950,9 +950,9 @@ AS
 		        SELECT
 			        @CheckId       = 4
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using Reserved Words in Name'
-		           ,@URLAnchor     = 'using-reserved-words-in-name';
+		           ,@URLAnchor     = 'naming-conventions#using-reserved-words-in-name';
 		        /**********************************************************************************************************************/
 
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
@@ -1049,9 +1049,9 @@ AS
 		        SELECT
 			        @CheckId       = 3
 		           ,@Priority      = 40
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'Wide Table'
-		           ,@URLAnchor     = 'wide-table';
+		           ,@URLAnchor     = 'table-conventions#wide-table';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1089,9 +1089,9 @@ AS
 		        SELECT
 			        @CheckId       = 6
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'Heap'
-		           ,@URLAnchor     = 'heap';
+		           ,@URLAnchor     = 'table-conventions#heap';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1131,9 +1131,9 @@ AS
 		        SELECT
 			        @CheckId       = 7
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using ID for Primary Key Column Name'
-		           ,@URLAnchor     = 'using-id-for-primary-key-column-name';
+		           ,@URLAnchor     = 'naming-conventions#using-id-for-primary-key-column-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1174,9 +1174,9 @@ AS
 		        SELECT
 			        @CheckId       = 8
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'UNIQUEIDENTIFIER For Primary Key'
-		           ,@URLAnchor     = 'uniqueidentifier-for-primary-key';
+		           ,@URLAnchor     = 'table-conventions#uniqueidentifier-for-primary-key';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1219,9 +1219,9 @@ AS
 		        SELECT
 			        @CheckId       = 22
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'UNIQUEIDENTIFIER in a Clustered Index'
-		           ,@URLAnchor     = 'uniqueidentifier-in-a-clustered-index';
+		           ,@URLAnchor     = 'table-conventions#uniqueidentifier-in-a-clustered-index';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1265,9 +1265,9 @@ AS
 		        SELECT
 			        @CheckId       = 21
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'Missing Index for Foreign Key'
-		           ,@URLAnchor     = 'missing-index-for-foreign-key';
+		           ,@URLAnchor     = 'table-conventions#missing-index-for-foreign-key';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1309,9 +1309,9 @@ AS
 		        SELECT
 			        @CheckId       = 20
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'Missing Primary Key'
-		           ,@URLAnchor     = 'missing-primary-key';
+		           ,@URLAnchor     = 'table-conventions#missing-primary-key';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1351,9 +1351,9 @@ AS
 		        SELECT
 			        @CheckId       = 10
 		           ,@Priority      = 20
-		           ,@FindingGroup = 'Data Type Conventions'
+		           ,@FindingGroup  = 'Data Type Conventions'
 		           ,@Finding       = 'Using User-Defined Data Type'
-		           ,@URLAnchor     = 'using-user-defined-data-type';
+		           ,@URLAnchor     = 'data-type-conventions#using-user-defined-data-type';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1390,9 +1390,9 @@ AS
 		        SELECT
 			        @CheckId       = 25
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Scalar Function Is Not Inlineable'
-		           ,@URLAnchor     = 'scalar-function-is-not-inlineable';
+		           ,@URLAnchor     = 'sql-code-conventions#scalar-function-is-not-inlineable';
 		        /**********************************************************************************************************************/	
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 			        AND EXISTS(SELECT * FROM sys.databases WHERE compatibility_level >= 150 AND database_id = @DatabaseId)
@@ -1432,9 +1432,9 @@ AS
 		        SELECT
 			        @CheckId       = 24
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Using User-Defined Scalar Function'
-		           ,@URLAnchor     = 'using-user-defined-scalar-function';
+		           ,@URLAnchor     = 'sql-code-conventions#using-user-defined-scalar-function';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 			        AND EXISTS(SELECT * FROM sys.databases WHERE compatibility_level < 150 AND database_id = @DatabaseId)
@@ -1473,9 +1473,9 @@ AS
 		        SELECT
 			        @CheckId       = 23
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Using SELECT *'
-		           ,@URLAnchor     = 'using-select-*';
+		           ,@URLAnchor     = 'sql-code-conventions#using-select-';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1522,9 +1522,9 @@ AS
 		        SELECT
 			        @CheckId       = 9
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Using Hardcoded Database Name Reference'
-		           ,@URLAnchor     = 'using-hardcoded-database-name-reference';
+		           ,@URLAnchor     = 'sql-code-conventions#using-hardcoded-database-name-reference';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1562,9 +1562,9 @@ AS
 		        SELECT
 			        @CheckId       = 19
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Not Using SET NOCOUNT ON in Stored Procedure or Trigger'
-		           ,@URLAnchor     = 'not-using-set-nocount-on-in-stored-procedure-or-trigger';
+		           ,@URLAnchor     = 'sql-code-conventions#not-using-set-nocount-on-in-stored-procedure-or-trigger';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1634,9 +1634,9 @@ AS
 		        SELECT
 			        @CheckId       = 15
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Using NOLOCK (READ UNCOMMITTED)'
-		           ,@URLAnchor     = 'using-nolock-read-uncommitted';
+		           ,@URLAnchor     = 'sql-code-conventions#using-nolock-read-uncommitted';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1680,9 +1680,9 @@ AS
 		        SELECT
 			        @CheckId       = 27
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Data Issue'
+		           ,@FindingGroup  = 'Data Issue'
 		           ,@Finding       = 'Unencrypted Data'
-		           ,@URLAnchor     = 'unencrypted-data';
+		           ,@URLAnchor     = 'data-issue#unencrypted-data';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1875,7 +1875,7 @@ AS
 		           ,@Priority      = 1
 		           ,@FindingGroup  = 'Data Type Conventions'
 		           ,@Finding       = 'Using MONEY data type'
-		           ,@URLAnchor     = 'using-money-data-type';
+		           ,@URLAnchor     = 'data-type-conventions#using-money-data-type';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN

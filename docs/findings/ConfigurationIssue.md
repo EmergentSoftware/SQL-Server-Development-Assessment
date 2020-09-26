@@ -35,7 +35,7 @@ Using dbo as the owner of all the database objects simplifies object management.
 ---
 
 ## Database Compatibility Level is Lower Than the SQL Server
-**Check Id:** [NONE YET]
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/38)
 
 The database compatibility level lower than the SQL Server it is running on.
 

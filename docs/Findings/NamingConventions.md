@@ -1,6 +1,6 @@
 ---
 title: Naming Conventions
-permalink: naming-conventions
+permalink: findings/naming-conventions
 parent: Findings
 nav_order: 1
 layout: default

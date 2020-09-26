@@ -1,6 +1,6 @@
 ---
 title: Configuration Issue
-permalink: configuration-issue
+permalink: findings/configuration-issue
 parent: Findings
 nav_order: 6
 layout: default

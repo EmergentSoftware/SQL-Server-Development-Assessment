@@ -1,6 +1,6 @@
 ---
 title: Data Issue
-permalink: data-issue
+permalink: findings/data-issue
 parent: Findings
 nav_order: 5
 layout: default

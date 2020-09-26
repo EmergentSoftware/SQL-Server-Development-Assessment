@@ -1,6 +1,6 @@
 ---
 title: Table Conventions
-permalink: table-conventions
+permalink: findings/table-conventions
 parent: Findings
 nav_order: 2
 layout: default

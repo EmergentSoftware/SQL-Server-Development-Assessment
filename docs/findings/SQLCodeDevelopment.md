@@ -1,6 +1,6 @@
 ---
 title: SQL Code Conventions
-permalink: sql-code-conventions
+permalink: findings/sql-code-conventions
 parent: Findings
 nav_order: 4
 layout: default

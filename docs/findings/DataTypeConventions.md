@@ -1,6 +1,6 @@
 ---
 title: Data Type Conventions
-permalink: data-type-conventions
+permalink: findings/data-type-conventions
 parent: Findings
 nav_order: 3
 layout: default

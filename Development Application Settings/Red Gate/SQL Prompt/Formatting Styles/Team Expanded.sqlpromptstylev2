@@ -104,7 +104,7 @@
   <PreferBreakBeforeConditionOperator>true</PreferBreakBeforeConditionOperator>
   <PreferBreakBeforeCteName>false</PreferBreakBeforeCteName>
   <PreferBreakBeforeEquals>false</PreferBreakBeforeEquals>
-  <PreferBreakBeforeInsertTable>true</PreferBreakBeforeInsertTable>
+  <PreferBreakBeforeInsertTable>false</PreferBreakBeforeInsertTable>
   <PreferBreakBeforeThenKeyword>false</PreferBreakBeforeThenKeyword>
   <PreserveLineSpacingBetweenStatements>true</PreserveLineSpacingBetweenStatements>
   <PreserveLineSpacingWithinStatements>false</PreserveLineSpacingWithinStatements>

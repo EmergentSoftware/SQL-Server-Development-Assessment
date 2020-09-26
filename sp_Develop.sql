@@ -40,7 +40,6 @@ ALTER PROCEDURE dbo.sp_Develop
    ,@SkipCheckDatabase  NVARCHAR(128) = NULL
    ,@SkipCheckSchema    NVARCHAR(128) = NULL
    ,@SkipCheckTable     NVARCHAR(128) = NULL
-   ,@ShowRememberChecks BIT           = 0
    ,@OutputType         VARCHAR(20)   = 'TABLE'
    ,@Debug              INT           = 0
    ,@Version            VARCHAR(30)   = NULL OUTPUT
@@ -80,9 +79,9 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '0.11.6';
-        SET @VersionDate = '20200909';
-        SET @URLBase = 'https://github.com/EmergentSoftware/SQL-Server-Assess#';
+        SET @Version = '0.11.7';
+        SET @VersionDate = '20200920';
+        SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Assess/findings/';
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);
         SET @ScriptVersionName = N'sp_Develop v' + @Version + N' - ' + DATENAME(MONTH, @VersionDate) + N' ' + RIGHT('0' + DATENAME(DAY, @VersionDate), 2) + N', ' + DATENAME(YEAR, @VersionDate);
@@ -190,10 +189,10 @@ AS
 
                 IF LTRIM(RTRIM(@SkipCheckServer)) <> ''
                     BEGIN
-                        SET @StringToExecute += QUOTENAME(@SkipCheckServer) + N'.';
+                        SET @StringToExecute = @StringToExecute + QUOTENAME(@SkipCheckServer) + N'.';
                     END;
 
-                SET @StringToExecute += QUOTENAME(@SkipCheckDatabase) + N'.' + QUOTENAME(@SkipCheckSchema) + N'.' + QUOTENAME(@SkipCheckTable) + N' AS SK
+                SET @StringToExecute = @StringToExecute + QUOTENAME(@SkipCheckDatabase) + N'.' + QUOTENAME(@SkipCheckSchema) + N'.' + QUOTENAME(@SkipCheckTable) + N' AS SK
                 WHERE
                     SK.ServerName IS NULL
                     OR SK.ServerName = SERVERPROPERTY(''ServerName'')
@@ -260,7 +259,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
                    ,Details      = 'Amazon RDS detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -277,7 +276,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
                    ,Details      = 'Express Edition detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -295,7 +294,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
                    ,Details      = 'Managed Instance detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -380,7 +379,7 @@ AS
                                    ,@Priority     = 1
                                    ,@FindingGroup = 'Running Issues'
                                    ,@Finding      = 'You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node.'
-                                   ,@URLAnchor    = 'ran-on-a-non-readable-availability-group-secondary-databases';
+                                   ,@URLAnchor    = 'running-issue#ran-on-a-non-readable-availability-group-secondary-databases';
                                 /**********************************************************************************************************************/
                                 INSERT INTO
                                     #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
@@ -429,7 +428,7 @@ AS
            ,@Priority     = 1
            ,@FindingGroup = 'Running Issues'
            ,@Finding      = 'Ran Against 50+ Databases Without @BringThePain = 1'
-           ,@URLAnchor    = 'ran-against-50-databases-without-bringthepain--1';
+           ,@URLAnchor    = 'running-issue#ran-against-50-databases-without-bringthepain--1';
         /**********************************************************************************************************************/
         BEGIN TRY
             IF @NumDatabases >= 50
@@ -501,7 +500,7 @@ AS
            ,@Priority     = 1
            ,@FindingGroup = 'Running Issues'
            ,@Finding      = 'sp_Develop is Over 6 Months Old'
-           ,@URLAnchor    = 'sp_develop-is-over-6-months-old';
+           ,@URLAnchor    = 'running-issue#sp_develop-is-over-6-months-old';
         /**********************************************************************************************************************/
         IF NOT EXISTS (
             SELECT
@@ -527,168 +526,6 @@ AS
                    ,URL          = @URLBase + @URLAnchor
                    ,Priority     = @Priority
                    ,Details      = N'There most likely been some new checks and fixes performed within the last 6 months - time to go download the current one.';
-
-            END;
-
-        /**********************************************************************************************************************
-	    ** Return the remember check unless turned off. These are checks that cannot or are tough to create a script for but 
-	    ** we still want to show as a best practice.
-	    **********************************************************************************************************************/
-        IF @ShowRememberChecks = 1
-            BEGIN
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Naming Conventions
-		        ** Finding:			Not Naming Foreign Key Column the Same as Parent Table
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Naming Conventions'
-                   ,Finding      = 'Not Naming Foreign Key Column the Same as Parent Table'
-                   ,URL          = @URLBase + 'not-naming-foreign-key-column-the-same-as-parent-table'
-                   ,Details      = N'REMEMBER: Name the foreign key column the same as the parent table.';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Naming Conventions
-		        ** Finding:			Not Using PascalCase
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Naming Conventions'
-                   ,Finding      = 'Not Using PascalCase'
-                   ,URL          = @URLBase + 'not-using-pascalcase'
-                   ,Details      = N'REMEMBER: Use PascalCase for databse object names.';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Naming Conventions
-		        ** Finding:			Using Abbreviation
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Naming Conventions'
-                   ,Finding      = 'Using Abbreviation'
-                   ,URL          = @URLBase + 'using-abbreviation'
-                   ,Details      = N'REMEMBER: Don''t use abbreviation. Use "Account" instead of "Acct"';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Naming Conventions
-		        ** Finding:			Stored Procedures & Function Naming
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Naming Conventions'
-                   ,Finding      = 'Stored Procedures & Function Naming'
-                   ,URL          = @URLBase + 'stored-procedures--function-naming'
-                   ,Details      = N'REMEMBER: Stored procedures and functions should be named with ObjectAction. e.g. "ProductGet" or "OrderUpdate".)';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Naming Conventions
-		        ** Finding:			Non-Affirmative Boolean Name Use
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 201 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Naming Conventions'
-                   ,Finding      = 'Non-Affirmative Boolean Name Use'
-                   ,URL          = @URLBase + 'non-affirmative-boolean-name-use'
-                   ,Details      = N'REMEMBER: Bit columns should be given affirmative boolean names like "IsDeleted", "HasPermission", or "IsValid".';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Data Type Conventions
-		        ** Finding:			Using DATETIME Instead of DATETIMEOFFSET
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Data Type Conventions'
-                   ,Finding      = 'Using DATETIME Instead of DATETIMEOFFSET'
-                   ,URL          = @URLBase + 'using-datetime-instead-of-datetimeoffset'
-                   ,Details      = N'REMEMBER: DATETIMEOFFSET defines a date that is combined with a time of a day and time zone. This allows you to use "DATETIMEOFFSET AT TIME ZONE [timezonename]" to convert the datetime to a local timezone.';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Data Type Conventions
-		        ** Finding:			DATETIME or DATETIME2 Instead of DATE
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Data Type Conventions'
-                   ,Finding      = 'Using DATETIME or DATETIME2 Instead of DATE'
-                   ,URL          = @URLBase + 'using-datetime-or-datetime2-instead-of-date'
-                   ,Details      = N'REMEMBER: When appropriate, use the DATE or SMALLDATETIME type.';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Data Type Conventions
-		        ** Finding:			DATETIME or DATETIME2 Instead of TIME
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Data Type Conventions'
-                   ,Finding      = 'Using DATETIME or DATETIME2 Instead of TIME'
-                   ,URL          = @URLBase + 'using-datetime-or-datetime2-instead-of-time'
-                   ,Details      = N'REMEMBER: When appropriate, use the TIME or SMALLDATETIME type.';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	Data Type Conventions
-		        ** Finding:			Using VARCHAR Instead of NVARCHAR for Unicode Data
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 202 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'Data Type Conventions'
-                   ,Finding      = 'Using VARCHAR Instead of NVARCHAR for Unicode Data'
-                   ,URL          = @URLBase + 'using-varchar-instead-of-nvarchar-for-unicode-data'
-                   ,Details      = N'REMEMBER: NVARCHAR allows you to store names and addresses with accents and national characters that VARCHAR does not store.';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	SQL Code Development
-		        ** Finding:			Using BETWEEN for DATETIME Ranges
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 203 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'SQL Code Development'
-                   ,Finding      = 'Using BETWEEN for DATETIME Ranges'
-                   ,URL          = @URLBase + 'using-between-for-datetime-ranges'
-                   ,Details      = N'REMEMBER: You never get complete accuracy if you specify dates when using the BETWEEN logical operator with DATETIME values.';
-
-                /**********************************************************************************************************************
-		        ** Check Id:		[NONE YET]
-		        ** Findings Group:	SQL Code Development
-		        ** Finding:			Using Old Sybase JOIN Syntax
-		        **********************************************************************************************************************/
-                INSERT INTO
-                    #Finding (Priority, FindingGroup, Finding, URL, Details)
-                SELECT
-                    PRIORITY     = 203 /* Use the same Priority for Findings Group and it will ORDER BY in the results */
-                   ,FindingGroup = 'SQL Code Development'
-                   ,Finding      = 'Using Old Sybase JOIN Syntax'
-                   ,URL          = @URLBase + 'using-old-sybase-join-syntax'
-                   ,Details      = N'REMEMBER: Use the ANSI standards "<>, >=" & "INNER JOIN" instead of the deprecated Sybase join syntax: "=*, *=" & "JOIN".';
 
             END;
 
@@ -746,9 +583,9 @@ AS
 		        SELECT
 			        @CheckId       = 1
 		           ,@Priority      = 20
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using Plural in Names'
-		           ,@URLAnchor     = 'using-plural-in-name';
+		           ,@URLAnchor     = 'naming-conventions#using-plural-in-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -788,9 +625,9 @@ AS
 		        SELECT
 			        @CheckId       = 14
 		           ,@Priority      = 10
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Column Naming'
-		           ,@URLAnchor     = 'column-naming';
+		           ,@URLAnchor     = 'naming-conventions#column-naming';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -830,9 +667,9 @@ AS
 		        SELECT
 			        @CheckId       = 2
 		           ,@Priority      = 10
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using Prefix in Name'
-		           ,@URLAnchor     = 'using-prefix-in-name';
+		           ,@URLAnchor     = 'naming-conventions#using-prefix-in-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -943,9 +780,9 @@ AS
 		        SELECT
 			        @CheckId       = 5
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Including Special Characters in Name'
-		           ,@URLAnchor     = 'including-special-characters-in-name';
+		           ,@URLAnchor     = 'naming-conventions#including-special-characters-in-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -987,9 +824,9 @@ AS
 		        SELECT
 			        @CheckId       = 13
 		           ,@Priority      = 50
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Concatenating Two Table Names'
-		           ,@URLAnchor     = 'including-special-characters-in-name';
+		           ,@URLAnchor     = 'naming-conventions#including-special-characters-in-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1033,9 +870,9 @@ AS
 		        SELECT
 			        @CheckId       = 11
 		           ,@Priority      = 30
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Including Numbers in Table Name'
-		           ,@URLAnchor     = 'including-numbers-in-table-name';
+		           ,@URLAnchor     = 'naming-conventions#including-numbers-in-table-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1073,9 +910,9 @@ AS
 		        SELECT
 			        @CheckId       = 12
 		           ,@Priority      = 10
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Column Named Same as Table'
-		           ,@URLAnchor     = 'column-named-same-as-table';
+		           ,@URLAnchor     = 'naming-conventions#column-named-same-as-table';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1113,9 +950,9 @@ AS
 		        SELECT
 			        @CheckId       = 4
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using Reserved Words in Name'
-		           ,@URLAnchor     = 'using-reserved-words-in-name';
+		           ,@URLAnchor     = 'naming-conventions#using-reserved-words-in-name';
 		        /**********************************************************************************************************************/
 
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
@@ -1144,7 +981,7 @@ AS
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 					        INNER JOIN (
-						        VALUES (''ADD''), (''EXTERNAL''), (''PROCEDURE''), (''ALL''), (''FETCH''), (''PUBLIC''), (''ALTER''), (''FILE''), (''RAISERROR''), (''AND''), (''FILLFACTOR''), (''READ''), (''ANY''), (''FOR''), (''READTEXT''), (''AS''), (''FOREIGN''), (''RECONFIGURE''), (''ASC''), (''FREETEXT''), (''REFERENCES''), (''AUTHORIZATION''), (''FREETEXTTABLE''), (''REPLICATION''), (''BACKUP''), (''FROM''), (''RESTORE''), (''BEGIN''), (''FULL''), (''RESTRICT''), (''BETWEEN''), (''FUNCTION''), (''RETURN''), (''BREAK''), (''GOTO''), (''REVERT''), (''BROWSE''), (''GRANT''), (''REVOKE''), (''BULK''), (''GROUP''), (''RIGHT''), (''BY''), (''HAVING''), (''ROLLBACK''), (''CASCADE''), (''HOLDLOCK''), (''ROWCOUNT''), (''CASE''), (''IDENTITY''), (''ROWGUIDCOL''), (''CHECK''), (''IDENTITY_INSERT''), (''RULE''), (''CHECKPOINT''), (''IDENTITYCOL''), (''SAVE''), (''CLOSE''), (''IF''), (''SCHEMA''), (''CLUSTERED''), (''IN''), (''SECURITYAUDIT''), (''COALESCE''), (''INDEX''), (''SELECT''), (''COLLATE''), (''INNER''), (''SEMANTICKEYPHRASETABLE''), (''COLUMN''), (''INSERT''), (''SEMANTICSIMILARITYDETAILSTABLE''), (''COMMIT''), (''INTERSECT''), (''SEMANTICSIMILARITYTABLE''), (''COMPUTE''), (''INTO''), (''SESSION_USER''), (''CONSTRAINT''), (''IS''), (''SET''), (''CONTAINS''), (''JOIN''), (''SETUSER''), (''CONTAINSTABLE''), (''KEY''), (''SHUTDOWN''), (''CONTINUE''), (''KILL''), (''SOME''), (''CONVERT''), (''LEFT''), (''STATISTICS''), (''CREATE''), (''LIKE''), (''SYSTEM_USER''), (''CROSS''), (''LINENO''), (''TABLE''), (''CURRENT''), (''LOAD''), (''TABLESAMPLE''), (''CURRENT_DATE''), (''MERGE''), (''TEXTSIZE''), (''CURRENT_TIME''), (''NATIONAL''), (''THEN''), (''CURRENT_TIMESTAMP''), (''NOCHECK''), (''TO''), (''CURRENT_USER''), (''NONCLUSTERED''), (''TOP''), (''CURSOR''), (''NOT''), (''TRAN''), (''DATABASE''), (''NULL''), (''TRANSACTION''), (''DBCC''), (''NULLIF''), (''TRIGGER''), (''DEALLOCATE''), (''OF''), (''TRUNCATE''), (''DECLARE''), (''OFF''), (''TRY_CONVERT''), (''DEFAULT''), (''OFFSETS''), (''TSEQUAL''), (''DELETE''), (''ON''), (''UNION''), (''DENY''), (''OPEN''), (''UNIQUE''), (''DESC''), (''OPENDATASOURCE''), (''UNPIVOT''), (''DISK''), (''OPENQUERY''), (''UPDATE''), (''DISTINCT''), (''OPENROWSET''), (''UPDATETEXT''), (''DISTRIBUTED''), (''OPENXML''), (''USE''), (''DOUBLE''), (''OPTION''), (''USER''), (''DROP''), (''OR''), (''VALUES''), (''DUMP''), (''ORDER''), (''VARYING''), (''ELSE''), (''OUTER''), (''VIEW''), (''END''), (''OVER''), (''WAITFOR''), (''ERRLVL''), (''PERCENT''), (''WHEN''), (''ESCAPE''), (''PIVOT''), (''WHERE''), (''EXCEPT''), (''PLAN''), (''WHILE''), (''EXEC''), (''PRECISION''), (''WITH''), (''EXECUTE''), (''PRIMARY''), (''WITHIN GROUP''), (''EXISTS''), (''PRINT''), (''WRITETEXT''), (''EXIT''), (''PROC'')
+						        SELECT ''ADD'' UNION SELECT ''EXTERNAL'' UNION SELECT ''PROCEDURE'' UNION SELECT ''ALL'' UNION SELECT ''FETCH'' UNION SELECT ''PUBLIC'' UNION SELECT ''ALTER'' UNION SELECT ''FILE'' UNION SELECT ''RAISERROR'' UNION SELECT ''AND'' UNION SELECT ''FILLFACTOR'' UNION SELECT ''READ'' UNION SELECT ''ANY'' UNION SELECT ''FOR'' UNION SELECT ''READTEXT'' UNION SELECT ''AS'' UNION SELECT ''FOREIGN'' UNION SELECT ''RECONFIGURE'' UNION SELECT ''ASC'' UNION SELECT ''FREETEXT'' UNION SELECT ''REFERENCES'' UNION SELECT ''AUTHORIZATION'' UNION SELECT ''FREETEXTTABLE'' UNION SELECT ''REPLICATION'' UNION SELECT ''BACKUP'' UNION SELECT ''FROM'' UNION SELECT ''RESTORE'' UNION SELECT ''BEGIN'' UNION SELECT ''FULL'' UNION SELECT ''RESTRICT'' UNION SELECT ''BETWEEN'' UNION SELECT ''FUNCTION'' UNION SELECT ''RETURN'' UNION SELECT ''BREAK'' UNION SELECT ''GOTO'' UNION SELECT ''REVERT'' UNION SELECT ''BROWSE'' UNION SELECT ''GRANT'' UNION SELECT ''REVOKE'' UNION SELECT ''BULK'' UNION SELECT ''GROUP'' UNION SELECT ''RIGHT'' UNION SELECT ''BY'' UNION SELECT ''HAVING'' UNION SELECT ''ROLLBACK'' UNION SELECT ''CASCADE'' UNION SELECT ''HOLDLOCK'' UNION SELECT ''ROWCOUNT'' UNION SELECT ''CASE'' UNION SELECT ''IDENTITY'' UNION SELECT ''ROWGUIDCOL'' UNION SELECT ''CHECK'' UNION SELECT ''IDENTITY_INSERT'' UNION SELECT ''RULE'' UNION SELECT ''CHECKPOINT'' UNION SELECT ''IDENTITYCOL'' UNION SELECT ''SAVE'' UNION SELECT ''CLOSE'' UNION SELECT ''IF'' UNION SELECT ''SCHEMA'' UNION SELECT ''CLUSTERED'' UNION SELECT ''IN'' UNION SELECT ''SECURITYAUDIT'' UNION SELECT ''COALESCE'' UNION SELECT ''INDEX'' UNION SELECT ''SELECT'' UNION SELECT ''COLLATE'' UNION SELECT ''INNER'' UNION SELECT ''SEMANTICKEYPHRASETABLE'' UNION SELECT ''COLUMN'' UNION SELECT ''INSERT'' UNION SELECT ''SEMANTICSIMILARITYDETAILSTABLE'' UNION SELECT ''COMMIT'' UNION SELECT ''INTERSECT'' UNION SELECT ''SEMANTICSIMILARITYTABLE'' UNION SELECT ''COMPUTE'' UNION SELECT ''INTO'' UNION SELECT ''SESSION_USER'' UNION SELECT ''CONSTRAINT'' UNION SELECT ''IS'' UNION SELECT ''SET'' UNION SELECT ''CONTAINS'' UNION SELECT ''JOIN'' UNION SELECT ''SETUSER'' UNION SELECT ''CONTAINSTABLE'' UNION SELECT ''KEY'' UNION SELECT ''SHUTDOWN'' UNION SELECT ''CONTINUE'' UNION SELECT ''KILL'' UNION SELECT ''SOME'' UNION SELECT ''CONVERT'' UNION SELECT ''LEFT'' UNION SELECT ''STATISTICS'' UNION SELECT ''CREATE'' UNION SELECT ''LIKE'' UNION SELECT ''SYSTEM_USER'' UNION SELECT ''CROSS'' UNION SELECT ''LINENO'' UNION SELECT ''TABLE'' UNION SELECT ''CURRENT'' UNION SELECT ''LOAD'' UNION SELECT ''TABLESAMPLE'' UNION SELECT ''CURRENT_DATE'' UNION SELECT ''MERGE'' UNION SELECT ''TEXTSIZE'' UNION SELECT ''CURRENT_TIME'' UNION SELECT ''NATIONAL'' UNION SELECT ''THEN'' UNION SELECT ''CURRENT_TIMESTAMP'' UNION SELECT ''NOCHECK'' UNION SELECT ''TO'' UNION SELECT ''CURRENT_USER'' UNION SELECT ''NONCLUSTERED'' UNION SELECT ''TOP'' UNION SELECT ''CURSOR'' UNION SELECT ''NOT'' UNION SELECT ''TRAN'' UNION SELECT ''DATABASE'' UNION SELECT ''NULL'' UNION SELECT ''TRANSACTION'' UNION SELECT ''DBCC'' UNION SELECT ''NULLIF'' UNION SELECT ''TRIGGER'' UNION SELECT ''DEALLOCATE'' UNION SELECT ''OF'' UNION SELECT ''TRUNCATE'' UNION SELECT ''DECLARE'' UNION SELECT ''OFF'' UNION SELECT ''TRY_CONVERT'' UNION SELECT ''DEFAULT'' UNION SELECT ''OFFSETS'' UNION SELECT ''TSEQUAL'' UNION SELECT ''DELETE'' UNION SELECT ''ON'' UNION SELECT ''UNION'' UNION SELECT ''DENY'' UNION SELECT ''OPEN'' UNION SELECT ''UNIQUE'' UNION SELECT ''DESC'' UNION SELECT ''OPENDATASOURCE'' UNION SELECT ''UNPIVOT'' UNION SELECT ''DISK'' UNION SELECT ''OPENQUERY'' UNION SELECT ''UPDATE'' UNION SELECT ''DISTINCT'' UNION SELECT ''OPENROWSET'' UNION SELECT ''UPDATETEXT'' UNION SELECT ''DISTRIBUTED'' UNION SELECT ''OPENXML'' UNION SELECT ''USE'' UNION SELECT ''DOUBLE'' UNION SELECT ''OPTION'' UNION SELECT ''USER'' UNION SELECT ''DROP'' UNION SELECT ''OR'' UNION SELECT ''VALUES'' UNION SELECT ''DUMP'' UNION SELECT ''ORDER'' UNION SELECT ''VARYING'' UNION SELECT ''ELSE'' UNION SELECT ''OUTER'' UNION SELECT ''VIEW'' UNION SELECT ''END'' UNION SELECT ''OVER'' UNION SELECT ''WAITFOR'' UNION SELECT ''ERRLVL'' UNION SELECT ''PERCENT'' UNION SELECT ''WHEN'' UNION SELECT ''ESCAPE'' UNION SELECT ''PIVOT'' UNION SELECT ''WHERE'' UNION SELECT ''EXCEPT'' UNION SELECT ''PLAN'' UNION SELECT ''WHILE'' UNION SELECT ''EXEC'' UNION SELECT ''PRECISION'' UNION SELECT ''WITH'' UNION SELECT ''EXECUTE'' UNION SELECT ''PRIMARY'' UNION SELECT ''WITHIN GROUP'' UNION SELECT ''EXISTS'' UNION SELECT ''PRINT'' UNION SELECT ''WRITETEXT'' UNION SELECT ''EXIT'' UNION SELECT ''PROC'' COLLATE SQL_Latin1_General_CP1_CI_AS
 					        ) AS reserved (word) ON reserved.word = O.name;';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1172,7 +1009,7 @@ AS
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 					        INNER JOIN (
-						        VALUES (''ABSOLUTE''), (''EXEC''), (''OVERLAPS''), (''ACTION''), (''EXECUTE''), (''PAD''), (''ADA''), (''EXISTS''), (''PARTIAL''), (''ADD''), (''EXTERNAL''), (''PASCAL''), (''ALL''), (''EXTRACT''), (''POSITION''), (''ALLOCATE''), (''FALSE''), (''PRECISION''), (''ALTER''), (''FETCH''), (''PREPARE''), (''AND''), (''FIRST''), (''PRESERVE''), (''ANY''), (''FLOAT''), (''PRIMARY''), (''ARE''), (''FOR''), (''PRIOR''), (''AS''), (''FOREIGN''), (''PRIVILEGES''), (''ASC''), (''FORTRAN''), (''PROCEDURE''), (''ASSERTION''), (''FOUND''), (''PUBLIC''), (''AT''), (''FROM''), (''READ''), (''AUTHORIZATION''), (''FULL''), (''REAL''), (''AVG''), (''GET''), (''REFERENCES''), (''BEGIN''), (''GLOBAL''), (''RELATIVE''), (''BETWEEN''), (''GO''), (''RESTRICT''), (''BIT''), (''GOTO''), (''REVOKE''), (''BIT_LENGTH''), (''GRANT''), (''RIGHT''), (''BOTH''), (''GROUP''), (''ROLLBACK''), (''BY''), (''HAVING''), (''ROWS''), (''CASCADE''), (''HOUR''), (''SCHEMA''), (''CASCADED''), (''IDENTITY''), (''SCROLL''), (''CASE''), (''IMMEDIATE''), (''SECOND''), (''CAST''), (''IN''), (''SECTION''), (''CATALOG''), (''INCLUDE''), (''SELECT''), (''CHAR''), (''INDEX''), (''SESSION''), (''CHAR_LENGTH''), (''INDICATOR''), (''SESSION_USER''), (''CHARACTER''), (''INITIALLY''), (''SET''), (''CHARACTER_LENGTH''), (''INNER''), (''SIZE''), (''CHECK''), (''INPUT''), (''SMALLINT''), (''CLOSE''), (''INSENSITIVE''), (''SOME''), (''COALESCE''), (''INSERT''), (''SPACE''), (''COLLATE''), (''INT''), (''SQL''), (''COLLATION''), (''INTEGER''), (''SQLCA''), (''COLUMN''), (''INTERSECT''), (''SQLCODE''), (''COMMIT''), (''INTERVAL''), (''SQLERROR''), (''CONNECT''), (''INTO''), (''SQLSTATE''), (''CONNECTION''), (''IS''), (''SQLWARNING''), (''CONSTRAINT''), (''ISOLATION''), (''SUBSTRING''), (''CONSTRAINTS''), (''JOIN''), (''SUM''), (''CONTINUE''), (''KEY''), (''SYSTEM_USER''), (''CONVERT''), (''LANGUAGE''), (''TABLE''), (''CORRESPONDING''), (''LAST''), (''TEMPORARY''), (''COUNT''), (''LEADING''), (''THEN''), (''CREATE''), (''LEFT''), (''TIME''), (''CROSS''), (''LEVEL''), (''TIMESTAMP''), (''CURRENT''), (''LIKE''), (''TIMEZONE_HOUR''), (''CURRENT_DATE''), (''LOCAL''), (''TIMEZONE_MINUTE''), (''CURRENT_TIME''), (''LOWER''), (''TO''), (''CURRENT_TIMESTAMP''), (''MATCH''), (''TRAILING''), (''CURRENT_USER''), (''MAX''), (''TRANSACTION''), (''CURSOR''), (''MIN''), (''TRANSLATE''), (''DATE''), (''MINUTE''), (''TRANSLATION''), (''DAY''), (''MODULE''), (''TRIM''), (''DEALLOCATE''), (''MONTH''), (''TRUE''), (''DEC''), (''NAMES''), (''UNION''), (''DECIMAL''), (''NATIONAL''), (''UNIQUE''), (''DECLARE''), (''NATURAL''), (''UNKNOWN''), (''DEFAULT''), (''NCHAR''), (''UPDATE''), (''DEFERRABLE''), (''NEXT''), (''UPPER''), (''DEFERRED''), (''NO''), (''USAGE''), (''DELETE''), (''NONE''), (''USER''), (''DESC''), (''NOT''), (''USING''), (''DESCRIBE''), (''NULL''), (''VALUE''), (''DESCRIPTOR''), (''NULLIF''), (''VALUES''), (''DIAGNOSTICS''), (''NUMERIC''), (''VARCHAR''), (''DISCONNECT''), (''OCTET_LENGTH''), (''VARYING''), (''DISTINCT''), (''OF''), (''VIEW''), (''DOMAIN''), (''ON''), (''WHEN''), (''DOUBLE''), (''ONLY''), (''WHENEVER''), (''DROP''), (''OPEN''), (''WHERE''), (''ELSE''), (''OPTION''), (''WITH''), (''END''), (''OR''), (''WORK''), (''END-EXEC''), (''ORDER''), (''WRITE''), (''ESCAPE''), (''OUTER''), (''YEAR''), (''EXCEPT''), (''OUTPUT''), (''ZONE''), (''EXCEPTION'')
+						        SELECT ''ABSOLUTE'' UNION SELECT ''EXEC'' UNION SELECT ''OVERLAPS'' UNION SELECT ''ACTION'' UNION SELECT ''EXECUTE'' UNION SELECT ''PAD'' UNION SELECT ''ADA'' UNION SELECT ''EXISTS'' UNION SELECT ''PARTIAL'' UNION SELECT ''ADD'' UNION SELECT ''EXTERNAL'' UNION SELECT ''PASCAL'' UNION SELECT ''ALL'' UNION SELECT ''EXTRACT'' UNION SELECT ''POSITION'' UNION SELECT ''ALLOCATE'' UNION SELECT ''FALSE'' UNION SELECT ''PRECISION'' UNION SELECT ''ALTER'' UNION SELECT ''FETCH'' UNION SELECT ''PREPARE'' UNION SELECT ''AND'' UNION SELECT ''FIRST'' UNION SELECT ''PRESERVE'' UNION SELECT ''ANY'' UNION SELECT ''FLOAT'' UNION SELECT ''PRIMARY'' UNION SELECT ''ARE'' UNION SELECT ''FOR'' UNION SELECT ''PRIOR'' UNION SELECT ''AS'' UNION SELECT ''FOREIGN'' UNION SELECT ''PRIVILEGES'' UNION SELECT ''ASC'' UNION SELECT ''FORTRAN'' UNION SELECT ''PROCEDURE'' UNION SELECT ''ASSERTION'' UNION SELECT ''FOUND'' UNION SELECT ''PUBLIC'' UNION SELECT ''AT'' UNION SELECT ''FROM'' UNION SELECT ''READ'' UNION SELECT ''AUTHORIZATION'' UNION SELECT ''FULL'' UNION SELECT ''REAL'' UNION SELECT ''AVG'' UNION SELECT ''GET'' UNION SELECT ''REFERENCES'' UNION SELECT ''BEGIN'' UNION SELECT ''GLOBAL'' UNION SELECT ''RELATIVE'' UNION SELECT ''BETWEEN'' UNION SELECT ''GO'' UNION SELECT ''RESTRICT'' UNION SELECT ''BIT'' UNION SELECT ''GOTO'' UNION SELECT ''REVOKE'' UNION SELECT ''BIT_LENGTH'' UNION SELECT ''GRANT'' UNION SELECT ''RIGHT'' UNION SELECT ''BOTH'' UNION SELECT ''GROUP'' UNION SELECT ''ROLLBACK'' UNION SELECT ''BY'' UNION SELECT ''HAVING'' UNION SELECT ''ROWS'' UNION SELECT ''CASCADE'' UNION SELECT ''HOUR'' UNION SELECT ''SCHEMA'' UNION SELECT ''CASCADED'' UNION SELECT ''IDENTITY'' UNION SELECT ''SCROLL'' UNION SELECT ''CASE'' UNION SELECT ''IMMEDIATE'' UNION SELECT ''SECOND'' UNION SELECT ''CAST'' UNION SELECT ''IN'' UNION SELECT ''SECTION'' UNION SELECT ''CATALOG'' UNION SELECT ''INCLUDE'' UNION SELECT ''SELECT'' UNION SELECT ''CHAR'' UNION SELECT ''INDEX'' UNION SELECT ''SESSION'' UNION SELECT ''CHAR_LENGTH'' UNION SELECT ''INDICATOR'' UNION SELECT ''SESSION_USER'' UNION SELECT ''CHARACTER'' UNION SELECT ''INITIALLY'' UNION SELECT ''SET'' UNION SELECT ''CHARACTER_LENGTH'' UNION SELECT ''INNER'' UNION SELECT ''SIZE'' UNION SELECT ''CHECK'' UNION SELECT ''INPUT'' UNION SELECT ''SMALLINT'' UNION SELECT ''CLOSE'' UNION SELECT ''INSENSITIVE'' UNION SELECT ''SOME'' UNION SELECT ''COALESCE'' UNION SELECT ''INSERT'' UNION SELECT ''SPACE'' UNION SELECT ''COLLATE'' UNION SELECT ''INT'' UNION SELECT ''SQL'' UNION SELECT ''COLLATION'' UNION SELECT ''INTEGER'' UNION SELECT ''SQLCA'' UNION SELECT ''COLUMN'' UNION SELECT ''INTERSECT'' UNION SELECT ''SQLCODE'' UNION SELECT ''COMMIT'' UNION SELECT ''INTERVAL'' UNION SELECT ''SQLERROR'' UNION SELECT ''CONNECT'' UNION SELECT ''INTO'' UNION SELECT ''SQLSTATE'' UNION SELECT ''CONNECTION'' UNION SELECT ''IS'' UNION SELECT ''SQLWARNING'' UNION SELECT ''CONSTRAINT'' UNION SELECT ''ISOLATION'' UNION SELECT ''SUBSTRING'' UNION SELECT ''CONSTRAINTS'' UNION SELECT ''JOIN'' UNION SELECT ''SUM'' UNION SELECT ''CONTINUE'' UNION SELECT ''KEY'' UNION SELECT ''SYSTEM_USER'' UNION SELECT ''CONVERT'' UNION SELECT ''LANGUAGE'' UNION SELECT ''TABLE'' UNION SELECT ''CORRESPONDING'' UNION SELECT ''LAST'' UNION SELECT ''TEMPORARY'' UNION SELECT ''COUNT'' UNION SELECT ''LEADING'' UNION SELECT ''THEN'' UNION SELECT ''CREATE'' UNION SELECT ''LEFT'' UNION SELECT ''TIME'' UNION SELECT ''CROSS'' UNION SELECT ''LEVEL'' UNION SELECT ''TIMESTAMP'' UNION SELECT ''CURRENT'' UNION SELECT ''LIKE'' UNION SELECT ''TIMEZONE_HOUR'' UNION SELECT ''CURRENT_DATE'' UNION SELECT ''LOCAL'' UNION SELECT ''TIMEZONE_MINUTE'' UNION SELECT ''CURRENT_TIME'' UNION SELECT ''LOWER'' UNION SELECT ''TO'' UNION SELECT ''CURRENT_TIMESTAMP'' UNION SELECT ''MATCH'' UNION SELECT ''TRAILING'' UNION SELECT ''CURRENT_USER'' UNION SELECT ''MAX'' UNION SELECT ''TRANSACTION'' UNION SELECT ''CURSOR'' UNION SELECT ''MIN'' UNION SELECT ''TRANSLATE'' UNION SELECT ''DATE'' UNION SELECT ''MINUTE'' UNION SELECT ''TRANSLATION'' UNION SELECT ''DAY'' UNION SELECT ''MODULE'' UNION SELECT ''TRIM'' UNION SELECT ''DEALLOCATE'' UNION SELECT ''MONTH'' UNION SELECT ''TRUE'' UNION SELECT ''DEC'' UNION SELECT ''NAMES'' UNION SELECT ''UNION'' UNION SELECT ''DECIMAL'' UNION SELECT ''NATIONAL'' UNION SELECT ''UNIQUE'' UNION SELECT ''DECLARE'' UNION SELECT ''NATURAL'' UNION SELECT ''UNKNOWN'' UNION SELECT ''DEFAULT'' UNION SELECT ''NCHAR'' UNION SELECT ''UPDATE'' UNION SELECT ''DEFERRABLE'' UNION SELECT ''NEXT'' UNION SELECT ''UPPER'' UNION SELECT ''DEFERRED'' UNION SELECT ''NO'' UNION SELECT ''USAGE'' UNION SELECT ''DELETE'' UNION SELECT ''NONE'' UNION SELECT ''USER'' UNION SELECT ''DESC'' UNION SELECT ''NOT'' UNION SELECT ''USING'' UNION SELECT ''DESCRIBE'' UNION SELECT ''NULL'' UNION SELECT ''VALUE'' UNION SELECT ''DESCRIPTOR'' UNION SELECT ''NULLIF'' UNION SELECT ''VALUES'' UNION SELECT ''DIAGNOSTICS'' UNION SELECT ''NUMERIC'' UNION SELECT ''VARCHAR'' UNION SELECT ''DISCONNECT'' UNION SELECT ''OCTET_LENGTH'' UNION SELECT ''VARYING'' UNION SELECT ''DISTINCT'' UNION SELECT ''OF'' UNION SELECT ''VIEW'' UNION SELECT ''DOMAIN'' UNION SELECT ''ON'' UNION SELECT ''WHEN'' UNION SELECT ''DOUBLE'' UNION SELECT ''ONLY'' UNION SELECT ''WHENEVER'' UNION SELECT ''DROP'' UNION SELECT ''OPEN'' UNION SELECT ''WHERE'' UNION SELECT ''ELSE'' UNION SELECT ''OPTION'' UNION SELECT ''WITH'' UNION SELECT ''END'' UNION SELECT ''OR'' UNION SELECT ''WORK'' UNION SELECT ''END-EXEC'' UNION SELECT ''ORDER'' UNION SELECT ''WRITE'' UNION SELECT ''ESCAPE'' UNION SELECT ''OUTER'' UNION SELECT ''YEAR'' UNION SELECT ''EXCEPT'' UNION SELECT ''OUTPUT'' UNION SELECT ''ZONE'' UNION SELECT ''EXCEPTION'' COLLATE SQL_Latin1_General_CP1_CI_AS
 					        ) AS reserved (word) ON reserved.word = O.name;';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1200,7 +1037,7 @@ AS
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 					        INNER JOIN (
-						        VALUES (''ABSOLUTE''), (''HOST''), (''RELATIVE''), (''ACTION''), (''HOUR''), (''RELEASE''), (''ADMIN''), (''IGNORE''), (''RESULT''), (''AFTER''), (''IMMEDIATE''), (''RETURNS''), (''AGGREGATE''), (''INDICATOR''), (''ROLE''), (''ALIAS''), (''INITIALIZE''), (''ROLLUP''), (''ALLOCATE''), (''INITIALLY''), (''ROUTINE''), (''ARE''), (''INOUT''), (''ROW''), (''ARRAY''), (''INPUT''), (''ROWS''), (''ASENSITIVE''), (''INT''), (''SAVEPOINT''), (''ASSERTION''), (''INTEGER''), (''SCROLL''), (''ASYMMETRIC''), (''INTERSECTION''), (''SCOPE''), (''AT''), (''INTERVAL''), (''SEARCH''), (''ATOMIC''), (''ISOLATION''), (''SECOND''), (''BEFORE''), (''ITERATE''), (''SECTION''), (''BINARY''), (''LANGUAGE''), (''SENSITIVE''), (''BIT''), (''LARGE''), (''SEQUENCE''), (''BLOB''), (''LAST''), (''SESSION''), (''BOOLEAN''), (''LATERAL''), (''SETS''), (''BOTH''), (''LEADING''), (''SIMILAR''), (''BREADTH''), (''LESS''), (''SIZE''), (''CALL''), (''LEVEL''), (''SMALLINT''), (''CALLED''), (''LIKE_REGEX''), (''SPACE''), (''CARDINALITY''), (''LIMIT''), (''SPECIFIC''), (''CASCADED''), (''LN''), (''SPECIFICTYPE''), (''CAST''), (''LOCAL''), (''SQL''), (''CATALOG''), (''LOCALTIME''), (''SQLEXCEPTION''), (''CHAR''), (''LOCALTIMESTAMP''), (''SQLSTATE''), (''CHARACTER''), (''LOCATOR''), (''SQLWARNING''), (''CLASS''), (''MAP''), (''START''), (''CLOB''), (''MATCH''), (''STATE''), (''COLLATION''), (''MEMBER''), (''STATEMENT''), (''COLLECT''), (''METHOD''), (''STATIC''), (''COMPLETION''), (''MINUTE''), (''STDDEV_POP''), (''CONDITION''), (''MOD''), (''STDDEV_SAMP''), (''CONNECT''), (''MODIFIES''), (''STRUCTURE''), (''CONNECTION''), (''MODIFY''), (''SUBMULTISET''), (''CONSTRAINTS''), (''MODULE''), (''SUBSTRING_REGEX''), (''CONSTRUCTOR''), (''MONTH''), (''SYMMETRIC''), (''CORR''), (''MULTISET''), (''SYSTEM''), (''CORRESPONDING''), (''NAMES''), (''TEMPORARY''), (''COVAR_POP''), (''NATURAL''), (''TERMINATE''), (''COVAR_SAMP''), (''NCHAR''), (''THAN''), (''CUBE''), (''NCLOB''), (''TIME''), (''CUME_DIST''), (''NEW''), (''TIMESTAMP''), (''CURRENT_CATALOG''), (''NEXT''), (''TIMEZONE_HOUR''), (''CURRENT_DEFAULT_TRANSFORM_GROUP''), (''NO''), (''TIMEZONE_MINUTE''), (''CURRENT_PATH''), (''NONE''), (''TRAILING''), (''CURRENT_ROLE''), (''NORMALIZE''), (''TRANSLATE_REGEX''), (''CURRENT_SCHEMA''), (''NUMERIC''), (''TRANSLATION''), (''CURRENT_TRANSFORM_GROUP_FOR_TYPE''), (''OBJECT''), (''TREAT''), (''CYCLE''), (''OCCURRENCES_REGEX''), (''TRUE''), (''DATA''), (''OLD''), (''UESCAPE''), (''DATE''), (''ONLY''), (''UNDER''), (''DAY''), (''OPERATION''), (''UNKNOWN''), (''DEC''), (''ORDINALITY''), (''UNNEST''), (''DECIMAL''), (''OUT''), (''USAGE''), (''DEFERRABLE''), (''OVERLAY''), (''USING''), (''DEFERRED''), (''OUTPUT''), (''VALUE''), (''DEPTH''), (''PAD''), (''VAR_POP''), (''DEREF''), (''PARAMETER''), (''VAR_SAMP''), (''DESCRIBE''), (''PARAMETERS''), (''VARCHAR''), (''DESCRIPTOR''), (''PARTIAL''), (''VARIABLE''), (''DESTROY''), (''PARTITION''), (''WHENEVER''), (''DESTRUCTOR''), (''PATH''), (''WIDTH_BUCKET''), (''DETERMINISTIC''), (''POSTFIX''), (''WITHOUT''), (''DICTIONARY''), (''PREFIX''), (''WINDOW''), (''DIAGNOSTICS''), (''PREORDER''), (''WITHIN''), (''DISCONNECT''), (''PREPARE''), (''WORK''), (''DOMAIN''), (''PERCENT_RANK''), (''WRITE''), (''DYNAMIC''), (''PERCENTILE_CONT''), (''XMLAGG''), (''EACH''), (''PERCENTILE_DISC''), (''XMLATTRIBUTES''), (''ELEMENT''), (''POSITION_REGEX''), (''XMLBINARY''), (''END-EXEC''), (''PRESERVE''), (''XMLCAST''), (''EQUALS''), (''PRIOR''), (''XMLCOMMENT''), (''EVERY''), (''PRIVILEGES''), (''XMLCONCAT''), (''EXCEPTION''), (''RANGE''), (''XMLDOCUMENT''), (''FALSE''), (''READS''), (''XMLELEMENT''), (''FILTER''), (''REAL''), (''XMLEXISTS''), (''FIRST''), (''RECURSIVE''), (''XMLFOREST''), (''FLOAT''), (''REF''), (''XMLITERATE''), (''FOUND''), (''REFERENCING''), (''XMLNAMESPACES''), (''FREE''), (''REGR_AVGX''), (''XMLPARSE''), (''FULLTEXTTABLE''), (''REGR_AVGY''), (''XMLPI''), (''FUSION''), (''REGR_COUNT''), (''XMLQUERY''), (''GENERAL''), (''REGR_INTERCEPT''), (''XMLSERIALIZE''), (''GET''), (''REGR_R2''), (''XMLTABLE''), (''GLOBAL''), (''REGR_SLOPE''), (''XMLTEXT''), (''GO''), (''REGR_SXX''), (''XMLVALIDATE''), (''GROUPING''), (''REGR_SXY''), (''YEAR''), (''HOLD''), (''REGR_SYY''), (''ZONE'')
+						        SELECT ''ABSOLUTE'' UNION SELECT ''HOST'' UNION SELECT ''RELATIVE'' UNION SELECT ''ACTION'' UNION SELECT ''HOUR'' UNION SELECT ''RELEASE'' UNION SELECT ''ADMIN'' UNION SELECT ''IGNORE'' UNION SELECT ''RESULT'' UNION SELECT ''AFTER'' UNION SELECT ''IMMEDIATE'' UNION SELECT ''RETURNS'' UNION SELECT ''AGGREGATE'' UNION SELECT ''INDICATOR'' UNION SELECT ''ROLE'' UNION SELECT ''ALIAS'' UNION SELECT ''INITIALIZE'' UNION SELECT ''ROLLUP'' UNION SELECT ''ALLOCATE'' UNION SELECT ''INITIALLY'' UNION SELECT ''ROUTINE'' UNION SELECT ''ARE'' UNION SELECT ''INOUT'' UNION SELECT ''ROW'' UNION SELECT ''ARRAY'' UNION SELECT ''INPUT'' UNION SELECT ''ROWS'' UNION SELECT ''ASENSITIVE'' UNION SELECT ''INT'' UNION SELECT ''SAVEPOINT'' UNION SELECT ''ASSERTION'' UNION SELECT ''INTEGER'' UNION SELECT ''SCROLL'' UNION SELECT ''ASYMMETRIC'' UNION SELECT ''INTERSECTION'' UNION SELECT ''SCOPE'' UNION SELECT ''AT'' UNION SELECT ''INTERVAL'' UNION SELECT ''SEARCH'' UNION SELECT ''ATOMIC'' UNION SELECT ''ISOLATION'' UNION SELECT ''SECOND'' UNION SELECT ''BEFORE'' UNION SELECT ''ITERATE'' UNION SELECT ''SECTION'' UNION SELECT ''BINARY'' UNION SELECT ''LANGUAGE'' UNION SELECT ''SENSITIVE'' UNION SELECT ''BIT'' UNION SELECT ''LARGE'' UNION SELECT ''SEQUENCE'' UNION SELECT ''BLOB'' UNION SELECT ''LAST'' UNION SELECT ''SESSION'' UNION SELECT ''BOOLEAN'' UNION SELECT ''LATERAL'' UNION SELECT ''SETS'' UNION SELECT ''BOTH'' UNION SELECT ''LEADING'' UNION SELECT ''SIMILAR'' UNION SELECT ''BREADTH'' UNION SELECT ''LESS'' UNION SELECT ''SIZE'' UNION SELECT ''CALL'' UNION SELECT ''LEVEL'' UNION SELECT ''SMALLINT'' UNION SELECT ''CALLED'' UNION SELECT ''LIKE_REGEX'' UNION SELECT ''SPACE'' UNION SELECT ''CARDINALITY'' UNION SELECT ''LIMIT'' UNION SELECT ''SPECIFIC'' UNION SELECT ''CASCADED'' UNION SELECT ''LN'' UNION SELECT ''SPECIFICTYPE'' UNION SELECT ''CAST'' UNION SELECT ''LOCAL'' UNION SELECT ''SQL'' UNION SELECT ''CATALOG'' UNION SELECT ''LOCALTIME'' UNION SELECT ''SQLEXCEPTION'' UNION SELECT ''CHAR'' UNION SELECT ''LOCALTIMESTAMP'' UNION SELECT ''SQLSTATE'' UNION SELECT ''CHARACTER'' UNION SELECT ''LOCATOR'' UNION SELECT ''SQLWARNING'' UNION SELECT ''CLASS'' UNION SELECT ''MAP'' UNION SELECT ''START'' UNION SELECT ''CLOB'' UNION SELECT ''MATCH'' UNION SELECT ''STATE'' UNION SELECT ''COLLATION'' UNION SELECT ''MEMBER'' UNION SELECT ''STATEMENT'' UNION SELECT ''COLLECT'' UNION SELECT ''METHOD'' UNION SELECT ''STATIC'' UNION SELECT ''COMPLETION'' UNION SELECT ''MINUTE'' UNION SELECT ''STDDEV_POP'' UNION SELECT ''CONDITION'' UNION SELECT ''MOD'' UNION SELECT ''STDDEV_SAMP'' UNION SELECT ''CONNECT'' UNION SELECT ''MODIFIES'' UNION SELECT ''STRUCTURE'' UNION SELECT ''CONNECTION'' UNION SELECT ''MODIFY'' UNION SELECT ''SUBMULTISET'' UNION SELECT ''CONSTRAINTS'' UNION SELECT ''MODULE'' UNION SELECT ''SUBSTRING_REGEX'' UNION SELECT ''CONSTRUCTOR'' UNION SELECT ''MONTH'' UNION SELECT ''SYMMETRIC'' UNION SELECT ''CORR'' UNION SELECT ''MULTISET'' UNION SELECT ''SYSTEM'' UNION SELECT ''CORRESPONDING'' UNION SELECT ''NAMES'' UNION SELECT ''TEMPORARY'' UNION SELECT ''COVAR_POP'' UNION SELECT ''NATURAL'' UNION SELECT ''TERMINATE'' UNION SELECT ''COVAR_SAMP'' UNION SELECT ''NCHAR'' UNION SELECT ''THAN'' UNION SELECT ''CUBE'' UNION SELECT ''NCLOB'' UNION SELECT ''TIME'' UNION SELECT ''CUME_DIST'' UNION SELECT ''NEW'' UNION SELECT ''TIMESTAMP'' UNION SELECT ''CURRENT_CATALOG'' UNION SELECT ''NEXT'' UNION SELECT ''TIMEZONE_HOUR'' UNION SELECT ''CURRENT_DEFAULT_TRANSFORM_GROUP'' UNION SELECT ''NO'' UNION SELECT ''TIMEZONE_MINUTE'' UNION SELECT ''CURRENT_PATH'' UNION SELECT ''NONE'' UNION SELECT ''TRAILING'' UNION SELECT ''CURRENT_ROLE'' UNION SELECT ''NORMALIZE'' UNION SELECT ''TRANSLATE_REGEX'' UNION SELECT ''CURRENT_SCHEMA'' UNION SELECT ''NUMERIC'' UNION SELECT ''TRANSLATION'' UNION SELECT ''CURRENT_TRANSFORM_GROUP_FOR_TYPE'' UNION SELECT ''OBJECT'' UNION SELECT ''TREAT'' UNION SELECT ''CYCLE'' UNION SELECT ''OCCURRENCES_REGEX'' UNION SELECT ''TRUE'' UNION SELECT ''DATA'' UNION SELECT ''OLD'' UNION SELECT ''UESCAPE'' UNION SELECT ''DATE'' UNION SELECT ''ONLY'' UNION SELECT ''UNDER'' UNION SELECT ''DAY'' UNION SELECT ''OPERATION'' UNION SELECT ''UNKNOWN'' UNION SELECT ''DEC'' UNION SELECT ''ORDINALITY'' UNION SELECT ''UNNEST'' UNION SELECT ''DECIMAL'' UNION SELECT ''OUT'' UNION SELECT ''USAGE'' UNION SELECT ''DEFERRABLE'' UNION SELECT ''OVERLAY'' UNION SELECT ''USING'' UNION SELECT ''DEFERRED'' UNION SELECT ''OUTPUT'' UNION SELECT ''VALUE'' UNION SELECT ''DEPTH'' UNION SELECT ''PAD'' UNION SELECT ''VAR_POP'' UNION SELECT ''DEREF'' UNION SELECT ''PARAMETER'' UNION SELECT ''VAR_SAMP'' UNION SELECT ''DESCRIBE'' UNION SELECT ''PARAMETERS'' UNION SELECT ''VARCHAR'' UNION SELECT ''DESCRIPTOR'' UNION SELECT ''PARTIAL'' UNION SELECT ''VARIABLE'' UNION SELECT ''DESTROY'' UNION SELECT ''PARTITION'' UNION SELECT ''WHENEVER'' UNION SELECT ''DESTRUCTOR'' UNION SELECT ''PATH'' UNION SELECT ''WIDTH_BUCKET'' UNION SELECT ''DETERMINISTIC'' UNION SELECT ''POSTFIX'' UNION SELECT ''WITHOUT'' UNION SELECT ''DICTIONARY'' UNION SELECT ''PREFIX'' UNION SELECT ''WINDOW'' UNION SELECT ''DIAGNOSTICS'' UNION SELECT ''PREORDER'' UNION SELECT ''WITHIN'' UNION SELECT ''DISCONNECT'' UNION SELECT ''PREPARE'' UNION SELECT ''WORK'' UNION SELECT ''DOMAIN'' UNION SELECT ''PERCENT_RANK'' UNION SELECT ''WRITE'' UNION SELECT ''DYNAMIC'' UNION SELECT ''PERCENTILE_CONT'' UNION SELECT ''XMLAGG'' UNION SELECT ''EACH'' UNION SELECT ''PERCENTILE_DISC'' UNION SELECT ''XMLATTRIBUTES'' UNION SELECT ''ELEMENT'' UNION SELECT ''POSITION_REGEX'' UNION SELECT ''XMLBINARY'' UNION SELECT ''END-EXEC'' UNION SELECT ''PRESERVE'' UNION SELECT ''XMLCAST'' UNION SELECT ''EQUALS'' UNION SELECT ''PRIOR'' UNION SELECT ''XMLCOMMENT'' UNION SELECT ''EVERY'' UNION SELECT ''PRIVILEGES'' UNION SELECT ''XMLCONCAT'' UNION SELECT ''EXCEPTION'' UNION SELECT ''RANGE'' UNION SELECT ''XMLDOCUMENT'' UNION SELECT ''FALSE'' UNION SELECT ''READS'' UNION SELECT ''XMLELEMENT'' UNION SELECT ''FILTER'' UNION SELECT ''REAL'' UNION SELECT ''XMLEXISTS'' UNION SELECT ''FIRST'' UNION SELECT ''RECURSIVE'' UNION SELECT ''XMLFOREST'' UNION SELECT ''FLOAT'' UNION SELECT ''REF'' UNION SELECT ''XMLITERATE'' UNION SELECT ''FOUND'' UNION SELECT ''REFERENCING'' UNION SELECT ''XMLNAMESPACES'' UNION SELECT ''FREE'' UNION SELECT ''REGR_AVGX'' UNION SELECT ''XMLPARSE'' UNION SELECT ''FULLTEXTTABLE'' UNION SELECT ''REGR_AVGY'' UNION SELECT ''XMLPI'' UNION SELECT ''FUSION'' UNION SELECT ''REGR_COUNT'' UNION SELECT ''XMLQUERY'' UNION SELECT ''GENERAL'' UNION SELECT ''REGR_INTERCEPT'' UNION SELECT ''XMLSERIALIZE'' UNION SELECT ''GET'' UNION SELECT ''REGR_R2'' UNION SELECT ''XMLTABLE'' UNION SELECT ''GLOBAL'' UNION SELECT ''REGR_SLOPE'' UNION SELECT ''XMLTEXT'' UNION SELECT ''GO'' UNION SELECT ''REGR_SXX'' UNION SELECT ''XMLVALIDATE'' UNION SELECT ''GROUPING'' UNION SELECT ''REGR_SXY'' UNION SELECT ''YEAR'' UNION SELECT ''HOLD'' UNION SELECT ''REGR_SYY'' UNION SELECT ''ZONE'' COLLATE SQL_Latin1_General_CP1_CI_AS
 					        ) AS reserved (word) ON reserved.word = O.name;';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1212,9 +1049,9 @@ AS
 		        SELECT
 			        @CheckId       = 3
 		           ,@Priority      = 40
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'Wide Table'
-		           ,@URLAnchor     = 'wide-table';
+		           ,@URLAnchor     = 'table-conventions#wide-table';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1252,9 +1089,9 @@ AS
 		        SELECT
 			        @CheckId       = 6
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'Heap'
-		           ,@URLAnchor     = 'heap';
+		           ,@URLAnchor     = 'table-conventions#heap';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1294,9 +1131,9 @@ AS
 		        SELECT
 			        @CheckId       = 7
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Naming Conventions'
+		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using ID for Primary Key Column Name'
-		           ,@URLAnchor     = 'using-id-for-primary-key-column-name';
+		           ,@URLAnchor     = 'naming-conventions#using-id-for-primary-key-column-name';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1337,9 +1174,9 @@ AS
 		        SELECT
 			        @CheckId       = 8
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'UNIQUEIDENTIFIER For Primary Key'
-		           ,@URLAnchor     = 'uniqueidentifier-for-primary-key';
+		           ,@URLAnchor     = 'table-conventions#uniqueidentifier-for-primary-key';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1382,9 +1219,9 @@ AS
 		        SELECT
 			        @CheckId       = 22
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'UNIQUEIDENTIFIER in a Clustered Index'
-		           ,@URLAnchor     = 'uniqueidentifier-in-a-clustered-index';
+		           ,@URLAnchor     = 'table-conventions#uniqueidentifier-in-a-clustered-index';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1428,9 +1265,9 @@ AS
 		        SELECT
 			        @CheckId       = 21
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'Missing Index for Foreign Key'
-		           ,@URLAnchor     = 'missing-index-for-foreign-key';
+		           ,@URLAnchor     = 'table-conventions#missing-index-for-foreign-key';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1472,9 +1309,9 @@ AS
 		        SELECT
 			        @CheckId       = 20
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'Table Conventions'
+		           ,@FindingGroup  = 'Table Conventions'
 		           ,@Finding       = 'Missing Primary Key'
-		           ,@URLAnchor     = 'missing-primary-key';
+		           ,@URLAnchor     = 'table-conventions#missing-primary-key';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1514,9 +1351,9 @@ AS
 		        SELECT
 			        @CheckId       = 10
 		           ,@Priority      = 20
-		           ,@FindingGroup = 'Data Type Conventions'
+		           ,@FindingGroup  = 'Data Type Conventions'
 		           ,@Finding       = 'Using User-Defined Data Type'
-		           ,@URLAnchor     = 'using-user-defined-data-type';
+		           ,@URLAnchor     = 'data-type-conventions#using-user-defined-data-type';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1553,9 +1390,9 @@ AS
 		        SELECT
 			        @CheckId       = 25
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Scalar Function Is Not Inlineable'
-		           ,@URLAnchor     = 'scalar-function-is-not-inlineable';
+		           ,@URLAnchor     = 'sql-code-conventions#scalar-function-is-not-inlineable';
 		        /**********************************************************************************************************************/	
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 			        AND EXISTS(SELECT * FROM sys.databases WHERE compatibility_level >= 150 AND database_id = @DatabaseId)
@@ -1595,9 +1432,9 @@ AS
 		        SELECT
 			        @CheckId       = 24
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Using User-Defined Scalar Function'
-		           ,@URLAnchor     = 'using-user-defined-scalar-function';
+		           ,@URLAnchor     = 'sql-code-conventions#using-user-defined-scalar-function';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 			        AND EXISTS(SELECT * FROM sys.databases WHERE compatibility_level < 150 AND database_id = @DatabaseId)
@@ -1625,7 +1462,8 @@ AS
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
-					        O.type = ''FN'';'
+					        O.type = ''FN''
+                            AND O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'');'
 			
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1635,9 +1473,9 @@ AS
 		        SELECT
 			        @CheckId       = 23
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Using SELECT *'
-		           ,@URLAnchor     = 'using-select-*';
+		           ,@URLAnchor     = 'sql-code-conventions#using-select-';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1684,9 +1522,9 @@ AS
 		        SELECT
 			        @CheckId       = 9
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Using Hardcoded Database Name Reference'
-		           ,@URLAnchor     = 'using-hardcoded-database-name-reference';
+		           ,@URLAnchor     = 'sql-code-conventions#using-hardcoded-database-name-reference';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1714,7 +1552,7 @@ AS
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = SM.object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
-					        PATINDEX(CONCAT(''%FROM%'', ''' + @DatabaseName + N''', ''.%.%'') COLLATE SQL_Latin1_General_CP1_CI_AS, SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0;';
+					        PATINDEX(''%FROM%'' + ''' + @DatabaseName + N''' + ''.%.%'' COLLATE SQL_Latin1_General_CP1_CI_AS, SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0;';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
@@ -1724,9 +1562,9 @@ AS
 		        SELECT
 			        @CheckId       = 19
 		           ,@Priority      = 5
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Not Using SET NOCOUNT ON in Stored Procedure or Trigger'
-		           ,@URLAnchor     = 'not-using-set-nocount-on-in-stored-procedure-or-trigger';
+		           ,@URLAnchor     = 'sql-code-conventions#not-using-set-nocount-on-in-stored-procedure-or-trigger';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1785,6 +1623,7 @@ AS
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
 				        WHERE
 					        O.type IN (''P'')
+                            AND O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'')
 					        AND SM.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS;'
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1795,9 +1634,9 @@ AS
 		        SELECT
 			        @CheckId       = 15
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'SQL Code Development'
+		           ,@FindingGroup  = 'SQL Code Development'
 		           ,@Finding       = 'Using NOLOCK (READ UNCOMMITTED)'
-		           ,@URLAnchor     = 'using-nolock-read-uncommitted';
+		           ,@URLAnchor     = 'sql-code-conventions#using-nolock-read-uncommitted';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -1841,9 +1680,9 @@ AS
 		        SELECT
 			        @CheckId       = 27
 		           ,@Priority      = 1
-		           ,@FindingGroup = 'Data Issue'
+		           ,@FindingGroup  = 'Data Issue'
 		           ,@Finding       = 'Unencrypted Data'
-		           ,@URLAnchor     = 'unencrypted-data';
+		           ,@URLAnchor     = 'data-issue#unencrypted-data';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN
@@ -2036,7 +1875,7 @@ AS
 		           ,@Priority      = 1
 		           ,@FindingGroup  = 'Data Type Conventions'
 		           ,@Finding       = 'Using MONEY data type'
-		           ,@URLAnchor     = 'using-money-data-type';
+		           ,@URLAnchor     = 'data-type-conventions#using-money-data-type';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN

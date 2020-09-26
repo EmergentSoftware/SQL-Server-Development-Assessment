@@ -9,7 +9,7 @@ layout: default
 
 Included in this project are settings you can use for database development. Using the same set of settings across a team will helps ensure consistent development patterns.
 
-#### SQL Server Management Studio
+## SQL Server Management Studio
 
 The settings are located in the project "[\SQL-Server-Assess\Development Application Settings\Microsoft\SQL Server Management Studio\General Settings](https://github.com/EmergentSoftware/SQL-Server-Assess/tree/master/Development%20Application%20Settings/Microsoft/SQL%20Server%20Management%20Studio/General%20Settings)"
 
@@ -18,7 +18,7 @@ The settings are located in the project "[\SQL-Server-Assess\Development Applica
 3. Check "Use team settings file" and browse to "..\SQL-Server-Assess\Development Application Settings\Microsoft\SQL Server Management Studio\General Settings\SSMS.vssettings"
 4. Click the "OK" button
 
-#### RedGate SQL Server Prompt
+## RedGate SQL Server Prompt
 
 The settings are located in the project "[\SQL-Server-Assess\Development Application Settings\Red Gate\SQL Prompt](https://github.com/EmergentSoftware/SQL-Server-Assess/tree/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt)"
 

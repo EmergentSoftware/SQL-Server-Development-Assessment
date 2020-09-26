@@ -5,7 +5,7 @@ nav_order: 4
 layout: default
 ---
 
-## sp_Develop Results Explanations
+# sp_Develop Results Explanations
 
 After running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) the 'Results' tab will contain the checks findings.
 
@@ -13,7 +13,7 @@ After running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQ
 
 The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectType, FindingGroup, Finding. This allows you to review all the checks for an object at the same time.
 
-#### Column Results Details
+## Column Results Details
 
 |Column Name|Details|
 |--|--|

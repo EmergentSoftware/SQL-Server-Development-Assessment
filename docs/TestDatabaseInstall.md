@@ -11,7 +11,7 @@ The [Test Database](https://github.com/EmergentSoftware/SQL-Server-Assess/tree/m
 
 SQL Server 2008+ is supported. You can script out the test database and downgrade schema features like `DATETIME2` that is not supported.
 
-**Quick Steps to Setup and Use:**
+## Quick Steps to Setup and Use:
 
 1. Create new database 'spDevelop' and select in Object Browser
 2. Open RedGate SQL Source Control in SQL Server Management Studio
@@ -26,6 +26,7 @@ SQL Server 2008+ is supported. You can script out the test database and downgrad
 11. **Note:** there are exclude filters setup for invalid objects created in the post script. Do not check these objects back into the branch.
 
 
-**RedGate SQL Source Control Documentation**
+## RedGate SQL Source Control Documentation
+
 - [Getting Started ](https://documentation.red-gate.com/soc7/getting-started)
 - [Link to Git](https://documentation.red-gate.com/soc7/linking-to-source-control/link-to-git)

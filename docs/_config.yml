@@ -13,7 +13,9 @@ heading_anchors: "true"
 
 
 # Aux links for the upper right navigation
-aux_links: "sp_Develop on GitHub": - "//github.com/EmergentSoftware/SQL-Server-Assess"
+aux_links:
+    "sp_Develop on GitHub":
+        - "//github.com/EmergentSoftware/SQL-Server-Assess"
 
 
 

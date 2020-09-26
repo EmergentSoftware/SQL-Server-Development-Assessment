@@ -289,7 +289,7 @@ SELECT P.FirstName FROM Person.Person AS P; /* <-- semicolon goes at the end her
 
 Search ARGument..able. Avoid having a column or variable used within an expression or used as a function parameter. Columns are best used its self on one side of the operator. You will get a table scan instead of a index seek which will hurt performance.
 
-![Non-SARGable Scan vs. SARGable Seek](../images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
+![Non-SARGable Scan vs. SARGable Seek](../Images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
 
 [Back to top](#top)
 

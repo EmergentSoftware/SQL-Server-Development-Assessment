@@ -10,6 +10,21 @@ layout: default
 
 The purpose of naming and style convention allows you and others to identify the type and purpose of database objects. Our goal is to create legible, concise and consistent names for our database objects.
 
+---
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
+[Back to top](#top)
+
+---
+
 ## Using System-Generated Object Names
 **Check Id:** [NONE YET]
 
@@ -35,6 +50,10 @@ CREATE TABLE dbo.TableName (
 );
 ```
 
+[Back to top](#top)
+
+---
+
 ## Concatenating Two Table Names
 **Check Id:** 13
 
@@ -42,6 +61,9 @@ Avoid, where possible, concatenating two table names together to create the name
 
 When a word does not exist to describe the relationship use "Table1Table2" with no underscores.
 
+[Back to top](#top)
+
+---
 
 ## Variable Naming
 **Check Id:** [NONE YET]
@@ -54,13 +76,18 @@ All variables should be written in PascalCase, e.g. "@FirstName" or "@City" or "
 
 Variable names should contain only letters and numbers. No special characters or spaces should be used.
 
+[Back to top](#top)
+
+---
 
 ## Stored Procedures & Function Naming
 **Check Id:** [NONE YET]
 
 Stored procedures and functions should be named so they can be ordered by the table/business entity (ObjectAction) they perform a database operation on, and adding the database activity "Get, Update, Insert, Upsert, Delete, Merge" as a suffix, e.g., ("ProductGet" or "OrderUpdate").
 
+[Back to top](#top)
 
+---
 
 ## Using ID for Primary Key Column Name
 **Check Id:** 7
@@ -97,7 +124,9 @@ FROM
     INNER JOIN Color AS CL ON MK.MakeId  = C.ColorId;
 ```
 
+[Back to top](#top)
 
+---
 
 ## Not Naming Foreign Key Column the Same as Parent Table
 **Check Id:** [NONE YET]
@@ -126,7 +155,9 @@ FROM
      INNER JOIN dbo.Directory AS D ON F.ID = D.FileId
 ```
 
+[Back to top](#top)
 
+---
 
 ## Using Plural in Name
 **Check Id:** 1
@@ -136,6 +167,9 @@ Table and view names should be singular, for example, "Customer" instead of "Cus
 If writing code for a data integration and the source is plural keep the staging/integration tables the same as the source so there is no confusion.
 
 
+[Back to top](#top)
+
+---
 
 ## Using Prefix in Name
 **Check Id:** 2
@@ -148,7 +182,9 @@ SQL Server is a strongly typed language. There is never a doubt what type of obj
 
 Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvious in SQL statements which items are columns (before or after the FROM clause). Do not use a data type prefix for the column either, for example, "IntCustomerId" for a numeric type or "VcName" for a VARCHAR type.
 
+[Back to top](#top)
 
+---
 
 ## Using Prefix in Index Name
 **Check Id:** [NONE YET]
@@ -158,14 +194,18 @@ No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 * Names should be "Column1_Column2_Column3" 
 * Names should indicate if there are included columns with "Column1_Column2_Column3_Includes"
 
+[Back to top](#top)
 
+---
 
 ## Not Using PascalCase
 **Check Id:** [NONE YET]
 
 For all parts of the table name, including prefixes, use Pascal Case. `PascalCase` also reduces the need for underscores to visually separate words in names.
 
+[Back to top](#top)
 
+---
 
 ## Using Reserved Words in Name
 **Check Id:** 4
@@ -174,14 +214,18 @@ Using reserved words makes code more difficult to read, can cause problems to co
 
 [Reserved Keywords](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/reserved-keywords-transact-sql)
 
+[Back to top](#top)
 
+---
 
 ## Including Special Characters in Name
 **Check Id:** 5
 
 Special characters should not be used in names. Using PascalCase for your table name allows for the upper-case letter to denote the first letter of a new word or name. Thus, there is no need to do so with an underscore character. Do not use numbers in your table names either. This usually points to a poorly designed data model or irregularly-partitioned tables. Do not use spaces in your table names either. While most database systems can handle names that include spaces, systems such as SQL Server require you to add brackets around the name when referencing it (like [table name] for example) which goes against the rule of keeping things as short and simple as possible.
 
+[Back to top](#top)
 
+---
 
 ## Including Numbers in Table Name
 **Check Id:** 11
@@ -190,14 +234,18 @@ Beware of numbers in any object names, especially table names. It normally flags
 
 It is far better to use partitions than to create dated tables such as Invoice2018, Invoice2019, etc. If old data is no longer used, archive the data, store only aggregations, or both.
 
+[Back to top](#top)
 
+---
 
 ## Column Named Same as Table
 **Check Id:** 12
 
 Do not give a table the same name as one of its columns.
 
+[Back to top](#top)
 
+---
 
 ## Using Abbreviation
 **Check Id:** [NONE YET]
@@ -208,14 +256,18 @@ Avoid using abbreviation if possible. Use "Account" instead of "Acct" and "Hour"
 Acct, AP, AR, Hr, Rpt, Assoc, Desc
 ```
 
+[Back to top](#top)
 
+---
 
 ## Non-Affirmative Boolean Name Use
 **Check Id:** [NONE YET]
 
 Bit columns should be given affirmative boolean names like "IsDeletedFlag", "HasPermissionFlag", or "IsValidFlag" so that the meaning of the data in the column is not ambiguous; negative boolean names are harder to read when checking values in T-SQL because of double-negatives (e.g. "Not IsNotDeleted"). 
 
+[Back to top](#top)
 
+---
 
 ## Column Naming
 **Check Id:** 14
@@ -241,3 +293,7 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - State**Code** indicates the short form of something
   - IsDeleted**Flag** indicates a status
   - Unit**Price**
+
+[Back to top](#top)
+
+---

@@ -10,6 +10,21 @@ layout: default
 
 T-SQL code must execute properly and performant. It must be readable, well laid out and it must be robust and resilient. It must not rely on deprecated features of SQL Server or assume specific database settings.
 
+---
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
+[Back to top](#top)
+
+---
+
 ## Using ORDER BY
 **Check Id:** [NONE YET]
 
@@ -81,6 +96,10 @@ CLOSE MyCursor;
 DEALLOCATE MyCursor;
 ```
 
+[Back to top](#top)
+
+---
+
 ## Using WHILE Loop
 **Check Id:** [NONE YET]
 
@@ -131,6 +150,10 @@ WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
     END;
 ```
 
+[Back to top](#top)
+
+---
+
 ## Temporary Tables and Table Variables
 **Check Id:** [NONE YET]
 
@@ -155,10 +178,18 @@ DECLARE @DoNotUseMe TABLE (
 );
 ```
 
+[Back to top](#top)
+
+---
+
 ## Using Hints
 **Check Id:** [NONE YET]
 
 Because the SQL Server Query Optimizer typically selects the best execution plan for a query, we recommend that [hints](https://docs.microsoft.com/en-us/sql/t-sql/queries/hints-transact-sql-table) be used only as a last resort by experienced developers and database administrators.
+
+[Back to top](#top)
+
+---
 
 ## Using Brackets
 **Check Id:** [NONE YET]
@@ -182,10 +213,18 @@ FROM
 	dbo.Person AS P
 ```
 
+[Back to top](#top)
+
+---
+
 ## Using '== NULL' or '<> NULL' to Filter a Nullable Column
 **Check Id:** [NONE YET]
 
 To determine whether an expression is `NULL`, use `IS NULL` or `IS NOT NULL` instead of comparison operators (such as `=` or `<>`). Comparison operators return UNKNOWN when either or both arguments are `NULL`.
+
+[Back to top](#top)
+
+---
 
 ## Using the NOT IN Predicate in the WHERE Clause
 **Check Id:** [NONE YET]
@@ -228,6 +267,10 @@ WHERE
     NOT EXISTS (SELECT * FROM dbo.List AS L WHERE P.PersonId = L.PersonId);
 ```
 
+[Back to top](#top)
+
+---
+
 ## Not Using Semicolon to Terminate Statements
 **Check Id:** [NONE YET]
 
@@ -237,6 +280,9 @@ Although the semicolon isn't required for most statements prior to SQL Server 20
 SELECT P.FirstName FROM Person.Person AS P; /* <-- semicolon goes at the end here */
 ```
 
+[Back to top](#top)
+
+---
 
 ## Using a Non-SARGable Expression in a WHERE Clause
 **Check Id:** [NONE YET]
@@ -245,6 +291,9 @@ Search ARGument..able. Avoid having a column or variable used within an expressi
 
 ![Non-SARGable Scan vs. SARGable Seek](../Images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
 
+[Back to top](#top)
+
+---
 
 ## Mixing Data Types in JOIN or WHERE Clauses
 **Check Id:** [NONE YET]
@@ -255,6 +304,9 @@ In the `WHERE` clause below you will notice the "!" mark on the SELECT indicatin
 
 ![Implicit conversions in Execution Plan](../Images/Mixing_Data_Types_in_JOIN_or_WHERE_Clauses.png)
 
+[Back to top](#top)
+
+---
 
 ## Stored Procedures not Using BEGIN END
 **Check Id:** [NONE YET]
@@ -285,10 +337,18 @@ SET NOCOUNT ON;
 GO
 ```
 
+[Back to top](#top)
+
+---
+
 ## SET ANSI_NULLS OFF
 **Check Id:** [NONE YET]
 
 You should be using SET ANSI_NULLS ON; unless you have a good reason not to.
+
+[Back to top](#top)
+
+---
 
 ## Using Types of Variable Length That Are Size 1 or 2
 **Check Id:** [NONE YET]
@@ -296,6 +356,10 @@ You should be using SET ANSI_NULLS ON; unless you have a good reason not to.
 If the length of the type will be very small (size 1 or 2) and consistent, declare them as a type of fixed length, such as `CHAR`, `NCHAR`, and `BINARY`.
 
 When you use data types of variable length such as `VARCHAR`, `NVARCHAR`, and `VARBINARY`, you incur an additional storage cost to track the length of the value stored in the data type. In addition, columns of variable length are stored after all columns of fixed length, which can have performance implications.
+
+[Back to top](#top)
+
+---
 
 ## Data Type Without Length
 **Check Id:** [NONE YET]
@@ -306,6 +370,9 @@ Always specify lengths for a data type.
 - When you convert a data type to a ```VARCHAR```, you do not have to specify the length. SQL Server will use a ```VARCHAR``` length large enough to hold the text. It is better to specify the length because SQL Server does not know the length you may subsequently need.
 - `DECIMAL`, `NUMERIC`. If no precision and scale are provided, SQL Server will use (18, 0)
 
+[Back to top](#top)
+
+---
 
 ## COALESCE vs ISNULL
 **Check Id:** [NONE YET]
@@ -319,14 +386,20 @@ The ISNULL function and the COALESCE expression have a similar purpose but can b
 5. `ISNULL` takes only two parameters. By contrast `COALESCE` takes a variable number of parameters.
 6. `COALESCE` is faster but your results could depend on different circumstances.
 
-
 Source: [Microsoft Docs: Comparing COALESCE and ISNULL](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/coalesce-transact-sql?view=sql-server-ver15#comparing-coalesce-and-isnull)
+
+[Back to top](#top)
+
+---
 
 ## Using ISNUMERIC
 **Check Id:** [NONE YET]
 
 Avoid using the `ISNUMERIC()` function, because it can often lead to data type conversion errors. If you’re working on SQL Server 2012 or later, it’s much better to use the `TRY_CONVERT()` or `TRY_CAST()` function instead. On earlier SQL Server versions, the only way to avoid it is by using LIKE expressions.
 
+[Back to top](#top)
+
+---
 
 ## Using SELECT DISTINCT
 **Check Id:** [NONE YET]
@@ -335,15 +408,27 @@ So while DISTINCT and GROUP BY are identical in a lot of scenarios, there is one
 
 You also might be using SELECT DISTINCT to mask a JOIN problem. It’s much better to determine why rows are being duplicated and fix the problem.
 
+[Back to top](#top)
+
+---
+
 ## IN/NOT VS EXISTS/NOT EXISTS
 **Check Id:** [NONE YET]
 
 Use EXISTS or NOT EXISTS if referencing a subquery, and IN/NOT IN when using a list of literal values.
 
+[Back to top](#top)
+
+---
+
 ## Using Keyword Abbreviation
 **Check Id:** [NONE YET]
 
 Use the full name like in DATEDIFF(**YEAR**, StartDate, EndDate) vs DATEDIFF(**YY**, StartDate, EndDate).
+
+[Back to top](#top)
+
+---
 
 ## Using Percent at the Start of LIKE Predicate
 **Check Id:** [NONE YET]
@@ -361,6 +446,9 @@ WHERE
     P.LastName LIKE '%son';
 ```
 
+[Back to top](#top)
+
+---
 
 ## Using Unfinished Notes
 **Check Id:** [NONE YET]
@@ -406,20 +494,36 @@ You might have still have some work to do. One of the codetags below was found.
 - EXPLAIN
 - DOCUMENT
 
+[Back to top](#top)
+
+---
+
 ## Missing Index on WHERE Clause
 **Check Id:** [NONE YET]
 
 Check WHERE clauses for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) amount of records.
+
+[Back to top](#top)
+
+---
 
 ## Missing Index on IN Columns
 **Check Id:** [NONE YET]
 
 Check IN() predicates for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) amount of records.
 
+[Back to top](#top)
+
+---
+
 ## Converting Dates to String to Compare
 **Check Id:** [NONE YET]
 
 Don't convert dates to strings to compare. Dates should be stored with the pattern YYYY-MM-DD. Not all are and string comparisons can provide the wrong results.
+
+[Back to top](#top)
+
+---
 
 ## Not Using SET XACT_ABORT ON
 **Check Id:** [NONE YET]
@@ -428,6 +532,10 @@ Don't convert dates to strings to compare. Dates should be stored with the patte
 - When `SET XACT_ABORT OFF`, in some cases only the T-SQL statement that raised the error is rolled back and the transaction continues processing. Depending upon the severity of the error, the entire transaction may be rolled back even when SET XACT_ABORT is OFF. OFF is the default setting in a T-SQL statement, while ON is the default setting in a trigger.
 
 A use case for `SET XACT_ABORT OFF` is when debugging to trap an error.
+
+[Back to top](#top)
+
+---
 
 ## Scalar Function Is Not Inlineable
 **Check Id:** 25
@@ -463,7 +571,9 @@ WHERE
 
 **Serial execution:** SQL Server does not allow intra-query parallelism in queries that invoke UDFs.
 
+[Back to top](#top)
 
+---
 
 ## Using User-Defined Scalar Function
 **Check Id:** 24
@@ -497,7 +607,9 @@ WHERE
 
 **Serial execution:** SQL Server does not allow intra-query parallelism in queries that invoke UDFs.
 
+[Back to top](#top)
 
+---
 
 ## Not Using SET NOCOUNT ON in Stored Procedure or Trigger
 **Check Id:** 19
@@ -528,6 +640,9 @@ BEGIN
 END;
 ```
 
+[Back to top](#top)
+
+---
 
 ## Using NOLOCK (READ UNCOMMITTED)
 **Check Id:** 15
@@ -551,14 +666,18 @@ Only use `NOLOCK` when the application stakeholders understand the problems and 
 - Use READ COMMITTED SNAPSHOT ISOLATION (RCSI).
   - On by default in Azure SQL Server databases, local SQL Servers should be checked for TempDB latency before enabling
 
+[Back to top](#top)
 
+---
 
 ## Not Using Table Alias
 **Check Id:** [NONE YET]
 
 Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g. “Site” becomes "S" and "SiteType" becomes “ST”.
 
+[Back to top](#top)
 
+---
 
 ## Not Using Column List For INSERT
 **Check Id:** [NONE YET]
@@ -575,6 +694,9 @@ SELECT
    ,Gender       = 'M';
 ````
 
+[Back to top](#top)
+
+---
 
 ## Not Using SQL Formatting
 **Check Id:** [NONE YET]
@@ -585,15 +707,27 @@ Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https:
 
 See [RedGate SQL Server Prompt](https://github.com/EmergentSoftware/SQL-Server-Assess#redgate-sql-server-prompt)
 
+[Back to top](#top)
+
+---
+
 ## Not Using UPPERCASE for Keywords
 **Check Id:** [NONE YET]
 
 Keywords like `SELECT`, `FROM`, `GROUP BY` should be in UPPERCASE. See [Not Using SQL Formatting](#not-using-sql-formatting)
 
+[Back to top](#top)
+
+---
+
 ## Set Option Cause Recompile
 **Check Id:** [NONE YET]
 
 Setting options in batches, stored procedures and triggers cause recompilation. They should be compiled just once and have their plans reused for subsequent calls. The query will be more performant and use less memory.
+
+[Back to top](#top)
+
+---
 
 ## Using Column Number in ORDER BY
 **Check Id:** [NONE YET]
@@ -617,6 +751,10 @@ FROM
 ORDER BY
     P.LastName;
 ```
+
+[Back to top](#top)
+
+---
 
 ## Not Using Code Comments
 **Check Id:** [NONE YET]
@@ -653,6 +791,9 @@ You can skip including the Author, Created On & Modified On details when you use
 
 ```
 
+[Back to top](#top)
+
+---
 
 ## Not Using Table Schema
 **Check Id:** [NONE YET]
@@ -661,7 +802,9 @@ Prefix all table name with the table schema (in most cases "dbo."). This results
 
 By including the table schema, we avoid certain bugs, minimize the time the engine spends searching for the procedure, and help ensure that cached query plans for the procedures get reused.
 
+[Back to top](#top)
 
+---
 
 ## Using SELECT *
 **Check Id:** 23
@@ -678,7 +821,9 @@ Reasons not to use `SELECT *`:
 - **Breaks Views While Adding New Columns to a Table** the view columns are created at the time of the view creation, you will need to refresh "sp_refreshview()"
 - **Copying Data From One Table to Another** your SELECT * INTO table will break with new columns
 
+[Back to top](#top)
 
+---
 
 ## Using Hardcoded Database Name Reference
 **Check Id:** 9
@@ -694,13 +839,18 @@ It is common to need a database to operate under different names.
 - When building database code
   - To validate database objects compile from source, it is best to not have the database name hardcoded. If you use a hardcoded name you need to ensure that only one build server can run a build for that database instance.
 
- 
+[Back to top](#top)
+
+---
 
 ## Using @@IDENTITY Instead of SCOPE_IDENTITY
 **Check Id:** [NONE YET]
 
 The generation of an identity value is not transactional, so in some circumstances, `@@IDENTITY` returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The `SCOPE_IDENTITY` function is safer because it always relates to the current batch (within the same scope). Also consider using the `IDENT_CURRENT` function, which returns the last identity value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
 
+[Back to top](#top)
+
+---
 
 ## Using BETWEEN for DATETIME Ranges
 **Check Id:** [NONE YET]
@@ -731,6 +881,9 @@ ORDER BY
     O.PickingCompletedWhen DESC;
 ```
 
+[Back to top](#top)
+
+---
 
 ## Using Old Sybase JOIN Syntax
 **Check Id:** [NONE YET]
@@ -743,6 +896,9 @@ It is always better to specify the type of join you require, INNER JOIN, LEFT OU
 
 While you can choose any supported JOIN style, without affecting the query plan used by SQL Server, using the ANSI-standard syntax will make your code easier to understand, more consistent, and portable to other relational database systems.
 
+[Back to top](#top)
+
+---
 
 ## View Usage
 **Check Id:** [NONE YET]
@@ -758,6 +914,9 @@ Views do not lend themselves to being deeply nested. Views that reference views 
   - As an interface layer for a client that does not support a table or stored procedure data source
   - Abstracting complicated base tables
 
+[Back to top](#top)
+
+---
 
 ## Invalid Objects
 **Check Id:** [NONE YET]
@@ -765,3 +924,7 @@ Views do not lend themselves to being deeply nested. Views that reference views 
 This check found objects that were deleted, renamed. Use can also run "Find Invalid Objects" with RedGate SQL Prompt in SQL Server Management Studio.
 
 Try running EXEC sp_refreshsqlmodule or sp_refreshview.
+
+[Back to top](#top)
+
+---

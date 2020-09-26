@@ -12,12 +12,8 @@ url: "https://emergentsoftware.github.io"
 heading_anchors: "true"
 
 
-
 # Aux links for the upper right navigation
-aux_links:
-    "sp_Develop on GitHub":
-    - "//github.com/EmergentSoftware/SQL-Server-Assess"
-
+aux_links: "sp_Develop on GitHub": - "//github.com/EmergentSoftware/SQL-Server-Assess"
 
 
 
@@ -25,7 +21,7 @@ aux_links:
 # appears at the bottom of every page's main content
 
 # Back to top link
-back_to_top: true
+back_to_top: "true"
 back_to_top_text: "Back to top"
 
 footer_content: "Copyright &copy; 2020-2020 Emergent Software, LLC. Distributed by an <a href=\"https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/LICENSE.md\">MIT license.</a>"
@@ -42,7 +38,4 @@ gh_edit_branch: "master" # the branch that your docs is served from
 # gh_edit_source: docs # the source that your files originate from
 gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately
 
-  kramdown:
-  syntax_highlighter_opts:
-    block:
-      line_numbers: false
+ 

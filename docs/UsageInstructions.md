@@ -1,9 +1,8 @@
 ---
-layout: default
 title: Usage Instructions
-parent: Overview
-nav_order: 5
 permalink: usage-instructions
+nav_order: 3
+layout: default
 ---
 
 ## sp_Develop Usage Instructions

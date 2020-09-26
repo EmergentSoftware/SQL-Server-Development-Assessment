@@ -1,9 +1,8 @@
 ---
-layout: default
 title: Install Instructions
-parent: Overview
-nav_order: 1
 permalink: install-instructions
+nav_order: 2
+layout: default
 ---
 
 ## sp_Develop Install Instructions

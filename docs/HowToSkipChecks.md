@@ -1,9 +1,8 @@
 ---
-layout: default
 title: How to Skip Checks
-parent: Overview
-nav_order: 20
 permalink: how-to-skip-checks
+nav_order: 6
+layout: default
 ---
 
 ## How to Skip Checks Across Your Estate

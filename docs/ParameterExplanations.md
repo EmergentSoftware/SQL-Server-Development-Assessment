@@ -1,9 +1,8 @@
 ---
-layout: default
 title: Parameter Explanations
-parent: Overview
-nav_order: 15
 permalink: parameter-explanations
+nav_order: 5
+layout: default
 ---
 
 ## sp_Develop Parameter Explanations

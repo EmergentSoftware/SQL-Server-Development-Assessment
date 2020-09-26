@@ -1,9 +1,8 @@
 ---
-layout: default
 title: Test Database Install
-nav_order: 10
-has_children: false
 permalink: test-database-install
+nav_order: 8
+layout: default
 ---
 
 # Test Database Install

@@ -26,7 +26,7 @@ These check are for configurations to the SQL Server.
 ---
 
 ## Object Not Owned by dbo
-**Check Id:** [None yet, click here to ](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/29)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/29)
 
 Using dbo as the owner of all the database objects simplifies object management. dbo will always be a user in the database. If an object is owned by an account other than dbo, you must transfer ownership account needs to be deleted.
 
@@ -43,4 +43,3 @@ There might be query optimization your are not getting running on an older datab
 
 [Back to top](#top)
 
----

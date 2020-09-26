@@ -295,5 +295,3 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - Unit**Price**
 
 [Back to top](#top)
-
----

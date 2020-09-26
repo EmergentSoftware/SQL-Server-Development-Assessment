@@ -181,5 +181,3 @@ Heaps have performance issues like table scans, forward fetches.
 
 [Back to top](#top)
 
----
-

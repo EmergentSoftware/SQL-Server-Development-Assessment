@@ -30,7 +30,7 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 
 SQL Server is the second most expensive sorting system, remind the developer they can sort in the application layer
 
-#### 2020 Pricing
+**2020 Pricing**
 
 - Oracle Enterprise Edition = $47,500 per core
 - Microsoft SQL Server Enterprise Edition = $7,128 per core 
@@ -289,7 +289,7 @@ SELECT P.FirstName FROM Person.Person AS P; /* <-- semicolon goes at the end her
 
 Search ARGument..able. Avoid having a column or variable used within an expression or used as a function parameter. Columns are best used its self on one side of the operator. You will get a table scan instead of a index seek which will hurt performance.
 
-![Non-SARGable Scan vs. SARGable Seek](../Images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
+![Non-SARGable Scan vs. SARGable Seek](../images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
 
 [Back to top](#top)
 
@@ -544,7 +544,7 @@ Your scalar function is not inlineable. This means it will perform poorly.
 
 Review the [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements) to determine what changes you can make so it can go inline. If you cannot, you should in-line your scalar function in SQL query. This means duplicate the code you would put in the scalar function in your SQL code. SQL Server 2019 & Azure SQL Database (150 database compatibility level) can inline some scalar functions. 
 
-Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
+Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. Reference: [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
 
 **Run this query to check if your function is inlineable. (SQL Server 2019+ & Azure SQL Server)**
 
@@ -580,7 +580,7 @@ WHERE
 
 You should inline your scalar function in SQL query. This means duplicate the code you would put in the scalar function in your SQL code. SQL Server 2019 & Azure SQL Database (150 database compatibility level) can inline some scalar functions. 
 
-Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. [Reference: Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
+Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. Reference: [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
 
 **Run this query to check if your function is inlineable. (SQL Server 2019+ & Azure SQL Server)**
 
@@ -705,7 +705,7 @@ SQL statements should be arranged in an easy-to-read manner. When statements are
 
 Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Formatting%20Styles/Team%20Collapsed.sqlpromptstylev2)" or "[Team Expanded](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Formatting%20Styles/Team%20Expanded.sqlpromptstylev2)". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
 
-See [RedGate SQL Server Prompt](https://github.com/EmergentSoftware/SQL-Server-Assess#redgate-sql-server-prompt)
+See [RedGate SQL Server Prompt](/development-app-settings#redgate-sql-server-prompt)
 
 [Back to top](#top)
 
@@ -927,4 +927,3 @@ Try running EXEC sp_refreshsqlmodule or sp_refreshview.
 
 [Back to top](#top)
 
----

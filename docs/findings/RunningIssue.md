@@ -35,18 +35,11 @@ We skipped some checks that are not currently possible, relevant, or practical f
 
 ---
 
-## Skipped non-readable AG secondary databases
-You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node.
-
-
-[Back to top](#top)
-
----
 
 ## sp_Develop is Over 6 Months Old
 **Check Id:** 16
 
-There most likely been some new checks and fixes performed within the last 6 months - time to go download the current one.
+There most likely been some new checks and fixes performed within the last 6 months - time to go download the current [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql).
 
 
 [Back to top](#top)
@@ -70,4 +63,3 @@ Running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Serv
 
 [Back to top](#top)
 
----

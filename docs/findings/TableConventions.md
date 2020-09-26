@@ -6,29 +6,54 @@ nav_order: 2
 layout: default
 ---
 
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
+---
 # Table Conventions
 
 Table design matters because it is essential for building software applications that are scalable and capable of performing during high workload.
+
+[Back to top](#top)
+---
 
 ## Column Named ????Id But No FK Exists
 **Check Id:** [NONE YET]
 
 We found a column following the naming convention of ????Id and is not the PK but no FK exists, you might be missing a relationship to a parent table.
 
+[Back to top](#top)
+---
+
 ## More Than 5 Indexes
 **Check Id:** [NONE YET]
 
 Your table might be over indexed.
+
+[Back to top](#top)
+---
 
 ## Less than 2 Indexes
 **Check Id:** [NONE YET]
 
 Your table might be under indexed.
 
+[Back to top](#top)
+---
+
 ## Disabled Index
 **Check Id:** [NONE YET]
 
 An index rebuild or reorganization will enabled disabled indexes. It is now best practices to delete instead of disable if not needed.
+
+[Back to top](#top)
+---
 
 ## Leftover Fake Index
 **Check Id:** [NONE YET]
@@ -39,10 +64,16 @@ To fix the issue `DROP` the indexes.
 
 There are better ways to performance tune than using the wizards.
 
+[Back to top](#top)
+---
+
 ## Column Has a Different Collation Than Database
 **Check Id:** [NONE YET]
 
 This could cause issues if the code is not aware of different collations and does include features to work with them correctly.
+
+[Back to top](#top)
+---
 
 ## Low Index Fill-Factor
 **Check Id:** [NONE YET]
@@ -58,6 +89,9 @@ Best practice is to ONLY use a low fill factor on indexes where you know you nee
 Review indexes diagnosed with low fill factor. Check how much they’re written to. Look at the keys and determine whether insert and update patterns are likely to cause page splits.
 
 
+[Back to top](#top)
+---
+
 ## Untrusted Foreign Key
 **Check Id:** [NONE YET]
 
@@ -72,6 +106,9 @@ GO
 
 The `CHECK CHECK` syntax is correct. The 1st `CHECK` is the end of `WITH CHECK` statement. The 2nd `CHECK` is the start of the `CHECK CONSTRAINT` clause to enable the constraint
 
+[Back to top](#top)
+---
+
 ## UNIQUEIDENTIFIER in a Clustered Index
 **Check Id:** 22
 
@@ -79,21 +116,24 @@ UNIQUEIDENTIFIER/GUID columns should not be in a clustered index. Even NEWSEQUEN
 
 SQL Server will page bad page splits when a new record is inserted instead of being inserting on the last page. The clustered index will become fragmented because of randomness of UNIQUEIDENTIFIER.
 
-
+[Back to top](#top)
+---
 
 ## Missing Index for Foreign Key
 **Check Id:** 21
 
 Each foreign key in your table should be included in an index. Start off with an index on just the foreign key column if you have no workload to tune a multi-column index. There is a real good chance the indexes will be used when queries join on the parent table.
 
-
+[Back to top](#top)
+---
 
 ## Missing Primary Key
 **Check Id:** 20
 
 Every table should have some column (or set of columns) that uniquely identifies one and only one row. It makes it much easier to maintain the data.
 
-
+[Back to top](#top)
+---
 
 ## UNIQUEIDENTIFIER For Primary Key
 **Check Id:** 8
@@ -101,6 +141,8 @@ Every table should have some column (or set of columns) that uniquely identifies
 Using UNIQUEIDENTIFIER/GUID as primary keys causes issues with SQL Server databases. Non-sequential GUID cause page splits and perform 200% worse than the INT data type. UNIQUEIDENTIFIER are unnecessarily wide (4x wider than an INT).
 
 
+[Back to top](#top)
+---
 
 ## Wide Table
 **Check Id:** 3
@@ -108,6 +150,8 @@ Using UNIQUEIDENTIFIER/GUID as primary keys causes issues with SQL Server databa
 Do you have more than 20 columns? You might be treating this table like a spreadsheet. You might need to redesign your table schema.
 
 
+[Back to top](#top)
+---
 
 ## Heap
 **Check Id:** 6
@@ -121,3 +165,7 @@ A 'table' without a clustered index is a heap, which is a particularly bad idea 
 A table with a non-clustered index, but without a clustered index can sometimes perform well even though the index must reference individual rows via a Row Identifier rather than a more meaningful clustered index. The arrangement can be effective for a table that isn’t often updated if the table is always accessed by a non-clustered index and there is no good candidate for a clustered index.
 
 Heaps have performance issues like table scans, forward fetches.
+
+[Back to top](#top)
+---
+

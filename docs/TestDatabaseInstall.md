@@ -7,7 +7,7 @@ layout: default
 
 # Test Database Install
 
-The 'Test Database' folder contains the RedGate SQL Source Control. Use this database for creating and testing checks.
+The [Test Database](https://github.com/EmergentSoftware/SQL-Server-Assess/tree/master/Test%20Database) folder contains the RedGate SQL Source Control. Use this database for creating and testing checks.
 
 SQL Server 2008+ is supported. You can script out the test database and downgrade schema features like `DATETIME2` that is not supported.
 

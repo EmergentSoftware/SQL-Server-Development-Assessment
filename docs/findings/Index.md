@@ -10,11 +10,4 @@ The sections below are where you will find the details for each of the checks pe
 
 Feel free to browse the finding groupings. There are best practices that do not have a check created yet.
 
-
-Please consider [Contributing to the SQL Server Assess](../../CONTRIBUTING.md) project.
-
-# Current High Check Id
-
-If you want to add a new check, use this number then add +1 for the next one.
-
-**Next Check Id:** 29
+Please consider [Contributing to the SQL Server Assess](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/CONTRIBUTING.md) project.

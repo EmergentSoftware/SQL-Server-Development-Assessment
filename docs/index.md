@@ -12,7 +12,7 @@ You can use the link in the [results tab](results-explanations) to navigate to t
 
 sp_Develop runs on SQL Server 2005, 2008, 2008 R2, 2012, 2014,2016, 2017, 2019, Azure SQL Server
 
-Please consider [Contributing to the SQL Server Assess](../CONTRIBUTING.md) project.
+Please consider [Contributing to the SQL Server Assess](https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/CONTRIBUTING.md) project.
 
 [Get started now](install-instructions){: .btn .btn-purple }
 [View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Assess){: .btn }

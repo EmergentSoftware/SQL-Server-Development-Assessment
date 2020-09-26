@@ -79,9 +79,9 @@ We know that's a pain, but that's the kind of thing we find out in the wild. Of 
 
 4. Make changes.
 
-   Make changes to one or more of the files in the project. If your change requires a new CheckId look here: https://github.com/EmergentSoftware/SQL-Server-Assess#current-high-check-id.
+   Make changes to one or more of the files in the project. If your change requires a new CheckId look here: https://emergentsoftware.github.io/SQL-Server-Assess/findings/current-high-check-id.
    
-   You should modify the file 'README.md' in the project by yourself.
+   You should modify the markdown documentation files in the docs folder by yourself.
 
 5. Commit your changes in logical chunks. Please adhere to these [git commit message guidelines]
    or your code is unlikely be merged into the main project. Use Git's [interactive rebase]

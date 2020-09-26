@@ -5,7 +5,7 @@ nav_order: 6
 layout: default
 ---
 
-## How to Skip Checks Across Your Estate
+## How to Skip sp_Develop Checks
 
 Sometimes there are checks, databases or servers that you want to skip. For example, say a database is from a vendor and you are not responsible for the database development. 
 
@@ -21,7 +21,7 @@ CREATE TABLE dbo.DevelopCheckToSkip (
    ,SchemaName            NVARCHAR(128) NULL
    ,ObjectName            NVARCHAR(128) NULL
    ,CheckId               INT           NULL
-   ,CONSTRAINT DevelopCheckToSkip_DevelopCheckToSkipId PRIMARY KEY CLUSTERED (DevelopCheckToSkipId ASC)
+   ,CONSTRAINT DevelopCheckToSkipId PRIMARY KEY CLUSTERED (DevelopCheckToSkipId ASC)
 );
 GO
 ```

@@ -45,7 +45,7 @@ You might be overusing (N)VARCHAR(MAX) on your table.
 
 (N)VARCHAR(MAX) columns can be included in an index but not as a key. Queries will not be able to perform an index seek on this column. 
 
-(N)VARCHAR(MAX) should only every be used if the size of the field is known to be over [8K for VARCHAR | 4K for NVARCHAR]
+(N)VARCHAR(MAX) should only every be used if the size of the field is known to be over (8K for VARCHAR | 4K for NVARCHAR)
 
 Since SQL Server 2016 if the size of the cell is < 8K characters for VARCHAR(MAX) it will be treated as Row data. If > 8K it will be treated as a Large Object (LOB) for storage purposes.
 

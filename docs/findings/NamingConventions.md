@@ -7,7 +7,7 @@ layout: default
 ---
 
 # Naming Conventions
-
+{: .no_toc }
 The purpose of naming and style convention allows you and others to identify the type and purpose of database objects. Our goal is to create legible, concise and consistent names for our database objects.
 
 ---

@@ -9,7 +9,7 @@ layout: default
 
 After running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) the 'Results' tab will contain the checks findings.
 
-![sp_Develop Results](../images/sp_Develop_Results.png)
+![sp_Develop Results](images/sp_Develop_Results.png)
 
 The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectType, FindingGroup, Finding. This allows you to review all the checks for an object at the same time.
 

@@ -7,7 +7,7 @@ layout: default
 ---
 
 # Configuration Issue
-
+{: .no_toc }
 These check are for configurations to the SQL Server.
 
 ---

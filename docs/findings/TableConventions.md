@@ -7,7 +7,7 @@ layout: default
 ---
 
 # Table Conventions
-
+{: .no_toc }
 Table design matters because it is essential for building software applications that are scalable and capable of performing during high workload.
 
 ---

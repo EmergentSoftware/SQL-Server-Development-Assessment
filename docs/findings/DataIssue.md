@@ -7,7 +7,7 @@ layout: default
 ---
 
 # Data Issue
-
+{: .no_toc }
 Checks for data issues.
 
 ---

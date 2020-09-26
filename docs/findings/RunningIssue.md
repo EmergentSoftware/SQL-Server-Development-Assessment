@@ -7,7 +7,7 @@ layout: default
 ---
 
 # Running Issues
-
+{: .no_toc }
 These are some issues you might run into when running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql).
 
 ---

@@ -6,6 +6,8 @@ has_children: true
 layout: default
 ---
 
+# Findings
+
 The sections below are where you will find the details for each of the checks performed in [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql). 
 
 Feel free to browse the finding groupings. There are best practices that do not have a check created yet.

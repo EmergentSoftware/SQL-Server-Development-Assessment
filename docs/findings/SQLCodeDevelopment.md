@@ -7,7 +7,7 @@ layout: default
 ---
 
 # SQL Code Conventions
-
+{: .no_toc }
 T-SQL code must execute properly and performant. It must be readable, well laid out and it must be robust and resilient. It must not rely on deprecated features of SQL Server or assume specific database settings.
 
 ---

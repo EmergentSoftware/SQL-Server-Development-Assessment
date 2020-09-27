@@ -7,9 +7,9 @@ layout: default
 
 # sp_Develop Results Explanations
 
-After running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) the 'Results' tab will contain the checks findings.
+After running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) the 'Results' tab will contain the findings for the best practice DBA development checks.
 
-![sp_Develop Results](/Images/sp_Develop_Results.png)
+![sp_Develop Results](Images/sp_Develop_Results.png)
 
 The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectType, FindingGroup, Finding. This allows you to review all the checks for an object at the same time.
 
@@ -28,3 +28,5 @@ The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectTy
 |Priority|The lower the number the more severe the potential issue is to address|
 |CheckId|Every check is uniquely numbered|
 
+[What other parameters can be used](parameter-explanations){: .btn .btn-purple }
+[View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Assess){: .btn }

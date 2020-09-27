@@ -13,6 +13,8 @@ Another use case for skipping checks is to indicate that you have acknowledged a
 
 ## Create a table to hold the list of checks you want to skip
 
+Create this table in the database you are developing or in a database on a centralized SQL Server.
+
 ```sql
 CREATE TABLE dbo.DevelopCheckToSkip (
     DevelopCheckToSkipId INT           IDENTITY(1, 1) NOT NULL
@@ -66,3 +68,6 @@ EXEC dbo.sp_Develop
    ,@SkipCheckSchema = N'dbo'
    ,@SkipCheckTable = N'DevelopCheckToSkip';
 ```
+
+[Do I need the test database?](test-database-install){: .btn .btn-purple }
+[View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Assess){: .btn }

@@ -69,5 +69,5 @@ EXEC dbo.sp_Develop
    ,@SkipCheckTable = N'DevelopCheckToSkip';
 ```
 
-[Do I need the test database?](test-database-install){: .btn .btn-purple }
+[Tell me about the test database?](test-database-install){: .btn .btn-purple }
 [View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Assess){: .btn }

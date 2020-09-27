@@ -24,5 +24,5 @@ While you can run [sp_Develop](https://raw.githubusercontent.com/EmergentSoftwar
 |@VersionDate|Output variable to check the version date.|
 |@VersionCheckMode|Will set the version output variables and return without running the stored procedure.|
 
-[Why would I want to skip checks](how-to-skip-checks){: .btn .btn-purple }
+[Why you would want to skip checks](how-to-skip-checks){: .btn .btn-purple }
 [View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Assess){: .btn }

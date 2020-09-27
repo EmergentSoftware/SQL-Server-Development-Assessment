@@ -17,5 +17,5 @@ That's the bare minimum you need to run the best practice checks!
 
 Visit [Parameter Explanations for more options](parameter-explanations)
 
-[What do these results mean](results-explanations){: .btn .btn-purple }
+[What the results mean](results-explanations){: .btn .btn-purple }
 [View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Assess){: .btn }

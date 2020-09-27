@@ -1978,7 +1978,7 @@ AS
                         ,F.Finding
                         ,F.Details
                         ,F.URL
-                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://github.com/EmergentSoftware/SQL-Server-Assess#how-to-skip-checks-across-your-estate')
+                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://emergentsoftware.github.io/SQL-Server-Assess/how-to-skip-checks')
                         ,F.Priority
                         ,F.CheckId
                      FROM

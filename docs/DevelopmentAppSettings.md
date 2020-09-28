@@ -18,7 +18,7 @@ The settings are located in the project "[\SQL-Server-Assess\Development Applica
 3. Check "Use team settings file" and browse to "..\SQL-Server-Assess\Development Application Settings\Microsoft\SQL Server Management Studio\General Settings\SSMS.vssettings"
 4. Click the "OK" button
 
-## RedGate SQL Server Prompt
+## Redgate SQL Server Prompt
 
 The settings are located in the project "[\SQL-Server-Assess\Development Application Settings\Red Gate\SQL Prompt](https://github.com/EmergentSoftware/SQL-Server-Assess/tree/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt)"
 

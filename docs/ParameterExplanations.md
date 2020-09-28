@@ -12,7 +12,7 @@ While you can run [sp_Develop](https://raw.githubusercontent.com/EmergentSoftwar
 |Parameter|Details|
 |--|--|
 |@DatabaseName|Defaults to current DB if not specified|
-|@GetAllDatabases|Runs checks across all the databases on the server instead of just your current database context. Does not work on Azure SQL Server.|
+|@GetAllDatabases|Setting = 1, runs checks across all the databases on the server instead of just your current database context. Does not work on Azure SQL Server.|
 |@BringThePain |If you’ve got more than 50 databases on the server, this only works if you also pass in @BringThePain = 1, because it’s gonna be slow.|
 |@SkipCheckServer|The linked server name that stores the skip checks|
 |@SkipCheckDatabase|The database that stores the skip checks|

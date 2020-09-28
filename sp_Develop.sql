@@ -259,7 +259,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issues#some-checks-skipped'
                    ,Details      = 'Amazon RDS detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -276,7 +276,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issues#some-checks-skipped'
                    ,Details      = 'Express Edition detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -294,7 +294,7 @@ AS
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
                    ,Finding      = 'Some Checks Skipped'
-                   ,URL          = @URLBase + 'running-issue#some-checks-skipped'
+                   ,URL          = @URLBase + 'running-issues#some-checks-skipped'
                    ,Details      = 'Managed Instance detected, so we skipped some checks that are not currently possible, relevant, or practical there.';
             END;
 
@@ -379,7 +379,7 @@ AS
                                    ,@Priority     = 1
                                    ,@FindingGroup = 'Running Issues'
                                    ,@Finding      = 'You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node.'
-                                   ,@URLAnchor    = 'running-issue#ran-on-a-non-readable-availability-group-secondary-databases';
+                                   ,@URLAnchor    = 'running-issues#ran-on-a-non-readable-availability-group-secondary-databases';
                                 /**********************************************************************************************************************/
                                 INSERT INTO
                                     #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
@@ -428,7 +428,7 @@ AS
            ,@Priority     = 1
            ,@FindingGroup = 'Running Issues'
            ,@Finding      = 'Ran Against 50+ Databases Without @BringThePain = 1'
-           ,@URLAnchor    = 'running-issue#ran-against-50-databases-without-bringthepain--1';
+           ,@URLAnchor    = 'running-issues#ran-against-50-databases-without-bringthepain--1';
         /**********************************************************************************************************************/
         BEGIN TRY
             IF @NumDatabases >= 50
@@ -500,7 +500,7 @@ AS
            ,@Priority     = 1
            ,@FindingGroup = 'Running Issues'
            ,@Finding      = 'sp_Develop is Over 6 Months Old'
-           ,@URLAnchor    = 'running-issue#sp_develop-is-over-6-months-old';
+           ,@URLAnchor    = 'running-issues#sp_develop-is-over-6-months-old';
         /**********************************************************************************************************************/
         IF NOT EXISTS (
             SELECT
@@ -1680,9 +1680,9 @@ AS
 		        SELECT
 			        @CheckId       = 27
 		           ,@Priority      = 1
-		           ,@FindingGroup  = 'Data Issue'
+		           ,@FindingGroup  = 'Data Issues'
 		           ,@Finding       = 'Unencrypted Data'
-		           ,@URLAnchor     = 'data-issue#unencrypted-data';
+		           ,@URLAnchor     = 'data-issues#unencrypted-data';
 		        /**********************************************************************************************************************/
 		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
 		        BEGIN

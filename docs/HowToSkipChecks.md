@@ -30,7 +30,7 @@ GO
 
 ## Checks to Skip
 
-The CheckId column refers to the list below. You can also scroll to the right in the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
+The CheckId column refers checks found in the [Findings](findings) section. You can also scroll to the right in the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
 
 You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to `INSERT` that record into your skip check table.
 

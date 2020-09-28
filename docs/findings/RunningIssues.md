@@ -1,6 +1,6 @@
 ---
-title: Running Issue
-permalink: findings/running-issue
+title: Running Issues
+permalink: findings/running-issues
 parent: Findings
 nav_order: 7
 layout: default

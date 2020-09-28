@@ -20,7 +20,7 @@ The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectTy
 |DatabaseName|Can be run for multiple databases so this will show you the database with the potential issue|
 |SchemaName|This is the schema for the object that might have an issue|
 |ObjectName|This can be anything from user tables, views stored procedures, functions, …|
-|FindingGroup|The high level grouping for the check<br/> - Naming Conventions<br/>- Table Conventions<br/>- Data Type Conventions<br/>- SQL Code Development<br/>- Data Issue<br/>- Configuration Issue<br/>- Running Issues|
+|FindingGroup|The high-level grouping for the check<br/> - Naming Conventions<br/>- Table Conventions<br/>- Data Type Conventions<br/>- SQL Code Development<br/>- Data Issue<br/>- Configuration Issue<br/>- Running Issues|
 |Finding|The specific potential issue we the check is looking for|
 |Details|Additional details about the potential issue. This does not go into in-depth details of the potential issue but should give you a heads up of what to look for.|
 |URL|Copy and paste this link into a browser to view the README.md write up for the potential issue|

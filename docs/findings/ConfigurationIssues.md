@@ -1,14 +1,14 @@
 ---
-title: Configuration Issue
-permalink: findings/configuration-issue
+title: Configuration Issues
+permalink: findings/configuration-issues
 parent: Findings
 nav_order: 6
 layout: default
 ---
 
-# Configuration Issue
+# Configuration Issues
 {: .no_toc }
-These check are for configurations to the SQL Server.
+These checks are for configurations to the SQL Server.
 
 ---
 

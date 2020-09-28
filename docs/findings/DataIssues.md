@@ -1,12 +1,12 @@
 ---
-title: Data Issue
-permalink: findings/data-issue
+title: Data Issues
+permalink: findings/data-issues
 parent: Findings
 nav_order: 5
 layout: default
 ---
 
-# Data Issue
+# Data Issues
 {: .no_toc }
 Checks for data issues.
 

@@ -13,7 +13,7 @@ SQL Server 2008+ is supported. You can script out the test database and downgrad
 
 ## Quick Steps to Setup and Use:
 
-1. Create new database 'spDevelop' and select in Object Browser
+1. Create new database 'spDevelopTest' and select in Object Browser
 2. Open RedGate SQL Source Control in SQL Server Management Studio
 3. Click 'Setup' tab
 4. Select 'Link to my source control system' and click 'Next'

@@ -14,7 +14,7 @@ SQL Server 2008+ is supported. You can script out the test database and downgrad
 ## Quick Steps to Setup and Use:
 
 1. Create new database 'spDevelopTest' and select in Object Browser
-2. Open RedGate SQL Source Control in SQL Server Management Studio
+2. Open Redgate SQL Source Control in SQL Server Management Studio
 3. Click 'Setup' tab
 4. Select 'Link to my source control system' and click 'Next'
 5. Browser to '..\Test Database' cloned folder and click 'Link'
@@ -26,7 +26,7 @@ SQL Server 2008+ is supported. You can script out the test database and downgrad
 11. **Note:** there are exclude filters setup for invalid objects created in the post script. Do not check these objects back into the branch.
 
 
-## RedGate SQL Source Control Documentation
+## Redgate SQL Source Control Documentation
 
 - [Getting Started ](https://documentation.red-gate.com/soc7/getting-started)
 - [Link to Git](https://documentation.red-gate.com/soc7/linking-to-source-control/link-to-git)

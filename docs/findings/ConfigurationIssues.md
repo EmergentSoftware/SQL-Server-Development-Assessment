@@ -28,7 +28,7 @@ These checks are for configurations to the SQL Server.
 ## Object Not Owned by dbo
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/29)
 
-Using dbo as the owner of all the database objects simplifies object management. dbo will always be a user in the database. If an object is owned by an account other than dbo, you must transfer ownership account needs to be deleted.
+It simplifies object management with dbo owning all the database objects. You will need to transfer ownership of objects before an account can be deleted.
 
 [Back to top](#top)
 

@@ -8,7 +8,7 @@ There you will find the check findings with database development best practices.
 
 ### Please connect with me (Kevin Martin) if you need assistance with sp_Develop or any of our SQL Server consulting services:
 
-- https://www.emergentsoftware.net/contact
+- https://www.emergentsoftware.net
 - https://www.linkedin.com/in/KevinMartinLink
 - https://twitter.com/KevinMartinLink
 - https://github.com/KevinMartinLink

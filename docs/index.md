@@ -5,6 +5,17 @@ nav_order: 1
 layout: default
 ---
 
+# <span style="color:red">NOTE: THIS PROJECT WILL BE CHANGING NAMES SOON.</span>
+
+Please note the new repo address:
+https://emergentsoftware.github.io/SQL-Server-Development-Assessment/
+
+I will post via social media after the rename, so please follow me with the links below to get notified.
+
+- [Kevin Martin on LinkedIn](https://www.linkedin.com/in/KevinMartinLink)
+- [Kevin Martin on Twitter](https://twitter.com/KevinMartinLink)
+- [Kevin Martin on GitHub](https://github.com/KevinMartinLink)
+
 # SQL Server Assess Overview
 The open source SQL Server Assess project contains the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) stored procedure. It can be used by database developers, software developers and for performing database code (smell) assessments to adhere to best practices.
 

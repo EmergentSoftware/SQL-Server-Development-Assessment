@@ -7,8 +7,8 @@ layout: default
 
 # <span style="color:red">NOTE: THIS PROJECT WILL BE CHANGING NAMES SOON.</span>
 
-Please note the new repo address:
-https://emergentsoftware.github.io/SQL-Server-Development-Assessment/
+Please note the future repo address: [https://emergentsoftware.github.io/SQL-Server-Development-Assessment/](
+https://emergentsoftware.github.io/SQL-Server-Development-Assessment/)
 
 I will post via social media after the rename, so please follow me with the links below to get notified.
 

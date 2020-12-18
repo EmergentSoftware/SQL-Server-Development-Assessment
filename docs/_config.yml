@@ -3,7 +3,7 @@ description: "sp_Develop can be used by database developers, software developers
 remote_theme: "pmarsceill/just-the-docs"
 color_scheme: "light"
 search_enabled: "true"
-baseurl: "/SQL-Server-Assess"
+baseurl: "/SQL-Server-Development-Assessment"
 url: "https://emergentsoftware.github.io"
 
 
@@ -15,7 +15,7 @@ heading_anchors: "true"
 # Aux links for the upper right navigation
 aux_links:
     "sp_Develop on GitHub":
-        - "//github.com/EmergentSoftware/SQL-Server-Assess"
+        - "//github.com/EmergentSoftware/SQL-Server-Development-Assessment"
 
 
 
@@ -26,7 +26,7 @@ aux_links:
 back_to_top: "true"
 back_to_top_text: "Back to top"
 
-footer_content: "Copyright &copy; 2020-2020 Emergent Software, LLC. Distributed by an <a href=\"https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/LICENSE.md\">MIT license.</a>"
+footer_content: "Copyright &copy; 2020-2020 Emergent Software, LLC. Distributed by an <a href=\"https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/blob/master/LICENSE.md\">MIT license.</a>"
 
 # Footer last edited timestamp
 last_edit_timestamp: true # show or hide edit time - page must have `last_modified_date` defined in the frontmatter
@@ -35,7 +35,7 @@ last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https:/
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true # show or hide edit this page link
 gh_edit_link_text: "Edit this page on GitHub"
-gh_edit_repository: "https://github.com/EmergentSoftware/SQL-Server-Assess" # the github URL for your repo
+gh_edit_repository: "https://github.com/EmergentSoftware/SQL-Server-Development-Assessment" # the github URL for your repo
 gh_edit_branch: "master" # the branch that your docs is served from
 gh_edit_source: docs # the source that your files originate from
 gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately

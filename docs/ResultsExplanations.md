@@ -7,7 +7,7 @@ layout: default
 
 # sp_Develop Results Explanations
 
-After running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) the 'Results' tab will contain the findings for the best practice DBA development checks.
+After running [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Development-Assessment/master/sp_Develop.sql) the 'Results' tab will contain the findings for the best practice DBA development checks.
 
 ![sp_Develop Results](Images/sp_Develop_Results.png)
 
@@ -29,4 +29,4 @@ The findings results are order by DatabaseName, SchemaName, ObjectName, ObjectTy
 |CheckId|Every check is uniquely numbered|
 
 [What other parameters can be used](parameter-explanations){: .btn .btn-purple }
-[View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Assess){: .btn }
+[View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment){: .btn }

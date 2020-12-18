@@ -26,7 +26,7 @@ These checks are for configurations to the SQL Server.
 ---
 
 ## Object Not Owned by dbo
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/29)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/29)
 
 It simplifies object management with dbo owning all the database objects. You will need to transfer ownership of objects before an account can be deleted.
 
@@ -35,7 +35,7 @@ It simplifies object management with dbo owning all the database objects. You wi
 ---
 
 ## Database Compatibility Level is Lower Than the SQL Server
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/38)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/38)
 
 The database compatibility level lower than the SQL Server it is running on.
 

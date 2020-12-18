@@ -26,7 +26,7 @@ Table design matters because it is essential for building software applications 
 ---
 
 ## Column Named ????Id But No FK Exists
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/43)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/43)
 
 We found a column following the naming convention of ????Id and is not the PK but no FK exists, you might be missing a relationship to a parent table.
 
@@ -35,7 +35,7 @@ We found a column following the naming convention of ????Id and is not the PK bu
 ---
 
 ## More Than 5 Indexes
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/49)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/49)
 
 Your table might be over indexed.
 
@@ -44,7 +44,7 @@ Your table might be over indexed.
 ---
 
 ## Less than 2 Indexes
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/50)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/50)
 
 Your table might be under indexed.
 
@@ -53,7 +53,7 @@ Your table might be under indexed.
 ---
 
 ## Disabled Index
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/51)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/51)
 
 An index rebuild or reorganization will enabled disabled indexes. It is now best practices to delete instead of disable if not needed.
 
@@ -62,7 +62,7 @@ An index rebuild or reorganization will enabled disabled indexes. It is now best
 ---
 
 ## Leftover Fake Index
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/53)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/53)
 
 The Index Tuning Wizard and Database Tuning Advisor create fake indexes, then getting a new execution plan for a query. These fake indexes stay behind sometimes.
 
@@ -75,7 +75,7 @@ There are better ways to performance tune than using the wizards.
 ---
 
 ## Column Has a Different Collation Than Database
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/54)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/54)
 
 This could cause issues if the code is not aware of different collations and does include features to work with them correctly.
 
@@ -84,7 +84,7 @@ This could cause issues if the code is not aware of different collations and doe
 ---
 
 ## Low Index Fill-Factor
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/55)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/55)
 
 The default fill factor is (100 or 0) for SQL Server. This check is alerting you to a fill factor of 80% or lower.
 
@@ -101,7 +101,7 @@ Review indexes diagnosed with low fill factor. Check how much they’re written 
 ---
 
 ## Untrusted Foreign Key
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/59)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/59)
 
 SQL Server is not going to use untrusted constraints to compile a better execution plan.
 

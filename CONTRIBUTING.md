@@ -27,11 +27,11 @@ If you want something, you're going to either need to build it yourself, or conv
 
 ## How to Build Features Yourself
 
-When you're ready to start coding, discuss it with the community. Check the [Github issues list] and the [closed issues list] because folks may have tried it in the past, or the community may have decided it's not a good fit for these tools.
+When you're ready to start coding, discuss it with the community. Check the [GitHub issues list] and the [closed issues list] because folks may have tried it in the past, or the community may have decided it's not a good fit for these tools.
 
-If you can't find it in an existing issue, open a new Github issue for it. Outline what you'd like to do, why you'd like to do it, and optionally, how you'd think about coding it. This just helps make sure other users agree that it's a good idea to add to these tools. Other folks will respond to the idea, and if you get a warm reception, go for it!
+If you can't find it in an existing issue, open a new GitHub issue for it. Outline what you'd like to do, why you'd like to do it, and optionally, how you'd think about coding it. This just helps make sure other users agree that it's a good idea to add to these tools. Other folks will respond to the idea, and if you get a warm reception, go for it!
 
-After your Github issue has gotten good responses from a couple of volunteers who are willing to test your work, get started by forking the project and working on your own server. The Github instructions are below - it isn't exactly easy, and we totally understand if you're not up for it. Thing is, we can't take code contributions via text requests - Github makes it way easier for us to compare your work versus the changes other people have made, and merge them all together.
+After your GitHub issue has gotten good responses from a couple of volunteers who are willing to test your work, get started by forking the project and working on your own server. The GitHub instructions are below - it isn't exactly easy, and we totally understand if you're not up for it. Thing is, we can't take code contributions via text requests - GitHub makes it way easier for us to compare your work versus the changes other people have made, and merge them all together.
 
 Note that if you're not ready to get started coding in the next week, or if you think you can't finish the feature in the next 30 days, you probably don't want to bother opening an issue. You're only going to feel guilty over not making progress, because we'll keep checking in with you to see how it's going. We don't want to have stale "someday I'll build that" issues in the list - we want to keep the open issues list easy to scan for folks who are trying to troubleshoot bugs and feature requests.
 
@@ -60,7 +60,7 @@ We know that's a pain, but that's the kind of thing we find out in the wild. Of 
    # Navigate to the newly cloned directory
    cd SQL-Server-Assess
    # Assign the original repo to a remote called "upstream"
-   git remote add upstream https://github.com/EmergentSoftware/SQL-Server-Assess/
+   git remote add upstream https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/
    ```
 
 2. If you cloned a while ago, get the latest changes from upstream:
@@ -79,7 +79,7 @@ We know that's a pain, but that's the kind of thing we find out in the wild. Of 
 
 4. Make changes.
 
-   Make changes to one or more of the files in the project. If your change requires a new CheckId look here: https://emergentsoftware.github.io/SQL-Server-Assess/findings/current-high-check-id.
+   Make changes to one or more of the files in the project. If your change requires a new CheckId look here: https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/current-high-check-id.
    
    You should modify the markdown documentation files in the docs folder by yourself.
 
@@ -104,11 +104,11 @@ We know that's a pain, but that's the kind of thing we find out in the wild. Of 
 **IMPORTANT**: By submitting the work, you agree to allow the project owner to license your work under the MIT [LICENSE]
 
 
-[Github issues list]:https://github.com/EmergentSoftware/SQL-Server-Assess/issues
-[closed issues list]: https://github.com/EmergentSoftware/SQL-Server-Assess/issues?q=is%3Aissue+is%3Aclosed
+[Github issues list]:https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues
+[closed issues list]: https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues?q=is%3Aissue+is%3Aclosed
 [Fork]:https://help.github.com/articles/fork-a-repo/
 [git commit message guidelines]:http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [interactive rebase]:https://help.github.com/articles/about-git-rebase/
 [Open a Pull Request]:https://help.github.com/articles/about-pull-requests/
-[LICENSE]:https://github.com/EmergentSoftware/SQL-Server-Assess/blob/master/LICENSE.md
-[download the dev branch version]: https://github.com/EmergentSoftware/SQL-Server-Assess/archive/dev.zip
+[LICENSE]:https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/blob/master/LICENSE.md
+[download the dev branch version]: https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/archive/dev.zip

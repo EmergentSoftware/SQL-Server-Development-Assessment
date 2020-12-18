@@ -7,7 +7,7 @@ layout: default
 
 # sp_Develop Parameter Explanations
 
-While you can run [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Assess/master/sp_Develop.sql) without any parameters there is more you can do with additional parameters.
+While you can run [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Development-Assessment/master/sp_Develop.sql) without any parameters there is more you can do with additional parameters.
 
 |Parameter|Details|
 |--|--|
@@ -25,4 +25,4 @@ While you can run [sp_Develop](https://raw.githubusercontent.com/EmergentSoftwar
 |@VersionCheckMode|Will set the version output variables and return without running the stored procedure.|
 
 [Why you would want to skip checks](how-to-skip-checks){: .btn .btn-purple }
-[View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Assess){: .btn }
+[View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment){: .btn }

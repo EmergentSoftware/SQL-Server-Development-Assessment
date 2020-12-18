@@ -1,30 +1,3 @@
-/**********************************************************************************************************************
-** MIT License
-** 
-** Copyright for portions of sp_Develop are held by Brent Ozar Unlimited as part of project 
-** SQL-Server-First-Responder-Kit and are provided under the MIT license: 
-** https://github.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/ 
-**
-** Copyright for portions of sp_Develop are held by Phil Factor (real name withheld) as part of project 
-** SQLCodeSmells https://github.com/Phil-Factor/SQLCodeSmells
-**
-** All other copyrights for sp_Develop are held by Emergent Software, LLC as described below.
-** 
-** Copyright (c) 2020 Emergent Software, LLC
-** 
-** Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-** documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to 
-** permit persons to whom the Software is furnished to do so, subject to the following conditions:
-** 
-** The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-** Software.
-** 
-** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-** WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
-** OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-** OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-**********************************************************************************************************************/
 IF OBJECT_ID('dbo.sp_Develop') IS NULL
     BEGIN
         EXEC dbo.sp_executesql
@@ -33,23 +6,51 @@ IF OBJECT_ID('dbo.sp_Develop') IS NULL
 GO
 
 ALTER PROCEDURE dbo.sp_Develop
-    @DatabaseName       NVARCHAR(128) = NULL /*Defaults to current DB if not specified*/
-   ,@GetAllDatabases    BIT           = 0
-   ,@BringThePain       BIT           = 0
-   ,@SkipCheckServer    NVARCHAR(128) = NULL
-   ,@SkipCheckDatabase  NVARCHAR(128) = NULL
-   ,@SkipCheckSchema    NVARCHAR(128) = NULL
-   ,@SkipCheckTable     NVARCHAR(128) = NULL
-   ,@OutputType         VARCHAR(20)   = 'TABLE'
-   ,@Debug              INT           = 0
-   ,@Version            VARCHAR(30)   = NULL OUTPUT
-   ,@VersionDate        DATETIME      = NULL OUTPUT
-   ,@VersionCheckMode   BIT           = 0
+    @DatabaseName      NVARCHAR(128) = NULL /*Defaults to current DB if not specified*/
+   ,@GetAllDatabases   BIT           = 0
+   ,@BringThePain      BIT           = 0
+   ,@SkipCheckServer   NVARCHAR(128) = NULL
+   ,@SkipCheckDatabase NVARCHAR(128) = NULL
+   ,@SkipCheckSchema   NVARCHAR(128) = NULL
+   ,@SkipCheckTable    NVARCHAR(128) = NULL
+   ,@OutputType        VARCHAR(20)   = 'TABLE'
+   ,@Debug             INT           = 0
+   ,@Version           VARCHAR(30)   = NULL OUTPUT
+   ,@VersionDate       DATETIME      = NULL OUTPUT
+   ,@VersionCheckMode  BIT           = 0
 WITH RECOMPILE
 AS
     BEGIN
         SET NOCOUNT ON;
         SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
+        /**********************************************************************************************************************
+        ** MIT License
+        ** 
+        ** Copyright for portions of sp_Develop are held by Brent Ozar Unlimited as part of project 
+        ** SQL-Server-First-Responder-Kit and are provided under the MIT license: 
+        ** https://github.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/ 
+        **
+        ** Copyright for portions of sp_Develop are held by Phil Factor (real name withheld) as part of project 
+        ** SQLCodeSmells https://github.com/Phil-Factor/SQLCodeSmells
+        **
+        ** All other copyrights for sp_Develop are held by Emergent Software, LLC as described below.
+        ** 
+        ** Copyright (c) 2020 Emergent Software, LLC
+        ** 
+        ** Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+        ** documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+        ** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to 
+        ** permit persons to whom the Software is furnished to do so, subject to the following conditions:
+        ** 
+        ** The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+        ** Software.
+        ** 
+        ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+        ** WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
+        ** OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+        ** OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        **********************************************************************************************************************/
 
         /**********************************************************************************************************************
 	    ** Declare some varibles
@@ -68,6 +69,7 @@ AS
            ,@FindingGroup        VARCHAR(100)
            ,@Finding             VARCHAR(200)
            ,@URLBase             VARCHAR(100)
+           ,@URLSkipChecks       VARCHAR(100)
            ,@URLAnchor           VARCHAR(400)
            ,@Priority            INT
            ,@ProductVersion      NVARCHAR(128)
@@ -81,7 +83,8 @@ AS
 
         SET @Version = '0.11.7';
         SET @VersionDate = '20200920';
-        SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Assess/findings/';
+        SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/';
+        SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);
         SET @ScriptVersionName = N'sp_Develop v' + @Version + N' - ' + DATENAME(MONTH, @VersionDate) + N' ' + RIGHT('0' + DATENAME(DAY, @VersionDate), 2) + N', ' + DATENAME(YEAR, @VersionDate);
@@ -253,8 +256,7 @@ AS
                 /* INSERT INTO #SkipCheck (CheckId) VALUES (?); */
 
                 /* Let them know we are skipping checks */
-                INSERT INTO
-                    #Finding (CheckId, FindingGroup, Finding, URL, Details)
+                INSERT INTO #Finding (CheckId, FindingGroup, Finding, URL, Details)
                 SELECT
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
@@ -270,8 +272,7 @@ AS
                 /* INSERT INTO #SkipCheck (CheckId) VALUES (?); */
 
                 /* Let them know we are skipping checks */
-                INSERT INTO
-                    #Finding (CheckId, FindingGroup, Finding, URL, Details)
+                INSERT INTO #Finding (CheckId, FindingGroup, Finding, URL, Details)
                 SELECT
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
@@ -288,8 +289,7 @@ AS
                 /* INSERT INTO #SkipCheck (CheckId) VALUES (?); */
 
                 /* Let them know we are skipping checks */
-                INSERT INTO
-                    #Finding (CheckId, FindingGroup, Finding, URL, Details)
+                INSERT INTO #Finding (CheckId, FindingGroup, Finding, URL, Details)
                 SELECT
                     CheckID      = 26
                    ,FindingGroup = 'Running Issues'
@@ -301,8 +301,7 @@ AS
         /**********************************************************************************************************************
 	    ** What databases are we going to ignore?
 	    **********************************************************************************************************************/
-        INSERT INTO
-            #DatabaseIgnore (DatabaseName, Reason)
+        INSERT INTO #DatabaseIgnore (DatabaseName, Reason)
         SELECT
             SC.DatabaseName
            ,N'Included in skip checks'
@@ -318,8 +317,7 @@ AS
 	    **********************************************************************************************************************/
         IF @GetAllDatabases = 1
             BEGIN
-                INSERT INTO
-                    #DatabaseList (DatabaseName)
+                INSERT INTO #DatabaseList (DatabaseName)
                 SELECT
                     DB_NAME(database_id)
                 FROM
@@ -381,8 +379,7 @@ AS
                                    ,@Finding      = 'You are running this on an AG secondary, and some of your databases are configured as non-readable when this is a secondary node.'
                                    ,@URLAnchor    = 'running-issues#ran-on-a-non-readable-availability-group-secondary-databases';
                                 /**********************************************************************************************************************/
-                                INSERT INTO
-                                    #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
+                                INSERT INTO #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
                                 SELECT
                                     CheckId      = @CheckId
                                    ,FindingGroup = @FindingGroup
@@ -396,8 +393,7 @@ AS
             END;
         ELSE
             BEGIN
-                INSERT INTO
-                    #DatabaseList (DatabaseName)
+                INSERT INTO #DatabaseList (DatabaseName)
                 SELECT
                     CASE
                         WHEN @DatabaseName IS NULL
@@ -435,8 +431,7 @@ AS
                AND @BringThePain <> 1
                 BEGIN
 
-                    INSERT
-                        #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
+                    INSERT #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
                     SELECT
                         CheckId      = @CheckId
                        ,FindingGroup = @FindingGroup
@@ -517,8 +512,7 @@ AS
                 IF @Debug IN (1, 2)
                     RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
 
-                INSERT
-                    #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
+                INSERT #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
                 SELECT
                     CheckId      = @CheckId
                    ,FindingGroup = @FindingGroup
@@ -1977,7 +1971,7 @@ AS
                         ,F.Finding
                         ,F.Details
                         ,F.URL
-                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://emergentsoftware.github.io/SQL-Server-Assess/how-to-skip-checks')
+                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', @URLSkipChecks)
                         ,F.Priority
                         ,F.CheckId
                      FROM
@@ -2002,7 +1996,7 @@ AS
                         ,F.Finding
                         ,F.Details
                         ,F.URL
-                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', 'https://emergentsoftware.github.io/SQL-Server-Assess/how-to-skip-checks')
+                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', @URLSkipChecks)
                         ,F.Priority
                         ,F.CheckId
                      FROM

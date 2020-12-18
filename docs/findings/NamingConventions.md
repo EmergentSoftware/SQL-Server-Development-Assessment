@@ -26,7 +26,7 @@ The purpose of naming and style convention allows you and others to identify the
 ---
 
 ## Using System-Generated Object Names
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/42)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/42)
 
 Create logical names and do not let SQL Server name objects.
 
@@ -66,7 +66,7 @@ When a word does not exist to describe the relationship use "Table1Table2" with 
 ---
 
 ## Variable Naming
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/74)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/74)
 
 In addition to the general naming standards regarding no special characters, no spaces, and limited use of abbreviations and acronyms, common sense should prevail in naming variables; variable names should be meaningful and natural.
 
@@ -81,7 +81,7 @@ Variable names should contain only letters and numbers. No special characters or
 ---
 
 ## Stored Procedures & Function Naming
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/75)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/75)
 
 Stored procedures and functions should be named so they can be ordered by the table/business entity (ObjectAction) they perform a database operation on, and adding the database activity "Get, Update, Insert, Upsert, Delete, Merge" as a suffix, e.g., ("ProductGet" or "OrderUpdate").
 
@@ -129,7 +129,7 @@ FROM
 ---
 
 ## Not Naming Foreign Key Column the Same as Parent Table
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/76)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/76)
 
 Foreign key columns should have the exact same name as they do in the parent table where the column is the primary. For example, in the Customer table the primary key column might be "CustomerId". In an Order table where the customer id is kept, it would also be "CustomerId".
 
@@ -187,7 +187,7 @@ Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvio
 ---
 
 ## Using Prefix in Index Name
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/72)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/72)
 
 No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 
@@ -199,7 +199,7 @@ No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 ---
 
 ## Not Using PascalCase
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/77)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/77)
 
 For all parts of the table name, including prefixes, use Pascal Case. `PascalCase` also reduces the need for underscores to visually separate words in names.
 
@@ -248,7 +248,7 @@ Do not give a table the same name as one of its columns.
 ---
 
 ## Using Abbreviation
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/78)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/78)
 
 Avoid using abbreviation if possible. Use "Account" instead of "Acct" and "Hour" instead of "Hr". Not everyone will always agree with you on what your abbreviations stand for - and - this makes it simple to read and understand for both developers and non-developers.
 
@@ -261,7 +261,7 @@ Acct, AP, AR, Hr, Rpt, Assoc, Desc
 ---
 
 ## Non-Affirmative Boolean Name Use
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Assess/issues/79)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/79)
 
 Bit columns should be given affirmative boolean names like "IsDeletedFlag", "HasPermissionFlag", or "IsValidFlag" so that the meaning of the data in the column is not ambiguous; negative boolean names are harder to read when checking values in T-SQL because of double-negatives (e.g. "Not IsNotDeleted"). 
 

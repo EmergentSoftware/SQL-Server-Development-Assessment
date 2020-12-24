@@ -42,5 +42,5 @@ gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into t
 
  
 # Google Analytics Tracking (optional)
-ga_tracking: UA-179101427-1
+ga_tracking: G-Y3VRXTG8JR
 ga_tracking_anonymize_ip: false # Use GDPR compliant Google Analytics settings (true by default)

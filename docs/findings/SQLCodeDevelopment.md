@@ -144,7 +144,7 @@ ELSE
     END;
 ```
 
-**Do not use this UPSERT pattern:** It will produce primary key violations when run concurrently. MERGE can be used for ETL processing if it is assured to be run concurrently.
+**Do not use this UPSERT pattern:** It will produce primary key violations when run concurrently. MERGE can be used for ETL processing if it is assured to NOT be run concurrently.
 
 ```sql
 MERGE INTO dbo.Person AS T

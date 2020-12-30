@@ -28,8 +28,6 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 ## UPSERT Pattern
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/151)
 
-
-
 **Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.
 
 ```sql

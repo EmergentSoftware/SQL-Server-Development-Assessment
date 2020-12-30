@@ -25,6 +25,149 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 
 ---
 
+## UPSERT Pattern
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/151)
+
+
+
+**Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.
+
+```sql
+BEGIN TRANSACTION;
+
+UPDATE
+    dbo.Person WITH (UPDLOCK, SERIALIZABLE)
+SET
+    FirstName = 'Kevin'
+WHERE
+    LastName = 'Martin';
+
+IF @@ROWCOUNT = 0
+    BEGIN
+        INSERT dbo.Person (FirstName, LastName) VALUES ('Kevin', 'Martin');
+    END;
+
+COMMIT TRANSACTION;
+```
+
+
+**Use this UPSERT pattern when a record insert is more likely:** Don't worry about checking for a records existence just perform the insert.
+
+```sql
+BEGIN TRANSACTION;
+
+INSERT dbo.Person (FirstName, LastName)
+SELECT
+    'Kevin'
+   ,'Martin'
+WHERE
+    NOT EXISTS (
+    SELECT
+        1
+    FROM
+        dbo.Person WITH (UPDLOCK, SERIALIZABLE)
+    WHERE
+        LastName = 'Martin'
+
+COMMIT TRANSACTION;
+);
+
+IF @@ROWCOUNT = 0
+    BEGIN
+        UPDATE dbo.Person SET FirstName = 'Kevin' WHERE LastName = 'Martin';
+    END;
+```
+
+**Use this UPSERT pattern to allow the client application to handle the exception:** Ensure you handle the exception in your code.
+
+```sql
+BEGIN TRANSACTION;
+
+BEGIN TRY
+    INSERT dbo.Person (FirstName, LastName) VALUES ('Kevin', 'Martin');
+END TRY
+BEGIN CATCH
+    UPDATE dbo.Person SET FirstName = 'Kevin' WHERE LastName = 'Martin';
+    THROW;
+END CATCH;
+
+COMMIT TRANSACTION;
+```
+
+
+**Use this UPSERT pattern for upserting multiple rows:** You can use a [table-valued parameter](https://docs.microsoft.com/en-us/sql/relational-databases/tables/use-table-valued-parameters-database-engine?view=sql-server-ver15), [JSON](https://docs.microsoft.com/en-us/sql/relational-databases/json/convert-json-data-to-rows-and-columns-with-openjson-sql-server?view=sql-server-ver15), [XML](https://docs.microsoft.com/en-us/sql/t-sql/xml/nodes-method-xml-data-type?view=sql-server-ver15) or [comma-separate list](https://docs.microsoft.com/en-us/sql/t-sql/functions/string-split-transact-sql?view=sql-server-ver15). 
+
+For XML or CSV ensure you insert the records into a temporary table for performance considerations.
+
+```sql
+BEGIN TRANSACTION;
+
+CREATE TABLE #Update (FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL);
+
+INSERT INTO #Update (FirstName, LastName)
+VALUES
+     ('Kevin', 'Martin')
+    ,('Jean-Luc', 'Picard');
+
+UPDATE
+    P WITH (UPDLOCK, SERIALIZABLE)
+SET
+    P.FirstName = U.FirstName
+FROM
+    dbo.Person         AS P
+    INNER JOIN #Update AS U ON P.LastName = U.LastName;
+
+INSERT dbo.Person (FirstName, LastName)
+SELECT
+    U.FirstName
+   ,U.LastName
+FROM
+    #Update AS U
+WHERE
+    NOT EXISTS (SELECT * FROM dbo.Person AS P WHERE P.LastName = U.LastName);
+
+COMMIT TRANSACTION;
+```
+
+
+**Do not use this UPSERT pattern:** It will produce primary key violations when run concurrently.
+
+```sql
+IF EXISTS (SELECT * FROM dbo.Person AS P WHERE P.LastName = 'Martin')
+    BEGIN
+        UPDATE dbo.Person 
+		SET FirstName = 'Kevin' 
+		WHERE LastName = 'Martin';
+    END;
+ELSE
+    BEGIN
+        INSERT dbo.Person (FirstName, LastName) 
+		VALUES ('Kevin', 'Martin');
+    END;
+```
+
+**Do not use this UPSERT pattern:** It will produce primary key violations when run concurrently. MERGE can be used for ETL processing if it is assured to be run concurrently.
+
+```sql
+MERGE INTO dbo.Person AS T
+USING (
+	SELECT FirstName = 'Kevin', LastName = 'Martin'
+) AS S
+ON (S.LastName = T.LastName)
+WHEN MATCHED THEN
+    UPDATE SET
+        FirstName = S.FirstName
+WHEN NOT MATCHED THEN
+    INSERT (FirstName, LastName)
+    VALUES
+         (S.FirstName, S.LastName);
+```
+
+
+
+
+
+
 ## Using ORDER BY
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/39)
 

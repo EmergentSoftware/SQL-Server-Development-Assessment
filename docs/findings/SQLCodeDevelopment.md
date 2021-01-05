@@ -25,6 +25,49 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 
 ---
 
+## Data Warehouse Date & Time Key Pattern
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/155)
+
+This data warehouse date & time key pattern can be used with the [Date-Time-Dimensions](https://github.com/EmergentSoftware/Date-Time-Dimensions) tables. The grain of the time dimension records are in seconds.
+
+The primary keys in the date and time dimension tables are integers and the T-SQL below extracts and converts them.
+
+If the datetime column in the source table is a DATETIMEOFFSET data type you can remove the first 'AT TIME ZONE'.
+
+See [Using DATETIME Instead of DATETIMEOFFSET](/SQL-Server-Development-Assessment/findings/data-type-conventions#using-datetime-instead-of-datetimeoffset).
+
+```sql
+SELECT
+    [Date Key] = 
+		ISNULL(
+			CAST(
+				CONVERT(CHAR(8), 
+					CAST(
+						CAST(
+							GETDATE() AS DATETIME2(7) /* use the table date column instead of GETDATE() here */
+						) 
+						AT TIME ZONE 'UTC' /* use this 1st AT TIME ZONE to set the offset if the data type is not using datetimeoffset(7) */
+						AT TIME ZONE 'Central Standard Time' /* this 2nd AT TIME ZONE converts into the time zone */
+						AS DATETIME
+					), 112
+				) AS INT
+			), -1
+		)
+   ,[Time Key] = 
+		REPLACE(
+			CONVERT(VARCHAR(8), 
+				CAST(
+					CAST(
+						GETDATE() AS DATETIME2(7) /* use the table date column instead of GETDATE() here */
+					) 
+					AT TIME ZONE 'UTC' /* use this 1st AT TIME ZONE to set the offset if the data type is not using datetimeoffset(7) */
+					AT TIME ZONE 'Central Standard Time' AS TIME /* this 2nd AT TIME ZONE converts into the time zone */
+				), 108
+			), ':', ''
+		);
+```
+
+
 ## UPSERT Pattern
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/151)
 

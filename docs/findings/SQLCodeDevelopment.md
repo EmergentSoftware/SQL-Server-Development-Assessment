@@ -885,7 +885,9 @@ SELECT
 ## Not Using SQL Formatting
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/87)
 
-SQL statements should be arranged in an easy-to-read manner. When statements are written all to one line or not broken into smaller easy-to-read chunks, more complicated statements are very hard to decipher.
+SQL code statements should be arranged in an easy-to-read manner. When statements are written all on one line or not broken into smaller easy-to-read chunks, it is hard to decipher.
+
+Your SQL code should be formatted in a consistent manner so specific elements like keywords, data types, table names, functions can be identified at a quick glance.
 
 Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/blob/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Formatting%20Styles/Team%20Collapsed.sqlpromptstylev2)" or "[Team Expanded](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/blob/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Formatting%20Styles/Team%20Expanded.sqlpromptstylev2)". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
 
@@ -947,7 +949,7 @@ ORDER BY
 
 Important code blocks within stored procedures and functions should be commented. Brief functionality descriptions should be included where important or complicated processing is taking place.
 
-Use block comments instead of single line comments in your T-SQL code. Single line comments that are copy and pasted when performance tuning make it difficult to know where the single line comment ends.
+Use block comments instead of single line comments in your T-SQL code. Single line comments that are copy and pasted when performance tuning makes it difficult to know where the single line comment ends.
 
 
 ```sql
@@ -1023,7 +1025,7 @@ It is common to need a database to operate under different names.
 - When branching database code in source control
   - You might want to name a database after a feature branch on the same SQL Server instance.
 - When building database code
-  - To validate database objects compile from source, it is best to not have the database name hardcoded. If you use a hardcoded name you need to ensure that only one build server can run a build for that database instance.
+  - To validate database objects compiled from a source, it is best to not have the database name hardcoded. If you use a hardcoded name you need to ensure that only one build server can run a build for that database instance.
 
 [Back to top](#top)
 

@@ -635,6 +635,21 @@ You also might be using SELECT DISTINCT to mask a JOIN problem. It’s much bett
 
 ---
 
+## Not Using SSIS
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/164)
+
+Use SSIS (SQL Server Integration Service) to move data around. You can use stored procedures and SQL Server Agent Jobs instead of SSIS to ETL data but it will make it difficult to orchestrate tasks between different environments. 
+
+SSIS gives you the ability to create project and package parameters that can be configured in the SSIS catalog Environments. SSIS has built in logging and Execution run reports you can access from SSMS (SQL Server Management Studio).
+
+When it comes time to migrate to Azure you can lift and shift you SSIS packages to an Azure-SSIS Integration Runtime.
+
+
+[Back to top](#top)
+
+---
+
+
 ## IN/NOT VS EXISTS/NOT EXISTS
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/70)
 

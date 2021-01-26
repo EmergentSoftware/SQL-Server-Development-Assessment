@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "id": "fcb648ec-57c1-48f9-a40f-d3e81de7b8de",
+    "name": "Emergent Style - Collapsed",
+    "lastModified": "2021-01-26T20:18:46.7576355Z"
+  },
+  "whitespace": {
+    "wrapLongLines": false,
+    "newLines": {
+      "preserveExistingEmptyLinesAfterBatchSeparator": false
+    }
+  },
+  "lists": {
+    "placeFirstItemOnNewLine": "always",
+    "alignItemsAcrossClauses": false,
+    "alignComments": true
+  },
+  "parentheses": {
+    "parenthesisStyle": "expandedToStatement",
+    "indentParenthesesContents": true,
+    "collapseParenthesesShorterThan": 75
+  },
+  "casing": {
+    "reservedKeywords": "uppercase",
+    "builtInFunctions": "uppercase",
+    "builtInDataTypes": "lowercase",
+    "globalVariables": "uppercase",
+    "useObjectDefinitionCase": true
+  },
+  "dml": {
+    "addNewLineAfterDistinctAndTopClauses": true,
+    "collapseShortStatements": true,
+    "collapseStatementsShorterThan": 78,
+    "collapseShortSubqueries": true,
+    "collapseSubqueriesShorterThan": 120
+  },
+  "ddl": {
+    "parenthesisStyle": "expandedToStatement",
+    "indentParenthesesContents": true,
+    "placeConstraintColumnsOnNewLines": "ifLongerOrMultipleColumns",
+    "collapseShortStatements": true,
+    "collapseStatementsShorterThan": 75
+  },
+  "controlFlow": {
+    "collapseStatementsShorterThan": 78
+  },
+  "variables": {
+    "alignDataTypesAndValues": false,
+    "placeEqualsSignOnNewLine": true
+  },
+  "joinStatements": {
+    "join": {
+      "indentJoinTable": false
+    },
+    "on": {
+      "keywordAlignment": "indented"
+    }
+  },
+  "insertStatements": {
+    "values": {
+      "indentContents": true
+    }
+  },
+  "functionCalls": {
+    "addSpacesAroundParentheses": true
+  },
+  "caseExpressions": {
+    "collapseCaseExpressionsShorterThan": 75
+  },
+  "operators": {
+    "andOr": {},
+    "between": {
+      "placeOnNewLine": false
+    },
+    "in": {
+      "placeFirstValueOnNewLine": "never",
+      "placeSubsequentValuesOnNewLines": "never",
+      "addSpaceAroundInContents": true
+    }
+  }
+}

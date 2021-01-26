@@ -20,6 +20,21 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 1. TOC
 {:toc}
 </details>
+[Back to top](#top)
+
+---
+
+## Not Using Source Control
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/161)
+
+Your database objects (tables, views, stored procedures, functions, triggers, users, roles, schemas, static data, ...) should be in a version control system. 
+
+Source control lets you see who made what changes, when, and why. Automate SQL changes during deployment. Rollback any changes you don't want. Source control helps when you develop branch features.
+
+Most importantly, you work from a single source of truth, greatly reducing the risk of downtime at deployment.
+
+
+[Redgate SQL Source Control](https://www.red-gate.com/products/sql-development/sql-source-control/) is our tool of choice.
 
 [Back to top](#top)
 
@@ -67,6 +82,9 @@ SELECT
 		);
 ```
 
+[Back to top](#top)
+
+---
 
 ## UPSERT Pattern
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/151)
@@ -204,9 +222,9 @@ WHEN NOT MATCHED THEN
          (S.FirstName, S.LastName);
 ```
 
+[Back to top](#top)
 
-
-
+---
 
 
 ## Using ORDER BY
@@ -221,8 +239,13 @@ SQL Server is the second most expensive sorting system, remind the developer the
 - ⬇
 - Microsoft Access $159.99
 
+[Back to top](#top)
+
+---
+
 ## Cursors
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/25)
+
 
 #### Overview
 Even though you'll hear DBAs and other experts say, "never use cursors!", there are a few cases were cursors come in handy and there are a few important pointers.
@@ -454,6 +477,22 @@ WHERE
 [Back to top](#top)
 
 ---
+
+## No Separate Environments
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/162)
+
+You should have a Development, Testing & Production environment.
+
+SQL Server development is a continuous process to avoid the issues caused by development and reducing the risks of blocking business.
+
+Accidents happen! Imagine you accidentally made an update to thousands of records that you can not undo without hours of work. Imagine that you do not have access to original data before you changed it. Feeling scared yet? This is where a development and test environment saves effort.
+
+A development environment allows developers to program and perform test ensuring their code is correct before pushing to a centralized testing environment for UAT (User Acceptance Testing) or staging for production.
+
+[Back to top](#top)
+
+---
+
 
 ## Not Using Semicolon to Terminate Statements
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/35)

@@ -25,6 +25,28 @@ The purpose of naming and style convention allows you and others to identify the
 
 ---
 
+## Naming Foreign Key Relationships
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/160)
+
+No need to use the "FX_" prefix in foreign key relationships. See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
+
+Use the format of "[FOREIGN-KEY-TABLE]_[PRIMARY-KEY-TABLE]" in most cases. This gives you a quick view of the tables that are involved in the relationship. The first table named depends on the second table named.
+
+**Example:** "Invoice_Product"
+
+In cases where there are multiple foreign key relationships to one primary key table like Address, Date, Time, ... your foreign key relationship name should include the context of the relationship.
+ 
+**Example:** "Invoice_ShippingAddress" or "Invoice_BillingAddress"
+
+In a more rare case when not referencing the primary key of the primary key table you should use the format of "[FOREIGN-KEY-TABLE]_[CHILD-COLUMN]_[PRIMARY-KEY-TABLE]_[PARENT-COLUMN]".
+
+**Example:** "Invoice_ProductCode_Product_ProductCode"
+
+
+[Back to top](#top)
+
+---
+
 ## Using System-Generated Object Names
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/42)
 
@@ -193,6 +215,8 @@ No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 
 * Names should be "Column1_Column2_Column3" 
 * Names should indicate if there are included columns with "Column1_Column2_Column3_Includes"
+
+See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
 
 [Back to top](#top)
 

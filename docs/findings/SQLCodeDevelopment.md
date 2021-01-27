@@ -515,7 +515,7 @@ Search ARGument..able. Avoid having a column or variable used within an expressi
 ![Non-SARGable Scan vs. SARGable Seek](../Images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
 
 
-Another issue with non-sargable queries besides the forced table scan is SQL Server will not be able to provide a recommended index.
+Another issue with non-sargable queries besides the forced table scan is SQL Server will not be able to provide a recommended index. See [Using Missing Indexes Recommendations](/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-missing-indexes-recommendations)
 
 By changed the WHERE clause to not use the YEAR() function and doing a bit more typing allows SQL Server to understand what you want it to do.
 

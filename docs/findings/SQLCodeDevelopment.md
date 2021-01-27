@@ -514,6 +514,41 @@ Search ARGument..able. Avoid having a column or variable used within an expressi
 
 ![Non-SARGable Scan vs. SARGable Seek](../Images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
 
+
+Another issue with non-sargable queries besides the forced table scan is SQL Server will not be able to provide a recommended index.
+
+By changed the WHERE clause to not use the YEAR() function and doing a bit more typing allows SQL Server to understand what you want it to do.
+
+![Non-SARGable Does Not Get Index Recommendation](../Images/Non-SARGable_Does_Not_Get_Index_Recommendation.png)
+
+
+[Back to top](#top)
+
+---
+
+## Using Missing Indexes Recommendations
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/166)
+
+The SQL Server Missing Indexes recommendations feature has limitations and even recommends you create indexes that already exist. It is not meant for you fine tune and only provides sometimes adequate recommendations.
+
+You should assess the missing index recommendation but create a fine tuned custom index that includes all that is excluded items.
+
+See the [Books Online: Limitations of the Missing Indexes Feature](http://msdn.microsoft.com/en-us/library/ms345485(v=sql.105).aspx)
+
+
+The missing index feature has the following limitations:
+
+* It is not intended to fine tune an indexing configuration.
+* It cannot gather statistics for more than 500 missing index groups.
+* It does not specify an order for columns to be used in an index.
+* For queries involving only inequality predicates, it returns less accurate cost information.
+* It reports only include columns for some queries, so index key columns must be manually selected.
+* It returns only raw information about columns on which indexes might be missing.
+* It does not suggest filtered indexes.
+* It can return different costs for the same missing index group that appears multiple times in XML Showplans.
+* It does not consider trivial query plans.
+
+
 [Back to top](#top)
 
 ---

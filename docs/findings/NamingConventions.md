@@ -310,8 +310,9 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - Invoice**Id** is the identity of the invoice record
   - Part**Number** is an alternate key
   - Start**Date** is the date something started
+  - RowUpdate**PersonId** is the person who last updated a record
   - RowCreate**Time** is the date and time something was created
-  - RowLastUpdate**Time** is the date and time something was modified
+  - RowUpdate**Time** is the date and time something was modified
   - Line**Amount** is a currency amount not dependent on the data type like DECIMAL(19, 4)
   - Group**Name** is the text string not dependent on the data type like VARCHAR() or NVARCHAR()
   - State**Code** indicates the short form of something

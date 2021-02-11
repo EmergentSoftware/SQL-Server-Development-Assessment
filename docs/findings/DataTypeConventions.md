@@ -8,7 +8,7 @@ layout: default
 
 # Data Type Conventions
 {: .no_toc }
-Poor data type choices can have significant impact on a database design and performance. A best practice is to right size the data type by understanding of the data.
+Poor data type choices can have significant impact on a database design and performance. A best practice is to right size the data type by understanding the data.
 
 ---
 

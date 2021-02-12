@@ -25,6 +25,7 @@
 **   This script will enabled contained users if it is executed on a SQL Server
 **   This script will create a contained database user if it does not exist
 **   This script will add or remove the username from the roles 
+**   This script can add or remove a role for ETL, this allows GRANT ALTER on tables that use TRUNCATE
 **  
 **   Change SSMS to connect with your database. "Ctrl+U" then type "[DATABASE-NAME]" and Enter Key.
 **   Modify the variables to set the database name, username, password, and roles. Then execute.
@@ -66,13 +67,18 @@ DECLARE
 
 /* Uncommon Roles Variables, talk to the SQL team to make sure you need any of these roles */
 DECLARE
-    @IsDBOwner          BIT = 0  /* 0 = Does not grant GOD permissions, 1 = Grants GOD permissions (Almost never should an app user be the owner of the database!) */
-   ,@IsDBAccessAdmin    BIT = 0  /* 0 = Can NOT add or remove access to the database, 1 = Can add or remove access to the database */
-   ,@IsDBBackupOperator BIT = 0  /* 0 = Can NOT back up the database, 1 = Can back up the database */
-   ,@IsDBDDLAdmin       BIT = 0  /* 0 = Can NOT run any Data Definition Language (DDL) command in the database, 1 = Can run any Data Definition Language (DDL) command in the database */
-   ,@IsDBDenyDataReader BIT = 0  /* 0 = Does NOT override any read data role permissions, 1 = Cannot read any data in user tables in the database */
-   ,@IsDBDenyDataWriter BIT = 0  /* 0 = Does NOT override any add, modify, or delete data role permissions, 1 = Cannot add, modify, or delete any data in user tables in the database */
-   ,@IsDBSecurityAdmin  BIT = 0; /* 0 = Can NOT modify role membership for custom roles and manage permissions, 1 = Can modify role membership for custom roles and manage permissions */
+    @IsDBOwner          BIT           = 0                       /* 0 = Does not grant GOD permissions, 1 = Grants GOD permissions (Almost never should an app user be the owner of the database!) */
+   ,@IsDBAccessAdmin    BIT           = 0                       /* 0 = Can NOT add or remove access to the database, 1 = Can add or remove access to the database */
+   ,@IsDBBackupOperator BIT           = 0                       /* 0 = Can NOT back up the database, 1 = Can back up the database */
+   ,@IsDBDDLAdmin       BIT           = 0                       /* 0 = Can NOT run any Data Definition Language (DDL) command in the database, 1 = Can run any Data Definition Language (DDL) command in the database */
+   ,@IsDBDenyDataReader BIT           = 0                       /* 0 = Does NOT override any read data role permissions, 1 = Cannot read any data in user tables in the database */
+   ,@IsDBDenyDataWriter BIT           = 0                       /* 0 = Does NOT override any add, modify, or delete data role permissions, 1 = Cannot add, modify, or delete any data in user tables in the database */
+   ,@IsDBSecurityAdmin  BIT           = 0                       /* 0 = Can NOT modify role membership for custom roles and manage permissions, 1 = Can modify role membership for custom roles and manage permissions */
+   ,@IsETL              BIT           = 0                       /* 0 = Can NOT perform tasks like TRUNCATE, 1 = Can perform tasks like TRUNCATE (There are other methods to allow TRUNCATE) */
+   ,@IsETLSchemas       NVARCHAR(MAX) = N'Staging,Integration'; /* Provide a comma delimited list of schemas to GRANT ALTER on */
+
+
+
 
 
 
@@ -117,19 +123,19 @@ IF @IsLoginUser = 1
 IF SERVERPROPERTY('EngineEdition') <> 5
    AND @IsLoginUser = 0
     BEGIN
-        DECLARE @StringToExecute NVARCHAR(MAX);
+        DECLARE @StringToExecuteContainedUsers NVARCHAR(MAX);
 
         PRINT 'Setting SQL Server to allow contained database authentication...';
         PRINT 'Altering database to set containment to partial...';
 
-        SET @StringToExecute = N'
+        SET @StringToExecuteContainedUsers = N'
 		EXEC sys.sp_configure ''show advanced'', 1;
 		RECONFIGURE;
 		EXEC sys.sp_configure ''contained database authentication'', 1;
 		RECONFIGURE;
 		ALTER DATABASE ' + QUOTENAME(@DatabaseName) + N' SET CONTAINMENT = PARTIAL;';
 
-        EXEC sys.sp_executesql @stmt = @StringToExecute;
+        EXEC sys.sp_executesql @stmt = @StringToExecuteContainedUsers;
     END;
 
 /*************************************************************************************************
@@ -174,6 +180,33 @@ ELSE
     END;
 GRANT EXECUTE TO db_executor;
 
+IF @IsETL = 1
+    BEGIN
+        IF DATABASE_PRINCIPAL_ID('db_etl') IS NULL
+            BEGIN
+                PRINT 'Creating db_etl role...';
+                CREATE ROLE db_etl;
+            END;
+        ELSE
+            BEGIN
+                PRINT 'The db_etl role already existed, skipping create...';
+            END;
+
+        IF LEN(@IsETLSchemas) > 0
+            BEGIN
+
+                DECLARE @StringToExecuteETL NVARCHAR(MAX) = N'';
+
+                SELECT
+                    @StringToExecuteETL = @StringToExecuteETL + N'GRANT ALTER ON SCHEMA :: ' + SS.value + N' TO db_etl;'
+                FROM
+                    STRING_SPLIT(@IsETLSchemas, ',') AS SS;
+
+
+                PRINT 'Executing: ' + @StringToExecuteETL;
+                EXEC sys.sp_executesql @stmt = @StringToExecuteETL;
+            END;
+    END;
 /*************************************************************************************************
 ** # Denying Execute on Stored Procedures
 **   If there are certain stored procedures that shouldn't be accessible to the application, you 
@@ -216,6 +249,17 @@ ELSE
     BEGIN
         PRINT 'Removing user to the db_executor role...';
         EXECUTE (N'ALTER ROLE db_executor DROP MEMBER ' + @UserName + ';');
+    END;
+
+IF @IsETL = 1
+    BEGIN
+        PRINT 'Adding user to the db_etl role...';
+        EXECUTE (N'ALTER ROLE db_etl ADD MEMBER ' + @UserName + ';');
+    END;
+ELSE
+    BEGIN
+        PRINT 'Removing user to the db_etl role...';
+        EXECUTE (N'ALTER ROLE db_etl DROP MEMBER ' + @UserName + ';');
     END;
 
 IF @IsDBOwner = 1
@@ -294,7 +338,6 @@ ELSE
         PRINT 'Removing user from the db_securityadmin role...';
         EXECUTE (N'ALTER ROLE db_securityadmin DROP MEMBER ' + @UserName + ';');
     END;
-
 GO]]></Code>
     </Snippet>
   </CodeSnippet>

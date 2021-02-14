@@ -1,0 +1,17 @@
+{
+  "id": "330dccdd-60ce-49d8-81ba-bc11894d6c41",
+  "name": "git",
+  "prefix": "git",
+  "description": "Grant Insert on Table",
+  "body": "GRANT INSERT ON $ObjectName$ TO $RoleOrUser$",
+  "placeholders": [
+    {
+      "name": "ObjectName",
+      "defaultValue": ""
+    },
+    {
+      "name": "RoleOrUser",
+      "defaultValue": ""
+    }
+  ]
+}

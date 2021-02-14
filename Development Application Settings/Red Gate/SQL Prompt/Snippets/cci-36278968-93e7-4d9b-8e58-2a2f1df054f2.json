@@ -1,0 +1,8 @@
+{
+  "id": "36278968-93e7-4d9b-8e58-2a2f1df054f2",
+  "name": "cci",
+  "prefix": "cci",
+  "description": "Create non-unique clustered index",
+  "body": "CREATE CLUSTERED INDEX $CURSOR$\nON -- table | view ( column1 [ ASC | DESC ], ..., columnN ( ASC | DESC ] )\n--WITH PAD_INDEX\n--    | FILLFACTOR = fillfactor\n--    | IGNORE_DUP_KEY\n--    | DROP_EXISTING\n--    | STATISTICS_NORECOMPUTE\n--    | SORT_IN_TEMPDB, .. as required\n-- ON filegroup\nGO\n",
+  "placeholders": []
+}

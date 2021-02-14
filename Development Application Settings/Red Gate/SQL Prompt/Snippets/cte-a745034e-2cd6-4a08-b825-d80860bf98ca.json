@@ -1,0 +1,8 @@
+{
+  "id": "a745034e-2cd6-4a08-b825-d80860bf98ca",
+  "name": "cte",
+  "prefix": "cte",
+  "description": "New common table expression",
+  "body": "WITH cteName\n    AS (\n        $SELECTIONSTART$SELECT col1\n        FROM someTable$SELECTIONEND$\n    )\n\nSELECT *\nFROM cteName",
+  "placeholders": []
+}

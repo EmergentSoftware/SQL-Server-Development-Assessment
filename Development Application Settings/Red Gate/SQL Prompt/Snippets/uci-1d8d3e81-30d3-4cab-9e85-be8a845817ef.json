@@ -1,0 +1,8 @@
+{
+  "id": "1d8d3e81-30d3-4cab-9e85-be8a845817ef",
+  "name": "uci",
+  "prefix": "uci",
+  "description": "Unique Clustered Index",
+  "body": "UNIQUE CLUSTERED INDEX uci ON ",
+  "placeholders": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "99f1f2b4-6aee-4464-9cd1-ee96479de411",
+  "name": "clrp",
+  "prefix": "clrp",
+  "description": "Create a CLR stored procedure",
+  "body": "--SET QUOTED_IDENTIFIER ON|OFF\n--SET ANSI_NULLS ON|OFF\n\nCREATE PROCEDURE $CURSOR$\n(\n\t--@parameter_name AS scalar_data_type ( = default_value ), ...\n)\n-- WITH EXECUTE AS CALLER|SELF|OWNER| 'user_name'\nAS EXTERNAL NAME -- assembly_name.class_name.static_method_name\nGO\n\n--SET QUOTED_IDENTIFIER ON|OFF\n--SET ANSI_NULLS ON|OFF",
+  "placeholders": []
+}

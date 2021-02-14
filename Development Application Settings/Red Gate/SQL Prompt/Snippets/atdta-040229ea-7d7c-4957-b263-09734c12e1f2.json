@@ -1,0 +1,8 @@
+{
+  "id": "040229ea-7d7c-4957-b263-09734c12e1f2",
+  "name": "atdta",
+  "prefix": "atdta",
+  "description": "Disable all triggers on table",
+  "body": "ALTER TABLE $CURSOR$ DISABLE TRIGGER ALL\nGO",
+  "placeholders": []
+}

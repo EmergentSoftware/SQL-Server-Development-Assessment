@@ -1,0 +1,8 @@
+{
+  "id": "be27a73c-15fb-40dd-992d-9b05c0f54d64",
+  "name": "be",
+  "prefix": "be",
+  "description": "Inserts BEGIN..END block",
+  "body": "BEGIN\n\t$CURSOR$\nEND",
+  "placeholders": []
+}

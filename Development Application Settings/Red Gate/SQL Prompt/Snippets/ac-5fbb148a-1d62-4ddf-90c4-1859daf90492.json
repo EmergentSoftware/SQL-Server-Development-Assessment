@@ -1,0 +1,8 @@
+{
+  "id": "5fbb148a-1d62-4ddf-90c4-1859daf90492",
+  "name": "ac",
+  "prefix": "ac",
+  "description": "ALTER COLUMN",
+  "body": "ALTER COLUMN ",
+  "placeholders": []
+}

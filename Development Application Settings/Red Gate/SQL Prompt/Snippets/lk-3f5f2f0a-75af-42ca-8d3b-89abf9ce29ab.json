@@ -1,0 +1,8 @@
+{
+  "id": "3f5f2f0a-75af-42ca-8d3b-89abf9ce29ab",
+  "name": "lk",
+  "prefix": "lk",
+  "description": "like '% %'",
+  "body": "LIKE '%$CURSOR$%'",
+  "placeholders": []
+}

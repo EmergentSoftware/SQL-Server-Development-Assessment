@@ -1,0 +1,8 @@
+{
+  "id": "a03dee51-9fe5-4a93-a8d0-1b41e9a92cd6",
+  "name": "today",
+  "prefix": "today",
+  "description": "CAST(GETDATE() as date)",
+  "body": "CAST(GETDATE() as DATE)",
+  "placeholders": []
+}

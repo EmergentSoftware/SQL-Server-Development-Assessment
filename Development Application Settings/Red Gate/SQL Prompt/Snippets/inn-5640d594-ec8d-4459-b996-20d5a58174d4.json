@@ -1,0 +1,8 @@
+{
+  "id": "5640d594-ec8d-4459-b996-20d5a58174d4",
+  "name": "inn",
+  "prefix": "inn",
+  "description": "Is Not Null",
+  "body": "IS NOT NULL ",
+  "placeholders": []
+}

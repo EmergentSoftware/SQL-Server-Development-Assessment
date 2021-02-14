@@ -1,0 +1,8 @@
+{
+  "id": "0e5c57be-ba55-47f6-b8ea-a81ee6d9030d",
+  "name": "atac",
+  "prefix": "atac",
+  "description": "Modify column",
+  "body": "ALTER TABLE $CURSOR$ ALTER COLUMN ",
+  "placeholders": []
+}

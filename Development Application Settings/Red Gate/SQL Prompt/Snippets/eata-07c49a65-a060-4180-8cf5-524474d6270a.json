@@ -1,0 +1,8 @@
+{
+  "id": "07c49a65-a060-4180-8cf5-524474d6270a",
+  "name": "eata",
+  "prefix": "eata",
+  "description": "Add column (enhanced edition)",
+  "body": "USE <database, sysname, $DBNAME$>\nGO\n \n-- Add a new column to the table\nALTER TABLE <Name of the Schema, sysname, dbo>.<Table name, sysname, $SELECTEDTEXT$>\n    ADD <Name of the new column, sysname, MyColumn> <datatype of this column,, datetime> <NULL or NOT NULL (allow nulls?),, NULL> -- <What is this column for?, sysname, unknown>\nGO\nEXEC sys.sp_addextendedproperty \n@name = N'MS_Description', \n@value = N'<What is this column for?, sysname, unknown>', \n@level0type = N'SCHEMA', @level0name = <Name of the Schema, sysname, dbo>, \n@level1type = N'TABLE',  @level1name = <Table name, sysname, $SELECTEDTEXT$>,\n@level2type = N'COLUMN', @level2name = <Name of the new column, sysname, MyColumn>;",
+  "placeholders": []
+}

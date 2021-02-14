@@ -1,0 +1,8 @@
+{
+  "id": "07a9ca4a-7a46-4d48-b769-458dfb67c936",
+  "name": "tmt",
+  "prefix": "tmt",
+  "description": "tSQLt.AssertEmptyTable - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "EXEC tSQLt.AssertEmptyTable @TableName = '$CURSOR$';",
+  "placeholders": []
+}

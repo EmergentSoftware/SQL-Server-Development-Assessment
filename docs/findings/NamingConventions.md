@@ -299,7 +299,7 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
 - Avoid repeating the table name except for:
   - **Table Primary Key:** A table primary key should include the table name and Id (e.g. PersonId) [See Using ID for Primary Key Column Name](#using-id-for-primary-key-column-name)
   - **Natural Common Words:** PatientNumber, PurchaseOrderNumber, DriversLicenseNumber
-  - **Generic Names:** When using generic names like "Number", "Name", "Description" & "Code" you can use repeat the table name
+  - **Generic Names:** When using generic names like "Number", "Name", "Description" & "Code" you can repeat the table name
     - Instead use "AccountNumber", "AddressTypeName", "ProductDescription" & "StateCode"
     - SELECT queries will need aliases when two tables use generic columns like "Name"
 - Use singular, not plural

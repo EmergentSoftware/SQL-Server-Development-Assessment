@@ -1,0 +1,8 @@
+{
+  "id": "9dc51561-fbd0-48d2-ac5f-65e662216b8f",
+  "name": "te",
+  "prefix": "te",
+  "description": "tSQLt.AssertEquals - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "EXEC tSQLt.AssertEquals @Expected = '$CURSOR$', @Actual;",
+  "placeholders": []
+}

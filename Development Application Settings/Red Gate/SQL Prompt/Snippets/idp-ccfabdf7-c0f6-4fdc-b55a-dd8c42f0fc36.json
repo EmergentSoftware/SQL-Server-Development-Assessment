@@ -1,0 +1,8 @@
+{
+  "id": "ccfabdf7-c0f6-4fdc-b55a-dd8c42f0fc36",
+  "name": "idp",
+  "prefix": "idp",
+  "description": "IF EXISTS DROP: Procedure - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "IF OBJECT_ID('$CURSOR$') IS NOT NULL DROP PROCEDURE ;\nGO\n",
+  "placeholders": []
+}

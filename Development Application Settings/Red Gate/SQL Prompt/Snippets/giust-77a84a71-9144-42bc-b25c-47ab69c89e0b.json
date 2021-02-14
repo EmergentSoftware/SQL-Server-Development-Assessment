@@ -1,0 +1,17 @@
+{
+  "id": "77a84a71-9144-42bc-b25c-47ab69c89e0b",
+  "name": "giust",
+  "prefix": "giust",
+  "description": "Grant Insert Update Select on Table",
+  "body": "GRANT INSERT UPDATE SELECT ON $ObjectName$ TO $RoleOrUser$;",
+  "placeholders": [
+    {
+      "name": "ObjectName",
+      "defaultValue": ""
+    },
+    {
+      "name": "RoleOrUser",
+      "defaultValue": ""
+    }
+  ]
+}

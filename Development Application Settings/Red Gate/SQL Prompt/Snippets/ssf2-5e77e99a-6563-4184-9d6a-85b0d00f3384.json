@@ -1,0 +1,8 @@
+{
+  "id": "5e77e99a-6563-4184-9d6a-85b0d00f3384",
+  "name": "ssf2",
+  "prefix": "ssf2",
+  "description": "SELECT * FROM fragment. Formatted nicely with tabs and new lines.",
+  "body": "SELECT \t* \nFROM  \t$CURSOR$",
+  "placeholders": []
+}

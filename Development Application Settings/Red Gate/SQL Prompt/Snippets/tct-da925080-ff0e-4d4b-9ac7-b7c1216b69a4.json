@@ -1,0 +1,8 @@
+{
+  "id": "da925080-ff0e-4d4b-9ac7-b7c1216b69a4",
+  "name": "tct",
+  "prefix": "tct",
+  "description": "tSQLt: Create Test - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "CREATE PROCEDURE $CURSOR$.[test ]\nAS\nBEGIN\n\nEND;\nGO\n",
+  "placeholders": []
+}

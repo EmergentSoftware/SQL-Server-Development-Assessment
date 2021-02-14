@@ -1,0 +1,8 @@
+{
+  "id": "c50bb30b-e175-4f1b-9b4e-53099b69b075",
+  "name": "at",
+  "prefix": "at",
+  "description": "ALTER TABLE",
+  "body": "ALTER TABLE ",
+  "placeholders": []
+}

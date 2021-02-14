@@ -1,0 +1,8 @@
+{
+  "id": "6fe464bb-14c1-4fc7-8e30-aa2dce4b3755",
+  "name": "df",
+  "prefix": "df",
+  "description": "DELETE FROM fragment",
+  "body": "DELETE FROM ",
+  "placeholders": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "39c3acc5-3fd1-46a7-9fc9-b182f113c96e",
+  "name": "atdt",
+  "prefix": "atdt",
+  "description": "Disable trigger",
+  "body": "ALTER TABLE $CURSOR$ DISABLE TRIGGER ",
+  "placeholders": []
+}

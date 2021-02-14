@@ -1,0 +1,8 @@
+{
+  "id": "7e12b596-6b70-44bb-ba33-735a17d3e8c4",
+  "name": "rnum",
+  "prefix": "rnum",
+  "description": "ROW_NUMBER() OVER () fragment",
+  "body": "ROW_NUMBER() OVER (ORDER BY $SELECTIONSTART$somecol$SELECTIONEND$) ",
+  "placeholders": []
+}

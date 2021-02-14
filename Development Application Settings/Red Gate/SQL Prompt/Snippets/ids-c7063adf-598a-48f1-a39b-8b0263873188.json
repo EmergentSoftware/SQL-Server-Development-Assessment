@@ -1,0 +1,8 @@
+{
+  "id": "c7063adf-598a-48f1-a39b-8b0263873188",
+  "name": "ids",
+  "prefix": "ids",
+  "description": "IF EXISTS DROP: Synonym - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "IF OBJECT_ID('$CURSOR$') IS NOT NULL DROP SYNONYM ;",
+  "placeholders": []
+}

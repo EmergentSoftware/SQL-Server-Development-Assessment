@@ -1,0 +1,8 @@
+{
+  "id": "5a7bc141-ae05-46f7-bc7b-654bbdf9d302",
+  "name": "cv",
+  "prefix": "cv",
+  "description": "Create a view",
+  "body": "CREATE VIEW $CURSOR$\n--WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA\nAS\n\tSELECT /* query specification */\n-- WITH CHECK OPTION\nGO\n",
+  "placeholders": []
+}

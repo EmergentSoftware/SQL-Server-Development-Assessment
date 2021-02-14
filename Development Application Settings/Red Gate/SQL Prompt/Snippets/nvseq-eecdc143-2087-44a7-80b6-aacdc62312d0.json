@@ -1,0 +1,21 @@
+{
+  "id": "eecdc143-2087-44a7-80b6-aacdc62312d0",
+  "name": "nvseq",
+  "prefix": "nvseq",
+  "description": "Next Value from a Sequence",
+  "body": "SELECT NEXT VALUE FOR $SchemaName$.$SequenceName$ as $Alias$; ",
+  "placeholders": [
+    {
+      "name": "SchemaName",
+      "defaultValue": ""
+    },
+    {
+      "name": "SequenceName",
+      "defaultValue": ""
+    },
+    {
+      "name": "Alias",
+      "defaultValue": "NextValue"
+    }
+  ]
+}

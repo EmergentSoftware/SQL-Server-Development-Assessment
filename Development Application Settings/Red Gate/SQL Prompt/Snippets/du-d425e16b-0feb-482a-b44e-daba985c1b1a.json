@@ -1,0 +1,8 @@
+{
+  "id": "d425e16b-0feb-482a-b44e-daba985c1b1a",
+  "name": "du",
+  "prefix": "du",
+  "description": "Drop a user",
+  "body": "DROP USER ",
+  "placeholders": []
+}

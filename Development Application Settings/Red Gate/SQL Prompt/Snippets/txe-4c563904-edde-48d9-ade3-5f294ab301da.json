@@ -1,0 +1,8 @@
+{
+  "id": "4c563904-edde-48d9-ade3-5f294ab301da",
+  "name": "txe",
+  "prefix": "txe",
+  "description": "tSQLt.ExpectException - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "EXEC tSQLt.ExpectException @ExpectedMessage = '$CURSOR$', @ExpectedSeverity = NULL, @ExpectedState = NULL;",
+  "placeholders": []
+}

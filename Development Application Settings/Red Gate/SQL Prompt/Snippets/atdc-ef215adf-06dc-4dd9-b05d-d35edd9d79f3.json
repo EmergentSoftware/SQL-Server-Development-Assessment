@@ -1,0 +1,8 @@
+{
+  "id": "ef215adf-06dc-4dd9-b05d-d35edd9d79f3",
+  "name": "atdc",
+  "prefix": "atdc",
+  "description": "Drop constraint",
+  "body": "ALTER TABLE $CURSOR$ DROP CONSTRAINT ",
+  "placeholders": []
+}

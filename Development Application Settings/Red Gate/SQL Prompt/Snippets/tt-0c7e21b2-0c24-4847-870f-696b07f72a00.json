@@ -1,0 +1,8 @@
+{
+  "id": "0c7e21b2-0c24-4847-870f-696b07f72a00",
+  "name": "tt",
+  "prefix": "tt",
+  "description": "Truncate Table",
+  "body": "TRUNCATE TABLE ",
+  "placeholders": []
+}

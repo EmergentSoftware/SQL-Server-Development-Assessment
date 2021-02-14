@@ -1,0 +1,8 @@
+{
+  "id": "cefe535f-adae-47e9-b329-6df61ec5f92f",
+  "name": "smf",
+  "prefix": "smf",
+  "description": "SELECT SUM() FROM",
+  "body": "SELECT FORMAT(SUM($CURSOR$),'#,##0') FROM ",
+  "placeholders": []
+}

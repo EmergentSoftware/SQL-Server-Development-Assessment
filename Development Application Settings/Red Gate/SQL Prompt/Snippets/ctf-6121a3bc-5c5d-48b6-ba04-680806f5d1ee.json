@@ -1,0 +1,8 @@
+{
+  "id": "6121a3bc-5c5d-48b6-ba04-680806f5d1ee",
+  "name": "ctf",
+  "prefix": "ctf",
+  "description": "ES: Create multi-statement table-valued function",
+  "body": "/**********************************************************************************************************************\n** Author:      $USER$\n** Created On:  $DATE$\n** Modified On: $DATE$\n** Description: <FunctionDescription,, Description>\n**********************************************************************************************************************/\nCREATE FUNCTION <Schema Name, SYSNAME, dbo>.<Function Name, SYSNAME, FunctionName>(\n\t-- @ParameterName1 AS DataType [ = DefaultValue ]\n\t-- @ParameterName2 AS DataType [ = DefaultValue ]\n) RETURNS <@TableVariableName, SYSNAME, @VariableName> TABLE (\n\t<ColumnName1, SYSNAME, ColumnName1> <ColumnName1DataType, , INT> NOT NULL,\n\t<ColumnName2, SYSNAME, ColumnName2> <ColumnName2DataType, , INT> NOT NULL\n)\n-- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'\nAS\nBEGIN\n\t-- Return the result of the function\n\tINSERT INTO <@TableVariableName, SYSNAME, @VariableName> (\n\t\t<ColumnName1, SYSNAME, ColumnName1>,\n\t\t<ColumnName2, SYSNAME, ColumnName2>\n\t)\n\t$SELECTIONSTART$SELECT <ColumnName1, SYSNAME, ColumnName1> = 1, <ColumnName2, SYSNAME, ColumnName2> = 2;$SELECTIONEND$\n\tRETURN;\nEND\nGO",
+  "placeholders": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "08ee8abe-ac13-4ebe-a3a0-dd5b7d780926",
+  "name": "idt",
+  "prefix": "idt",
+  "description": "IF EXISTS DROP: Table - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "IF OBJECT_ID('$CURSOR$') IS NOT NULL DROP TABLE ;",
+  "placeholders": []
+}

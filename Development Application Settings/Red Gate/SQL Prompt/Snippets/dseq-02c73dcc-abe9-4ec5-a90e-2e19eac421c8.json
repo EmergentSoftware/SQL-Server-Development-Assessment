@@ -1,0 +1,17 @@
+{
+  "id": "02c73dcc-abe9-4ec5-a90e-2e19eac421c8",
+  "name": "dseq",
+  "prefix": "dseq",
+  "description": "Drop sequence",
+  "body": "DROP SEQUENCE $SchemaName$.$SequenceName$;",
+  "placeholders": [
+    {
+      "name": "SchemaName",
+      "defaultValue": ""
+    },
+    {
+      "name": "SequenceName",
+      "defaultValue": ""
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "a9ba3e1d-9d41-4f84-8d68-b59019d59077",
+  "name": "ctt",
+  "prefix": "ctt",
+  "description": "Create TEMP Table",
+  "body": "IF (OBJECT_ID(N'tempdb..#$table_name$') IS NOT NULL) DROP TABLE #$table_name$ ;\nCREATE TABLE #$table_name$ ($CURSOR$);",
+  "placeholders": [
+    {
+      "name": "table_name",
+      "defaultValue": "tmpTable"
+    }
+  ]
+}

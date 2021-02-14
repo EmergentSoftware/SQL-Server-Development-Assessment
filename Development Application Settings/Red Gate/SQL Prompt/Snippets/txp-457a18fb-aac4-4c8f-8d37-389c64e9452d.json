@@ -1,0 +1,8 @@
+{
+  "id": "457a18fb-aac4-4c8f-8d37-389c64e9452d",
+  "name": "txp",
+  "prefix": "txp",
+  "description": "tSQLt.ExpectException:Pattern - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "EXEC tSQLt.ExpectException @ExpectedMessagePattern = '$CURSOR$', @ExpectedSeverity = NULL, @ExpectedState = NULL;",
+  "placeholders": []
+}

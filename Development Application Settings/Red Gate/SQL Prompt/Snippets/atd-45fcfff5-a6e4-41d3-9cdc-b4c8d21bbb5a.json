@@ -1,0 +1,8 @@
+{
+  "id": "45fcfff5-a6e4-41d3-9cdc-b4c8d21bbb5a",
+  "name": "atd",
+  "prefix": "atd",
+  "description": "Drop column",
+  "body": "ALTER TABLE $CURSOR$ DROP COLUMN",
+  "placeholders": []
+}

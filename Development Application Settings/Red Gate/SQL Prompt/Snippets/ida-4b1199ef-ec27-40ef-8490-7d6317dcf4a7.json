@@ -1,0 +1,8 @@
+{
+  "id": "4b1199ef-ec27-40ef-8490-7d6317dcf4a7",
+  "name": "ida",
+  "prefix": "ida",
+  "description": "IF EXISTS DROP: Assembly - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "IF ASSEMBLYPROPERTY('$CURSOR$','CLRName') IS NOT NULL DROP ASSEMBLY ;",
+  "placeholders": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "3efeb915-d830-4c47-9056-2518d771cb8f",
+  "name": "scf",
+  "prefix": "scf",
+  "description": "Count number of records returned by query, formatted nicely",
+  "body": "SELECT FORMAT(COUNT(*),'#,##0') FROM ",
+  "placeholders": []
+}

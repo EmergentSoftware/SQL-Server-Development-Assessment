@@ -1,0 +1,8 @@
+{
+  "id": "3b5a7fe2-bda9-473b-abbc-48f72272eb60",
+  "name": "setvar",
+  "prefix": "setvar",
+  "description": "SQL CMD setvar fragment",
+  "body": ":setvar $CURSOR$ \"RealValue\" --ALT Q M to toggle SQL CMD mode",
+  "placeholders": []
+}

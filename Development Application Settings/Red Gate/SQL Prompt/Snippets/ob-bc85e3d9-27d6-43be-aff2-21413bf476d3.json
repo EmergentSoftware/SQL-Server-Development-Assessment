@@ -1,0 +1,8 @@
+{
+  "id": "bc85e3d9-27d6-43be-aff2-21413bf476d3",
+  "name": "ob",
+  "prefix": "ob",
+  "description": "ORDER BY",
+  "body": "ORDER BY ",
+  "placeholders": []
+}

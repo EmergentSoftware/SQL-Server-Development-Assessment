@@ -1,0 +1,17 @@
+{
+  "id": "d1b754e5-16bf-4f1f-a0d7-233f3d15d4c5",
+  "name": "mmddyyyy",
+  "prefix": "mmddyyyy",
+  "description": "MM/DD/YYYY (101) Date Format",
+  "body": "CONVERT(VARCHAR(10), $column_name$, 101) AS $alias$",
+  "placeholders": [
+    {
+      "name": "alias",
+      "defaultValue": ""
+    },
+    {
+      "name": "column_name",
+      "defaultValue": ""
+    }
+  ]
+}

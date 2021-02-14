@@ -1,0 +1,8 @@
+{
+  "id": "a0f36423-8b7e-432b-8abb-94fa37f82122",
+  "name": "st100",
+  "prefix": "st100",
+  "description": "SELECT top 100 rows",
+  "body": "SELECT TOP (100) * FROM $CURSOR$",
+  "placeholders": []
+}

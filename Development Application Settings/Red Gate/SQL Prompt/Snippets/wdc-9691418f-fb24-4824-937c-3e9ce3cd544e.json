@@ -1,0 +1,8 @@
+{
+  "id": "9691418f-fb24-4824-937c-3e9ce3cd544e",
+  "name": "wdc",
+  "prefix": "wdc",
+  "description": "WITH (DATA_COMPRESSION = PAGE)",
+  "body": "WITH (DATA_COMPRESSION = PAGE)",
+  "placeholders": []
+}

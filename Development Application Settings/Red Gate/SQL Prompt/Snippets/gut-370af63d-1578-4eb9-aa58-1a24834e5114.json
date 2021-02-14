@@ -1,0 +1,17 @@
+{
+  "id": "370af63d-1578-4eb9-aa58-1a24834e5114",
+  "name": "gut",
+  "prefix": "gut",
+  "description": "Grant Update on Table",
+  "body": "GRANT UPDATE ON $ObjectName$ TO $RoleOrUser$;",
+  "placeholders": [
+    {
+      "name": "ObjectName",
+      "defaultValue": ""
+    },
+    {
+      "name": "RoleOrUser",
+      "defaultValue": ""
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "0fb515a5-2832-42e0-829a-3cfffe271abd",
+  "name": "cdbsnap",
+  "prefix": "cdbsnap",
+  "description": "Create a database snapshot",
+  "body": "CREATE DATABASE $CURSOR$ \nON \n    (\n    NAME = /* logical_file_name */,\n    FILENAME = /* 'os_file_name' */\n    ) [ ,...n ] \nAS SNAPSHOT OF /* source_database_name */\nGO\n",
+  "placeholders": []
+}

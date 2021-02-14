@@ -1,0 +1,8 @@
+{
+  "id": "e31a0b75-d45a-4c8d-b0fe-ed89eb7378c6",
+  "name": "header",
+  "prefix": "header",
+  "description": "ES: Template header for stored procedure",
+  "body": "/**********************************************************************************************************************\n** Author:      $USER$\n** Created On:  $DATE$\n** Modified On: $DATE$\n** Description: $CURSOR$\n**********************************************************************************************************************/",
+  "placeholders": []
+}

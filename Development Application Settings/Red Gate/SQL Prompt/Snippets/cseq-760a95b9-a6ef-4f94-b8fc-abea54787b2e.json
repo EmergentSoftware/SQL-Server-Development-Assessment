@@ -1,0 +1,33 @@
+{
+  "id": "760a95b9-a6ef-4f94-b8fc-abea54787b2e",
+  "name": "cseq",
+  "prefix": "cseq",
+  "description": "Create Sequence starts with x increment by y cache and cicle",
+  "body": "CREATE SEQUENCE $SchemaName$.$SequenceName$ \nSTART WITH $Start$\nINCREMENT BY $End$\n$Cycle$\n$Cache$;",
+  "placeholders": [
+    {
+      "name": "SchemaName",
+      "defaultValue": ""
+    },
+    {
+      "name": "SequenceName",
+      "defaultValue": ""
+    },
+    {
+      "name": "Start",
+      "defaultValue": "1"
+    },
+    {
+      "name": "End",
+      "defaultValue": "2147483647"
+    },
+    {
+      "name": "Cycle",
+      "defaultValue": "CYCLE"
+    },
+    {
+      "name": "Cache",
+      "defaultValue": "CACHE"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ccf88047-11ba-4e2b-8dcc-59c31ac4a28f",
+  "name": "idf",
+  "prefix": "idf",
+  "description": "IF EXISTS DROP: Function - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "IF OBJECT_ID('$CURSOR$') IS NOT NULL DROP FUNCTION ;\nGO\n",
+  "placeholders": []
+}

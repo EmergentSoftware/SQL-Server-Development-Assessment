@@ -1,0 +1,8 @@
+{
+  "id": "0e250b2b-5e69-49cb-94d8-756e776cd599",
+  "name": "idv",
+  "prefix": "idv",
+  "description": "IF EXISTS DROP: View - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "IF OBJECT_ID('$CURSOR$') IS NOT NULL DROP VIEW ;\nGO\n",
+  "placeholders": []
+}

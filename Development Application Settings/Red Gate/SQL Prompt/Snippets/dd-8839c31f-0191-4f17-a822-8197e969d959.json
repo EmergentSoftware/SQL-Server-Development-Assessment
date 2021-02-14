@@ -1,0 +1,8 @@
+{
+  "id": "8839c31f-0191-4f17-a822-8197e969d959",
+  "name": "dd",
+  "prefix": "dd",
+  "description": "Drop a database",
+  "body": "DROP DATABASE ",
+  "placeholders": []
+}

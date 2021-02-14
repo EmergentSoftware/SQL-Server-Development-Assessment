@@ -1,0 +1,8 @@
+{
+  "id": "ec65b7c5-2414-43ed-9514-faf11e123f08",
+  "name": "citf",
+  "prefix": "citf",
+  "description": "ES: Create inline table-valued function",
+  "body": "/**********************************************************************************************************************\n** Author:      $USER$\n** Created On:  $DATE$\n** Modified On: $DATE$\n** Description: <FunctionDescription,, Description>\n**********************************************************************************************************************/\nCREATE FUNCTION <Schema Name, SYSNAME, dbo>.<Function Name, SYSNAME, FunctionName>(\n\t-- @ParameterName AS DataType [ = DefaultValue ]\n) RETURNS TABLE\nAS\nRETURN\n\t-- Return the result of the function\n\t$SELECTIONSTART$SELECT ColumnName = 1;$SELECTIONEND$\nGO",
+  "placeholders": []
+}

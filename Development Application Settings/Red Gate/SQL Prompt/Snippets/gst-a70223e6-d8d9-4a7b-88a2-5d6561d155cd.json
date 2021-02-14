@@ -1,0 +1,17 @@
+{
+  "id": "a70223e6-d8d9-4a7b-88a2-5d6561d155cd",
+  "name": "gst",
+  "prefix": "gst",
+  "description": "Grant Select on Table",
+  "body": "GRANT SELECT ON $ObjectName$ TO $RoleOrUser$;",
+  "placeholders": [
+    {
+      "name": "ObjectName",
+      "defaultValue": ""
+    },
+    {
+      "name": "RoleOrUser",
+      "defaultValue": ""
+    }
+  ]
+}

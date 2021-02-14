@@ -1,0 +1,8 @@
+{
+  "id": "b053855e-a834-4f4f-b334-3784278354b0",
+  "name": "is",
+  "prefix": "is",
+  "description": "Shortcut for INFORMATION_SCHEMA",
+  "body": "INFORMATION_SCHEMA",
+  "placeholders": []
+}

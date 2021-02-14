@@ -1,0 +1,17 @@
+{
+  "id": "add4cbf9-cf13-4e71-a8bb-c717acf3a1b4",
+  "name": "mmddyyyyhhmm",
+  "prefix": "mmddyyyyhhmm",
+  "description": "Month - Day - Year - hour - minute",
+  "body": "CONVERT(VARCHAR(10), $date_column$, 101) + ' ' + LEFT(CONVERT(VARCHAR(8), $date_column$, 108),5) as $alias$",
+  "placeholders": [
+    {
+      "name": "date_column",
+      "defaultValue": ""
+    },
+    {
+      "name": "alias",
+      "defaultValue": ""
+    }
+  ]
+}

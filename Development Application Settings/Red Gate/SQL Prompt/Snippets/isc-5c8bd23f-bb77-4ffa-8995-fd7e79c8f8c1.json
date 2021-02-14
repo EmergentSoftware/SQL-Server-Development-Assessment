@@ -1,0 +1,8 @@
+{
+  "id": "5c8bd23f-bb77-4ffa-8995-fd7e79c8f8c1",
+  "name": "isc",
+  "prefix": "isc",
+  "description": "Column Information Grabber",
+  "body": "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME LIKE '%$CURSOR$%' ORDER BY TABLE_SCHEMA, TABLE_NAME ",
+  "placeholders": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "4b208cf2-995f-41ac-9883-ff9ad9790b54",
+  "name": "sst",
+  "prefix": "sst",
+  "description": "SELECT TOP 1000 * FROM",
+  "body": "SELECT TOP 1000 * FROM ",
+  "placeholders": []
+}

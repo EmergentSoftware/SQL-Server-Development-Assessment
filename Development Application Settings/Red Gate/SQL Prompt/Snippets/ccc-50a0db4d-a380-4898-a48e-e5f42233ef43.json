@@ -1,0 +1,8 @@
+{
+  "id": "50a0db4d-a380-4898-a48e-e5f42233ef43",
+  "name": "ccc",
+  "prefix": "ccc",
+  "description": "CREATE CELL CALCULATION fragment",
+  "body": "CREATE CELL CALCULATION ",
+  "placeholders": []
+}

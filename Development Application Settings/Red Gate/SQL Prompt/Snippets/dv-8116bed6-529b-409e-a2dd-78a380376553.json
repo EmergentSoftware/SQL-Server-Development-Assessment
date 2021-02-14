@@ -1,0 +1,8 @@
+{
+  "id": "8116bed6-529b-409e-a2dd-78a380376553",
+  "name": "dv",
+  "prefix": "dv",
+  "description": "Drop a view",
+  "body": "DROP VIEW ",
+  "placeholders": []
+}

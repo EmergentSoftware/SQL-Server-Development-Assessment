@@ -1,0 +1,8 @@
+{
+  "id": "41af3a3e-7ac3-4956-b829-c150c40ec7d1",
+  "name": "tca",
+  "prefix": "tca",
+  "description": "tSQLt: SELECT INTO #Actual - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "SELECT *\nINTO #Actual\nFROM $CURSOR$;\n",
+  "placeholders": []
+}

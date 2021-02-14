@@ -1,0 +1,8 @@
+{
+  "id": "6654906d-f2ec-400d-be64-3e45afff3ed8",
+  "name": "san",
+  "prefix": "san",
+  "description": "Change the current ANSI_NULLS setting",
+  "body": "SET ANSI_NULLS ",
+  "placeholders": []
+}

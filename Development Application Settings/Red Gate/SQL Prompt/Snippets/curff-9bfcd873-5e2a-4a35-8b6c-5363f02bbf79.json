@@ -1,0 +1,8 @@
+{
+  "id": "9bfcd873-5e2a-4a35-8b6c-5363f02bbf79",
+  "name": "curff",
+  "prefix": "curff",
+  "description": "Boilerplate code for fast-forward read-only cursor",
+  "body": "DECLARE /* variables */\n\nDECLARE $CURSOR$ CURSOR FAST_FORWARD READ_ONLY FOR\n/* SELECT statement */\n\nOPEN /* cursor name */\n\nFETCH NEXT FROM /* cursor name */ INTO /* variables */\n\nWHILE @@FETCH_STATUS = 0\nBEGIN\n\n/* cursor logic */\n\nFETCH NEXT FROM /* cursor name */ INTO /* variables */\n\nEND\n\nCLOSE /* cursor name */\nDEALLOCATE /* cursor name */",
+  "placeholders": []
+}

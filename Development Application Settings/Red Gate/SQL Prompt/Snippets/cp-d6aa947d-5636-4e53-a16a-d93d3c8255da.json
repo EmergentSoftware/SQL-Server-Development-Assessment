@@ -1,0 +1,8 @@
+{
+  "id": "d6aa947d-5636-4e53-a16a-d93d3c8255da",
+  "name": "cp",
+  "prefix": "cp",
+  "description": "ES: Create a stored procedure",
+  "body": "--SET QUOTED_IDENTIFIER ON|OFF\n--SET ANSI_NULLS ON|OFF\n/**********************************************************************************************************************\n** Author:      $USER$\n** Created On:  $DATE$\n** Modified On: $DATE$\n** Description: Description\n**********************************************************************************************************************/\nCREATE OR ALTER PROCEDURE <Schema Name, SYSNAME, dbo>.<Procedure Name, SYSNAME, BusinessEntityAction>\n\t-- @ParameterName AS DataType [ = DefaultValue ]\n-- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'\nAS\n\tBEGIN\n\t\tSET NOCOUNT ON;\n\t\n\t\t$SELECTIONSTART$--SELECT\n\t\t--\tTableId     = TN.TableId\n\t\t--   ,ColumnName1 = TN.Column1\n\t\t--   ,ColumnName2 = TN.Column2\n\t\t--FROM\n\t\t--\tSchemaName.TableName AS TN\n\t\t--WHERE\n\t\t--\tTN.TableId = @TableId;$SELECTIONEND$\n\n\tEND\nGO\n--SET QUOTED_IDENTIFIER ON|OFF\n--SET ANSI_NULLS ON|OFF",
+  "placeholders": []
+}

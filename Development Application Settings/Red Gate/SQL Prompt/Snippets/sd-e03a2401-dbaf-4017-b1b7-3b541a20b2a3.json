@@ -1,0 +1,8 @@
+{
+  "id": "e03a2401-dbaf-4017-b1b7-3b541a20b2a3",
+  "name": "sd",
+  "prefix": "sd",
+  "description": "SELECT DISTINCT",
+  "body": "SELECT DISTINCT ",
+  "placeholders": []
+}

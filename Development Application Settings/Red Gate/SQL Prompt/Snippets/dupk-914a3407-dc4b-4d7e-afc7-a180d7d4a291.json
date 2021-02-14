@@ -1,0 +1,25 @@
+{
+  "id": "914a3407-dc4b-4d7e-afc7-a180d7d4a291",
+  "name": "dupk",
+  "prefix": "dupk",
+  "description": "Check for n-uplicate values on a column",
+  "body": "SELECT\n\t$Column$\nFROM\n\t$SchemaName$.$ObjectName$\nGROUP BY\n\t$Column$\nHAVING\n\tCOUNT(1) > $Occurrences$;",
+  "placeholders": [
+    {
+      "name": "Column",
+      "defaultValue": ""
+    },
+    {
+      "name": "SchemaName",
+      "defaultValue": ""
+    },
+    {
+      "name": "ObjectName",
+      "defaultValue": ""
+    },
+    {
+      "name": "Occurrences",
+      "defaultValue": ""
+    }
+  ]
+}

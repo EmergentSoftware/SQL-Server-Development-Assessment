@@ -1,0 +1,8 @@
+{
+  "id": "b62377c6-24e5-412b-8323-6c8eba37990d",
+  "name": "num",
+  "prefix": "num",
+  "description": "Format a big number into a readable format",
+  "body": "FORMAT($CURSOR$,'#,##0')",
+  "placeholders": []
+}

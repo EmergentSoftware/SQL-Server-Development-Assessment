@@ -1,0 +1,8 @@
+{
+  "id": "2d8c5136-2612-4360-a3d1-a76c0d4f4262",
+  "name": "tft",
+  "prefix": "tft",
+  "description": "tSQLt.FakeTable - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "EXEC tSQLt.FakeTable @TableName = '$CURSOR$', @Identity = 0, @ComputedColumns = 0, @Defaults = 0;",
+  "placeholders": []
+}

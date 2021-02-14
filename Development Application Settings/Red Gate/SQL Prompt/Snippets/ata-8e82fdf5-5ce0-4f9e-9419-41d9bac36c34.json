@@ -1,0 +1,8 @@
+{
+  "id": "8e82fdf5-5ce0-4f9e-9419-41d9bac36c34",
+  "name": "ata",
+  "prefix": "ata",
+  "description": "Add column",
+  "body": "ALTER TABLE $CURSOR$ ADD ",
+  "placeholders": []
+}

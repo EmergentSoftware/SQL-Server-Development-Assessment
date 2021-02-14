@@ -1,0 +1,17 @@
+{
+  "id": "286dca70-9277-4472-b6f1-128d94501f07",
+  "name": "gep",
+  "prefix": "gep",
+  "description": "Grant Execute on Procedure",
+  "body": "GRANT EXECUTE ON $ProcedureName$ TO $RoleOrUser$;",
+  "placeholders": [
+    {
+      "name": "ProcedureName",
+      "defaultValue": ""
+    },
+    {
+      "name": "RoleOrUser",
+      "defaultValue": ""
+    }
+  ]
+}

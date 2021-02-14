@@ -1,0 +1,8 @@
+{
+  "id": "9f61ad71-b9e4-45bb-8700-f139fcaa275f",
+  "name": "numc",
+  "prefix": "numc",
+  "description": "Nicely formatted COUNT(*) as numRows",
+  "body": "FORMAT(COUNT(*),'#,##0') AS NumRows ",
+  "placeholders": []
+}

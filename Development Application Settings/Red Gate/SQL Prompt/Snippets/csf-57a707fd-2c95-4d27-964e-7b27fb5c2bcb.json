@@ -1,0 +1,8 @@
+{
+  "id": "57a707fd-2c95-4d27-964e-7b27fb5c2bcb",
+  "name": "csf",
+  "prefix": "csf",
+  "description": "ES: Create scalar function",
+  "body": "/**********************************************************************************************************************\n** Author:      $USER$\n** Created On:  $DATE$\n** Modified On: $DATE$\n** Description: <FunctionDescription,, Description>\n**********************************************************************************************************************/\nCREATE OR ALTER FUNCTION <Schema Name, SYSNAME, dbo>.<Function Name, SYSNAME, FunctionName>(\n\t-- @ParameterName AS DataType [ = DefaultValue ]\n) RETURNS <ReturnType,,INT>\n-- WITH ENCRYPTION, SCHEMABINDING, RETURNS NULL ON NULL INPUT, CALLED ON NULL INPUT, EXECUTE AS CALLER|SELF|OWNER 'user_name', INLINE = {ON|OFF}\nAS\n\tBEGIN\n\t\t-- Determine if an UDF is the best option. SQL Server 2019+ might possibly inline this function.\n\t\t-- User-defined scalar functions suck – even when they don’t access data.\n\t\t-- https://www.brentozar.com/archive/2019/05/user-defined-scalar-functions-suck-even-when-they-dont-access-data/\n\n  \t\t-- Declare the return variable\n\t\tDECLARE <@ResultVariable, sysname, @VariableName> <ReturnType,,int>\n\n\t\t-- Add the T-SQL statements to compute the return value\n\t\t$SELECTIONSTART$SELECT <@ResultVariable, sysname, @VariableName> = @ParameterName$SELECTIONEND$\n\n\t\t-- Return the result of the function\n\t\tRETURN <@ResultVariable, sysname, @VariableName>\n\tEND\nGO",
+  "placeholders": []
+}

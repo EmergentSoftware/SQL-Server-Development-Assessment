@@ -1,0 +1,8 @@
+{
+  "id": "d549e06d-2453-49f7-bf1c-8f9249e7072a",
+  "name": "ct",
+  "prefix": "ct",
+  "description": "ES: Create a table",
+  "body": "CREATE TABLE <SCHEMA NAME, SYSNAME, dbo>.<TABLE NAME, SYSNAME, TableName>\n(\n\t<PRIMARY KEY COLUMN, , TableNameId> INT NOT NULL IDENTITY(1, 1) CONSTRAINT <PRIMARY KEY, , TableNameId> PRIMARY KEY, \n\t<COLUMN NAME, SYSNAME, FirstName> NVARCHAR(100) NOT NULL$CURSOR$\n)\nGO",
+  "placeholders": []
+}

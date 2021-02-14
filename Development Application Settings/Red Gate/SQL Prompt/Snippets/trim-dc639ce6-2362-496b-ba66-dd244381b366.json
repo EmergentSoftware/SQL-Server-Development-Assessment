@@ -1,0 +1,8 @@
+{
+  "id": "dc639ce6-2362-496b-ba66-dd244381b366",
+  "name": "trim",
+  "prefix": "trim",
+  "description": "Left and Right Trim",
+  "body": "LTRIM(RTRIM($CURSOR$))",
+  "placeholders": []
+}

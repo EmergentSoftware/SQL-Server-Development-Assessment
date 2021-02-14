@@ -1,0 +1,8 @@
+{
+  "id": "d1b02a3b-27ca-43be-a726-72f214f823ac",
+  "name": "idtr",
+  "prefix": "idtr",
+  "description": "IF EXISTS DROP: Trigger - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "IF OBJECT_ID('$CURSOR$') IS NOT NULL DROP TRIGGER ;\nGO\n",
+  "placeholders": []
+}

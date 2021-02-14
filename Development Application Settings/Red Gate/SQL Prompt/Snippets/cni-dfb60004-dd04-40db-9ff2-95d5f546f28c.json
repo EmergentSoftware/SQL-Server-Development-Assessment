@@ -1,0 +1,8 @@
+{
+  "id": "dfb60004-dd04-40db-9ff2-95d5f546f28c",
+  "name": "cni",
+  "prefix": "cni",
+  "description": "Create non-unique nonclustered index",
+  "body": "CREATE NONCLUSTERED INDEX $CURSOR$\nON -- table | view ( column1 [ ASC | DESC ], ..., columnN ( ASC | DESC ] )\n--WITH PAD_INDEX\n--    | FILLFACTOR = fillfactor\n--    | IGNORE_DUP_KEY\n--    | DROP_EXISTING\n--    | STATISTICS_NORECOMPUTE\n--    | SORT_IN_TEMPDB, .. as required\n-- ON filegroup\nGO\n",
+  "placeholders": []
+}

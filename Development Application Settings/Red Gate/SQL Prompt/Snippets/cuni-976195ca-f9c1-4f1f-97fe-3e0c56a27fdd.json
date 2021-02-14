@@ -1,0 +1,8 @@
+{
+  "id": "976195ca-f9c1-4f1f-97fe-3e0c56a27fdd",
+  "name": "cuni",
+  "prefix": "cuni",
+  "description": "Create unique nonclustered index",
+  "body": "CREATE UNIQUE NONCLUSTERED INDEX $CURSOR$\nON -- table | view ( column1 [ ASC | DESC ], ..., columnN ( ASC | DESC ] )\n--WITH PAD_INDEX\n--    | FILLFACTOR = fillfactor\n--    | IGNORE_DUP_KEY\n--    | DROP_EXISTING\n--    | STATISTICS_NORECOMPUTE\n--    | SORT_IN_TEMPDB, .. as required\n-- ON filegroup\nGO\n",
+  "placeholders": []
+}

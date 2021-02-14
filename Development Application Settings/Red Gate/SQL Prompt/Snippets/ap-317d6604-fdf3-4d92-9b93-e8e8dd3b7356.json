@@ -1,0 +1,8 @@
+{
+  "id": "317d6604-fdf3-4d92-9b93-e8e8dd3b7356",
+  "name": "ap",
+  "prefix": "ap",
+  "description": "ALTER PROCEDURE",
+  "body": "ALTER PROCEDURE ",
+  "placeholders": []
+}

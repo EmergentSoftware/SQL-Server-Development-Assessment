@@ -1,0 +1,8 @@
+{
+  "id": "b3c80997-d675-471d-97f9-d167ccebb5c0",
+  "name": "af",
+  "prefix": "af",
+  "description": "ALTER FUNCTION",
+  "body": "ALTER FUNCTION ",
+  "placeholders": []
+}

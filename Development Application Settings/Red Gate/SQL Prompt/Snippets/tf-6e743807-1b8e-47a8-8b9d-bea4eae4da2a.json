@@ -1,0 +1,8 @@
+{
+  "id": "6e743807-1b8e-47a8-8b9d-bea4eae4da2a",
+  "name": "tf",
+  "prefix": "tf",
+  "description": "tSQLt.Fail - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "EXEC tSQLt.Fail '$CURSOR$';",
+  "placeholders": []
+}

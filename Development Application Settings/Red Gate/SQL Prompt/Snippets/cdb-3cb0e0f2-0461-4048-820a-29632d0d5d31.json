@@ -1,0 +1,8 @@
+{
+  "id": "3cb0e0f2-0461-4048-820a-29632d0d5d31",
+  "name": "cdb",
+  "prefix": "cdb",
+  "description": "CREATE DATABASE statement",
+  "body": "CREATE DATABASE $CURSOR$ --database_name\nON\nPRIMARY ( -- or use FILEGROUP filegroup_name\n  NAME = logical_file_name,\n  FILENAME = 'os_file_name',\n  SIZE = size,\n  MAXSIZE = max_size|UNLIMITED,\n  FILEGROWTH = growth_increment\n) --, and repeat as required\nLOG ON\n(\n  NAME = logical_file_name,\n  FILENAME = 'os_file_name',\n  SIZE = size,\n  MAXSIZE = max_size|UNLIMITED,\n  FILEGROWTH = growth_increment\n) --, and repeat as required\n--COLLATE collation_name\n--WITH\n--  DB_CHAINING ON/OFF\n--  TRUSTWORTHY ON/OFF\n--FOR LOAD\n--FOR ATTACH\n--WITH\n--  ENABLE_BROKER\n--  NEW_BROKER\n--  ERROR_BROKER_CONVERSATIONS\n--FOR ATTACH_REBUILD_LOG\nGO\n",
+  "placeholders": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "7e909586-9924-4eb8-84b2-613a707eea83",
+  "name": "trims",
+  "prefix": "trims",
+  "description": "Wrap selected text in LTRIM(RTRIM())",
+  "body": "LTRIM(RTRIM($SELECTEDTEXT$))",
+  "placeholders": []
+}

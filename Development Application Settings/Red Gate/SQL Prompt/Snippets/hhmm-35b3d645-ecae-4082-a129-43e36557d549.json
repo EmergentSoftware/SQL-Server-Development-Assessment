@@ -1,0 +1,13 @@
+{
+  "id": "35b3d645-ecae-4082-a129-43e36557d549",
+  "name": "hhmm",
+  "prefix": "hhmm",
+  "description": "HH:mm format",
+  "body": "LEFT(CONVERT(VARCHAR(8), $date_column$, 108),5) as HHMM",
+  "placeholders": [
+    {
+      "name": "date_column",
+      "defaultValue": ""
+    }
+  ]
+}

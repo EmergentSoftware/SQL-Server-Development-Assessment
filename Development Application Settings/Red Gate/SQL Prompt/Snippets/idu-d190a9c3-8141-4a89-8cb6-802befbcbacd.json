@@ -1,0 +1,8 @@
+{
+  "id": "d190a9c3-8141-4a89-8cb6-802befbcbacd",
+  "name": "idu",
+  "prefix": "idu",
+  "description": "IF EXISTS DROP: User - [tSQLt - Database Unit Testing for SQL Server. Get it at http://tsqlt.org]",
+  "body": "IF USER_ID('$CURSOR$') IS NOT NULL DROP USER ;",
+  "placeholders": []
+}

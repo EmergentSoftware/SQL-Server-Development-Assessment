@@ -1,0 +1,8 @@
+{
+  "id": "1f487fd4-2350-4846-aac5-ce856c4df6c3",
+  "name": "wn",
+  "prefix": "wn",
+  "description": "WITH (NOLOCK)",
+  "body": "WITH (NOLOCK)",
+  "placeholders": []
+}

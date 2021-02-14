@@ -1,0 +1,8 @@
+{
+  "id": "b3c14629-861f-48e0-95ed-dbb2e5a3d185",
+  "name": "wt",
+  "prefix": "wt",
+  "description": "WITH (TABLOCK)",
+  "body": "WITH (TABLOCK)",
+  "placeholders": []
+}

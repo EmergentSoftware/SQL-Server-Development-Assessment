@@ -398,6 +398,66 @@ Because the SQL Server Query Optimizer typically selects the best execution plan
 
 ---
 
+## Using Dynamic Search Conditions
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/179)
+
+aka. Catch-All Query or Kitchen Sink Query
+
+If your stored procedure has multiple parameters where any one (or more) number are parameters are optional, you have a dynamic search query.
+
+If your query is moderately complex you should use `OPTION (RECOMPILE)`. If you query is complex you should build the query with dynamic SQL.
+
+You will also know this based on the `WHERE` clause of the query. You will see `@ProductId IS NULL` or have parameters wrapped in an `ISNULL()`.
+
+```sql
+CREATE PROCEDURE dbo.SearchHistory
+    @ProductId       INT     = NULL
+   ,@OrderId         INT     = NULL
+   ,@TransactionType CHAR(1) = NULL
+AS
+    BEGIN
+        SELECT
+            TH.ProductId
+        FROM
+            dbo.TransactionHistory AS TH
+        WHERE
+            (TH.ProductId            = @ProductId OR @ProductId IS NULL)
+            AND (TH.ReferenceOrderId = @OrderId OR @OrderId IS NULL)
+            AND (TH.TransactionType  = @TransactionType OR @TransactionType IS NULL)
+            AND (TH.Quantity         = ISNULL(@childFilter, m.Child));
+    END;
+GO
+```
+
+For simple to moderately complex queries add `OPTION (RECOMPILE)`.
+
+```sql
+CREATE PROCEDURE dbo.SearchHistory
+    @ProductId       INT     = NULL
+   ,@OrderId         INT     = NULL
+   ,@TransactionType CHAR(1) = NULL
+AS
+    BEGIN
+        SELECT
+            TH.ProductId
+        FROM
+            dbo.TransactionHistory AS TH
+        WHERE
+            (TH.ProductId            = @ProductId OR @ProductId IS NULL)
+            AND (TH.ReferenceOrderId = @OrderId OR @OrderId IS NULL)
+            AND (TH.TransactionType  = @TransactionType OR @TransactionType IS NULL)
+            AND (TH.Quantity         = ISNULL(@childFilter, m.Child))
+        OPTION (RECOMPILE)/* <-- Added this */;
+    END;
+GO
+```
+
+See [Dynamic Search Conditions in T‑SQL](http://www.sommarskog.se/dyn-search-2008.html) by Erland Sommarskog
+
+[Back to top](#top)
+
+---
+
 ## Using Brackets
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/32)
 

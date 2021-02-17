@@ -30,7 +30,7 @@ These checks are for configurations to the SQL Server.
 
 You will want to give an account or process only those privileges which are essential to perform its intended function. Start your development with the app user account only a member of the db_reader, db_writer and db_executor roles.
 
-When a vulnerability is found in the code, service or operating system the "Principle of least privilege" lessens the blast radius of damage cause by hackers and malware.
+When a vulnerability is found in the code, service or operating system the "Principle of least privilege" lessens the blast radius of damage caused by hackers and malware.
 
 See [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)
 

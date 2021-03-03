@@ -43,7 +43,7 @@ Most importantly, you work from a single source of truth, greatly reducing the r
 ## Data Warehouse Date & Time Key Pattern
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/155)
 
-This data warehouse date & time key pattern can be used with the [Date-Time-Dimensions](https://github.com/EmergentSoftware/Date-Time-Dimensions) tables. The grain of the time dimension records are in seconds.
+This data warehouse date & time key pattern can be used with the [Date-Time-Number-Dimensions](https://github.com/EmergentSoftware/Date-Time-Number-Dimensions) tables. The grain of the time dimension records are in seconds.
 
 The primary keys in the date and time dimension tables are integers and the T-SQL below extracts and converts them.
 

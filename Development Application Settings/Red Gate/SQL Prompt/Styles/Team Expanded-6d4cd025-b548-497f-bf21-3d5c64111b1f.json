@@ -1,8 +1,7 @@
 {
   "metadata": {
     "id": "6d4cd025-b548-497f-bf21-3d5c64111b1f",
-    "name": "Team Expanded",
-    "lastModified": "2021-01-26T20:18:46.8346358Z"
+    "name": "Team Expanded"
   },
   "whitespace": {
     "wrapLongLines": false,
@@ -27,7 +26,7 @@
   "casing": {
     "reservedKeywords": "uppercase",
     "builtInFunctions": "uppercase",
-    "builtInDataTypes": "uppercase",
+    "builtInDataTypes": "lowercase",
     "useObjectDefinitionCase": true
   },
   "dml": {
@@ -46,7 +45,10 @@
     "parenthesisStyle": "expandedSplit",
     "indentParenthesesContents": true,
     "alignDataTypesAndConstraints": true,
-    "placeConstraintColumnsOnNewLines": "ifLongerOrMultipleColumns",
+    "placeConstraintsOnNewLines": true,
+    "placeConstraintColumnsOnNewLines": "always",
+    "indentClauses": true,
+    "placeFirstProcedureParameterOnNewLine": "always",
     "collapseShortStatements": true,
     "collapseStatementsShorterThan": 78
   },
@@ -70,7 +72,6 @@
       "indentJoinTable": false
     },
     "on": {
-      "placeOnNewLine": false,
       "keywordAlignment": "indented"
     }
   },
@@ -85,21 +86,20 @@
     }
   },
   "caseExpressions": {
-    "collapseCaseExpressionsShorterThan": 75
+    "placeExpressionOnNewLine": false,
+    "placeFirstWhenOnNewLine": "ifInputExpression",
+    "collapseShortCaseExpressions": true,
+    "collapseCaseExpressionsShorterThan": 78
   },
   "operators": {
     "comparison": {
       "align": true
     },
     "andOr": {
-      "alignment": "toFirstListItem"
+      "alignment": "rightAligned"
     },
     "between": {
       "placeOnNewLine": false
-    },
-    "in": {
-      "placeFirstValueOnNewLine": "never",
-      "placeSubsequentValuesOnNewLines": "never"
     }
   }
 }

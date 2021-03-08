@@ -45,12 +45,11 @@
     "parenthesisStyle": "expandedSplit",
     "indentParenthesesContents": true,
     "alignDataTypesAndConstraints": true,
-    "placeConstraintsOnNewLines": true,
-    "placeConstraintColumnsOnNewLines": "always",
+    "placeConstraintColumnsOnNewLines": "ifLongerOrMultipleColumns",
     "indentClauses": true,
     "placeFirstProcedureParameterOnNewLine": "always",
     "collapseShortStatements": true,
-    "collapseStatementsShorterThan": 78
+    "collapseStatementsShorterThan": 100
   },
   "controlFlow": {
     "indentBeginAndEndKeywords": true,

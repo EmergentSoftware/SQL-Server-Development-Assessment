@@ -20,8 +20,7 @@
   "parentheses": {
     "parenthesisStyle": "expandedSplit",
     "indentParenthesesContents": true,
-    "collapseShortParenthesisContents": true,
-    "collapseParenthesesShorterThan": 78
+    "collapseParenthesesShorterThan": 35
   },
   "casing": {
     "reservedKeywords": "uppercase",

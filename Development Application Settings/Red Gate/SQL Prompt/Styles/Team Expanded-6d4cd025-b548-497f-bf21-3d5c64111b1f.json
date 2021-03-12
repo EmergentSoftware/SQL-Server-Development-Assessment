@@ -93,9 +93,7 @@
     "comparison": {
       "align": true
     },
-    "andOr": {
-      "alignment": "rightAligned"
-    },
+    "andOr": {},
     "between": {
       "placeOnNewLine": false
     }

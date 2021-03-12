@@ -123,7 +123,7 @@ The `CHECK CHECK` syntax is correct. The 1st `CHECK` is the end of `WITH CHECK` 
 
 UNIQUEIDENTIFIER/GUID columns should not be in a clustered index. Even NEWSEQUENTIALID() should not be used in a clustered index. The sequential UNIQUEIDENTIFIER is based on the SQL Server's MAC address. When an Availability Group fails over the next UNIQUEIDENTIFIER will not be sequential anymore.
 
-SQL Server will page bad page splits when a new record is inserted instead of being inserting on the last page. The clustered index will become fragmented because of randomness of UNIQUEIDENTIFIER.
+SQL Server will page bad page splits when a new record is inserted instead of being inserting on the last page using standard best practices for index maintenance. The clustered index will become fragmented because of randomness of UNIQUEIDENTIFIER. Index maintenance set to the default fill factor of 0 (packed 100%) will force bad page splits.
 
 [Back to top](#top)
 
@@ -152,6 +152,9 @@ Every table should have some column (or set of columns) that uniquely identifies
 
 Using UNIQUEIDENTIFIER/GUID as primary keys causes issues with SQL Server databases. Non-sequential GUID cause page splits and perform 200% worse than the INT data type. UNIQUEIDENTIFIER are unnecessarily wide (4x wider than an INT).
 
+A possible positive side to using UNIQUEIDENTIFIER/GUID as primary keys is they could avoid "Insert Hotspot" and "ExpAnsive Updates". You will really need to understand how index maintenance impacts.
+
+See [UNIQUEIDENTIFIER in a Clustered Index](#uniqueidentifier-in-a-clustered-index)
 
 [Back to top](#top)
 

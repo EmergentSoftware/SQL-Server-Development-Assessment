@@ -127,14 +127,14 @@ WHERE
         dbo.Person WITH (UPDLOCK, SERIALIZABLE)
     WHERE
         LastName = 'Martin'
-
-COMMIT TRANSACTION;
 );
 
 IF @@ROWCOUNT = 0
     BEGIN
         UPDATE dbo.Person SET FirstName = 'Kevin' WHERE LastName = 'Martin';
     END;
+
+COMMIT TRANSACTION;
 ```
 
 **Use this UPSERT pattern to allow the client application to handle the exception:** Ensure you handle the exception in your code.

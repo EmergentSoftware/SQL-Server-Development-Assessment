@@ -10,7 +10,7 @@ SQLCodeSmells https://github.com/Phil-Factor/SQLCodeSmells
 All other copyrights for sp_Develop are held by 
 Emergent Software, LLC as described below.
 
-Copyright (c) 2020 Emergent Software, LLC
+Copyright (c) 2021 Emergent Software, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 

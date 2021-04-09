@@ -243,6 +243,33 @@ SQL Server is the second most expensive sorting system, remind the developer the
 
 ---
 
+## Not Parameterized Queries
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/190)
+
+Queries should be parameterized so SQL Server can reuse the execution plan. You application code is either hardcoding the query values in the WHERE clause or you are using some sort of dynamic T-SQL and not doing it correctly.
+
+A temporary fix is to for parameterization until you can refactor the code and include some @parameters.
+
+[Back to top](#top)
+
+---
+
+---
+
+## Nullable Columns with No Non-Null Records
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/191)
+
+If the row data in the table does not contain any NULL values you should assess setting the column to not 'Allow Nulls'.
+
+Null-ness does more than constraining the data, it factors in on optimizer decisions.
+
+For data warehouses do not allow NULL values for dimensional tables. You can create a -1 identifier with the value of [UNKNOWN]. This helps business users who might not understand the difference between INNER and OUTER JOINs.
+
+[Back to top](#top)
+
+---
+
+
 ## Cursors
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/25)
 

@@ -257,7 +257,7 @@ A temporary fix is to for parameterization until you can refactor the code and i
 ---
 
 ## Nullable Columns with No Non-Null Records
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/191)
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/192)
 
 If the row data in the table does not contain any NULL values you should assess setting the column to not 'Allow Nulls'.
 

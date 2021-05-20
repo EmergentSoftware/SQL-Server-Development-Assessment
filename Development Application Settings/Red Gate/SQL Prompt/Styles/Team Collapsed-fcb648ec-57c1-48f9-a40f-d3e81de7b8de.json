@@ -11,6 +11,7 @@
   },
   "lists": {
     "placeFirstItemOnNewLine": "always",
+    "alignSubsequentItemsWithFirstItem": false,
     "alignItemsAcrossClauses": false,
     "alignComments": true
   },

@@ -4,13 +4,11 @@
     "name": "Team Expanded"
   },
   "whitespace": {
-    "wrapLongLines": false,
-    "newLines": {
-      "preserveExistingEmptyLinesAfterBatchSeparator": false
-    }
+    "wrapLongLines": false
   },
   "lists": {
     "placeFirstItemOnNewLine": "always",
+    "alignSubsequentItemsWithFirstItem": false,
     "alignItemsAcrossClauses": false,
     "alignAliases": true,
     "alignComments": true,
@@ -20,7 +18,8 @@
   "parentheses": {
     "parenthesisStyle": "expandedSplit",
     "indentParenthesesContents": true,
-    "collapseParenthesesShorterThan": 35
+    "collapseShortParenthesisContents": true,
+    "collapseParenthesesShorterThan": 78
   },
   "casing": {
     "reservedKeywords": "uppercase",
@@ -86,8 +85,9 @@
   "caseExpressions": {
     "placeExpressionOnNewLine": false,
     "placeFirstWhenOnNewLine": "ifInputExpression",
+    "placeThenOnNewLine": true,
     "collapseShortCaseExpressions": true,
-    "collapseCaseExpressionsShorterThan": 78
+    "collapseCaseExpressionsShorterThan": 100
   },
   "operators": {
     "comparison": {
@@ -96,6 +96,9 @@
     "andOr": {},
     "between": {
       "placeOnNewLine": false
+    },
+    "in": {
+      "placeFirstValueOnNewLine": "ifLongerThanMaxLineLength"
     }
   }
 }

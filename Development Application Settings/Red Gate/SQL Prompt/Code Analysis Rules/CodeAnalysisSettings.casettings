@@ -35,7 +35,7 @@
     <BP013>Warning</BP013>
     <BP014>Warning</BP014>
     <BP015>Warning</BP015>
-    <BP016>Warning</BP016>
+    <BP016>Ignore</BP016>
     <BP017>Warning</BP017>
     <BP018>Warning</BP018>
     <BP022>Warning</BP022>
@@ -105,7 +105,7 @@
     <SC005>Warning</SC005>
     <SC006>Warning</SC006>
     <ST001>Warning</ST001>
-    <ST002>Warning</ST002>
+    <ST002>Ignore</ST002>
     <ST003>Warning</ST003>
     <ST006>Warning</ST006>
     <ST007>Warning</ST007>
@@ -116,5 +116,5 @@
   </IssueSettings>
   <UseCompression>false</UseCompression>
   <IssueGroups />
-  <SettingsGuid>a38110e9-53fb-432b-b5fb-9a5db589bad9</SettingsGuid>
+  <SettingsGuid>f9a6f2ab-7f36-4c68-9f05-647e5286ef50</SettingsGuid>
 </SqlCodeGuardSettings>

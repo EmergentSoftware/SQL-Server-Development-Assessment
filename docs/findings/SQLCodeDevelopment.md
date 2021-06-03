@@ -712,7 +712,6 @@ When you use data types of variable length such as `VARCHAR`, `NVARCHAR`, and `V
 Always specify lengths for a data type.
 
 - A `VARCHAR`, or `NVARCHAR` that is declared without an explicit length will use a default length. It is safer to be explicit.
-- When you convert a data type to a ```VARCHAR```, you do not have to specify the length. SQL Server will use a ```VARCHAR``` length large enough to hold the text. It is better to specify the length because SQL Server does not know the length you may subsequently need.
 - `DECIMAL`, `NUMERIC`. If no precision and scale are provided, SQL Server will use (18, 0)
 
 [Back to top](#top)

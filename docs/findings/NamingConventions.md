@@ -298,15 +298,15 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
 
 - Avoid repeating the table name except for:
   - **Table Primary Key:** A table primary key should include the table name and Id (e.g. PersonId) [See Using ID for Primary Key Column Name](#using-id-for-primary-key-column-name)
-  - **Natural Common Words:** PatientNumber, PurchaseOrderNumber, DriversLicenseNumber
-  - **Generic Names:** When using generic names like "Number", "Name", "Description" & "Code" you can repeat the table name
+  - **Common or Natural Words or Terms:** When you come across common or natural names like "PatientNumber", "PurchaseOrderNumber" or "DriversLicenseNumber", "GLAccount", "ARAccount" you will want to use them as they commonly are used.
+  - **Generic or Class Words:** When using generic names like "Name", "Description", "Number", "Code", "Type", "Status", "Amount", "Date", "Quantity", "Rate", … you should prefix the class word with a modifier like the table name if appropriate.
     - Instead use "AccountNumber", "AddressTypeName", "ProductDescription" & "StateCode"
     - SELECT queries will need aliases when two tables use generic columns like "Name"
 - Use singular, not plural
 - Choose a name to reflect precisely what is contained in the attribute
 - Use abbreviations rarely in attribute names. If your organization has a TPS "thing" that is commonly used and referred to in general conversation as a TPS, you might use this abbreviation
   - **Pronounced abbreviations:** It is better to use a natural abbreviation like id instead of identifier
-- End the name with a suffix that denotes general usage. These suffixes are not data types that are used in Hungarian notations. There can be names where a suffix would not apply
+- End the name with a suffix (class word) that denotes general usage. These suffixes are not data types that are used in Hungarian notations. There can be names where a suffix would not apply. Class words
   - Invoice**Id** is the identity of the invoice record
   - Part**Number** is an alternate key
   - Start**Date** is the date something started

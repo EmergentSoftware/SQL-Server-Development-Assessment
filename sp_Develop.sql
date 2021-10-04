@@ -82,8 +82,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '0.11.8';
-        SET @VersionDate = '20210201';
+        SET @Version = '0.12.1';
+        SET @VersionDate = '20211004';
         SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/';
         SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);
@@ -1357,6 +1357,7 @@ AS
 				        WHERE
 				            T.name NOT IN (''__RefactorLog'', ''__MigrationLog'', ''__MigrationLogCurrent'', ''__SchemaSnapshot'', ''__SchemaSnapshotDateDefault'', ''fn_diagramobjects'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'')
 					        AND I.object_id IS NULL
+                            AND T.temporal_type <> 1
                         OPTION (RECOMPILE);';
 
 				        EXEC sys.sp_executesql @stmt = @StringToExecute;

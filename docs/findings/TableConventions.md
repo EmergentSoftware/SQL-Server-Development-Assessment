@@ -154,6 +154,8 @@ Using UNIQUEIDENTIFIER/GUID as primary keys causes issues with SQL Server databa
 
 A possible positive side to using UNIQUEIDENTIFIER/GUID as primary keys is they could avoid "Insert Hotspot" and "ExpAnsive Updates". You will really need to understand how index maintenance impacts.
 
+A use case for when you can use UNIQUEIDENTIFIER/GUID as primary keys, is when there are separate systems and merging rows would be difficult. The uniqueness of UNIQUEIDENTIFIER/GUID simplifies the data movements.
+
 See [UNIQUEIDENTIFIER in a Clustered Index](#uniqueidentifier-in-a-clustered-index)
 
 [Back to top](#top)

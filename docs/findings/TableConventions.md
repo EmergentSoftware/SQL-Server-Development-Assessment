@@ -189,7 +189,7 @@ Heaps have performance issues like table scans, forward fetches.
 ---
 
 ## Not Normalizing Tables
-**Check Id:** 3
+**Check Id:** None yet
 
 Normalizing tables is regarded as a best practice methodology for relational databases design. Relational database tables should be normalized to at least the [Boyce–Codd normal form (BCNF or 3.5NF)](https://en.wikipedia.org/wiki/Boyce%E2%80%93Codd_normal_form).
 

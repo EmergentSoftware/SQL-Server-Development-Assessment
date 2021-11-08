@@ -193,7 +193,9 @@ Heaps have performance issues like table scans, forward fetches.
 
 Normalizing tables is regarded as a best practice methodology for relational databases design. Relational database tables should be normalized to at least the [Boyce–Codd normal form (BCNF or 3.5NF)](https://en.wikipedia.org/wiki/Boyce%E2%80%93Codd_normal_form).
 
-These normalizing principles is used to reduce data duplication, avoid data anomalies, ensure table relationship integrity, and make data managment simplified.
+These normalizing principles are used to reduce data duplication, avoid data anomalies, ensure table relationship integrity, and make data management simplified.
 
 [Back to top](#top)
 
+---
+</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>

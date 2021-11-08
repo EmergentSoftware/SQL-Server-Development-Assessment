@@ -320,4 +320,8 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - IsDeleted**Flag** indicates a status
   - Unit**Price**
 
+
 [Back to top](#top)
+
+---
+</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>

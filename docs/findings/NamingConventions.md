@@ -213,8 +213,9 @@ Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvio
 
 No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 
-* Names should be "Column1_Column2_Column3" 
-* Names should indicate if there are included columns with "Column1_Column2_Column3_Includes"
+* Names should be "Table-Name_Column1_Column2_Column3" 
+* Names should indicate if there are included columns with "Table-Name_Column1_Column2_Column3_Includes"
+* When using UNIQUEIDENTIFIER/GUID columns you can use "Table-Name_ColumnN_INDEX_REBUILD_ONLY" to signify special index maintenance handling.
 
 See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
 

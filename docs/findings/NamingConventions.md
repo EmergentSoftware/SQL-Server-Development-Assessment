@@ -318,7 +318,7 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - Line**Amount** is a currency amount not dependent on the data type like DECIMAL(19, 4)
   - Group**Name** is the text string not dependent on the data type like VARCHAR() or NVARCHAR()
   - State**Code** indicates the short form of something
-  - IsDeleted**Flag** indicates a status see (Non-Affirmative Boolean Name Use)[#non-affirmative-boolean-name-use] for boolean column naming
+  - IsDeleted**Flag** indicates a status see [Non-Affirmative Boolean Name Use](#non-affirmative-boolean-name-use) for boolean column naming
   - Unit**Price**
 
 

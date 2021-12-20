@@ -25,6 +25,60 @@ Table design matters because it is essential for building software applications 
 
 ---
 
+## Incorrect Inheritance Type
+**Check Id:** None yet
+
+Use the [Table Per Type (TPT)](https://entityframework.net/tpt) table design pattern.
+
+The [Table Per Concrete (TPC)](https://entityframework.net/tpc) design is not good as it would have redundant data and no relationship between the sub tables. The redundant data would just be in multiple tables vs squished into one table with [Table Per Hierarchy (TPH)](https://entityframework.net/tph). TPC would help with the extra nullable columns compared to TPH.
+
+TPC & TPH do not follow normal form. See [Not Normalizing Tables](#not-normalizing-tables).
+
+[Back to top](#top)
+
+---
+
+## Incorrect Weak or Strong Table
+**Check Id:** None yet
+
+Use the proper weak or strong table type based on the entity.
+
+A weak table is one that can only exist when owned by another table. For example: a 'Room' can only exist in a 'Building'.
+
+An 'Address' is a strong table because it exists with or without a person or organization.
+
+With an 'Address' table you would have a linking, or many-to-many table.
+
+|ResidenceId|AddressTypeId|PersonId|AddressId|
+|--|--|--|--|
+|1|1|456|233|
+|2|1|234|167|
+|3|2|622|893|
+
+
+A 'Phone Number' is a weak table because it generally does not exist without a person or organization.
+
+With a 'Phone Number' table you would not use a linking table. The 'Phone Number' table would reference back to the person table.
+
+|PersonId|FistName|LastName|
+|--|--|--|
+|1|Kevin|Martin|
+|2|Han|Solo|
+|3|Mace|Windu|
+
+|PersonPhoneId|PhoneTypeId|PersonId|PhoneNumber|
+|--|--|--|--|
+|1|1|1|555-899-5543|
+|2|1|2|(612) 233-2255|
+|3|2|3|1+ (453) 556-9902|
+
+A use case exception for using the proper weak or strong type is for security purposes. You might encounter a requirement for security that utilizing a linking table makes it impossible to have a discriminator to prevent read or modifications to a row.
+
+
+[Back to top](#top)
+
+---
+
 ## Column Named ????Id But No FK Exists
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/43)
 

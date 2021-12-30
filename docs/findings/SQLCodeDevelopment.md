@@ -208,18 +208,28 @@ ELSE
 **Do not use this UPSERT pattern:** It will produce primary key violations when run concurrently. MERGE can be used for ETL processing if it is assured to NOT be run concurrently.
 
 ```sql
-MERGE INTO dbo.Person AS T
+MERGE INTO dbo.Person WITH (HOLDLOCK) AS T
 USING (
 	SELECT FirstName = 'Kevin', LastName = 'Martin'
 ) AS S
 ON (S.LastName = T.LastName)
-WHEN MATCHED THEN
+    WHEN MATCHED AND EXISTS (
+        SELECT
+             S.FirstName
+            ,S.LastName
+        EXCEPT
+        SELECT
+             T.FirstName
+            ,T.LastName
+    ) THEN
     UPDATE SET
-        FirstName = S.FirstName
-WHEN NOT MATCHED THEN
+        T.FirstName = S.FirstName
+WHEN NOT MATCHED BY TARGET THEN
     INSERT (FirstName, LastName)
     VALUES
-         (S.FirstName, S.LastName);
+         (S.FirstName, S.LastName)
+WHEN NOT MATCHED BY SOURCE THEN
+        DELETE;
 ```
 
 [Back to top](#top)

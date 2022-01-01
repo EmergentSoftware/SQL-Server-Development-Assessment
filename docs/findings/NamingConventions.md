@@ -90,13 +90,13 @@ When a word does not exist to describe the relationship use "Table1Table2" with 
 ## Variable Naming
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/74)
 
-In addition to the general naming standards regarding no special characters, no spaces, and limited use of abbreviations and acronyms, common sense should prevail in naming variables; variable names should be meaningful and natural.
+In addition to the general naming standards regarding no special characters, no spaces, and limited use of abbreviations and acronyms, common sense should prevail in naming variables and parameters; variable and parameter names should be meaningful and natural.
 
-All variables must begin with the "@" symbol. Do not use "@@" to prefix a variable as this signifies a SQL Server system global variable and will affect performance.
+All variables and parameters must begin with the "@" symbol. Do not use "@@" to prefix a variable as this signifies a SQL Server system global variable and will affect performance.
 
-All variables should be written in PascalCase, e.g. "@FirstName" or "@City" or "@SiteId".
+All variables and parameter should be written in PascalCase, e.g. "@FirstName" or "@City" or "@SiteId".
 
-Variable names should contain only letters and numbers. No special characters or spaces should be used.
+Variable and parameter names should contain only letters and numbers. No special characters or spaces should be used.
 
 [Back to top](#top)
 

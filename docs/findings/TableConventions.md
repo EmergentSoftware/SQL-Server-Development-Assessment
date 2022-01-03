@@ -88,6 +88,15 @@ We found a column following the naming convention of ????Id and is not the PK bu
 
 ---
 
+## NULL or NOT NULL option is not specified in CREATE or DECLARE TABLE
+**Check Id:** None yet
+
+You should always explicitly define ``NULL`` or ``NOT NULL`` for columns when creating or declaring a table. The default of allowing NULLs can be changed with the database setting ``ANSI_NULL_DFLT_ON``.
+
+[Back to top](#top)
+
+---
+
 ## More Than 5 Indexes
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/49)
 

@@ -91,6 +91,8 @@ SELECT
 
 **Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.
 
+Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate an UPSERT stored procedure at least as starting point.
+
 ```sql
 SET NOCOUNT, XACT_ABORT ON;
 

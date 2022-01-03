@@ -1162,7 +1162,7 @@ Keywords like `SELECT`, `FROM`, `GROUP BY` should be in UPPERCASE. See [Not Usin
 ## Not Converting to Unicode
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Converting+to+Unicode)
 
-You need to put an ``N`` in from of your strings to ensure the characters are converted to Unicode before being places into a ```nvarchar``` column.
+You need to put an ``N`` in from of your strings to ensure the characters are converted to Unicode before being placed into a ```nvarchar``` column.
 
 In the example below FirstName is varchar(100) and LastName is nvarchar(100).
 

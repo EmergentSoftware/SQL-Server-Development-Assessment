@@ -927,11 +927,11 @@ A use case for `SET XACT_ABORT OFF` is when debugging to trap an error.
 ## Not Using Transactions
 **Check Id:** None yet, click here to view the issue
 
-Transactions allow for database operations to be [atomic](https://en.wikipedia.org/wiki/Atomicity_(database_systems)). A group of related SQL commands that all must complete successfully or not at all must be rolled back.
+Transactions allow for database operations to be [atomic](https://en.wikipedia.org/wiki/Atomicity_(database_systems)). A group of related SQL commands that must all complete successfully or not at all and must be rolled back.
 
 If you are performing a funds transfer and updating multiple bank account tables with debiting one and crediting the other, they must all complete successfully or there will be an imbalance.
 
-Here is a basic transaction pattern
+Here is a basic transaction pattern.
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON;

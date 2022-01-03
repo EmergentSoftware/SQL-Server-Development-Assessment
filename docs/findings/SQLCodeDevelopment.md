@@ -20,6 +20,7 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 1. TOC
 {:toc}
 </details>
+
 [Back to top](#top)
 
 ---
@@ -1158,10 +1159,32 @@ Keywords like `SELECT`, `FROM`, `GROUP BY` should be in UPPERCASE. See [Not Usin
 
 ---
 
-## Not Using lowercase for Data Types
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not Using+lowercase+for+Data+Types)
+## Not Using lower case for Data Types
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+lower+case+for+Data+Types)
 
-Data types should be lowercased to match the exact case that is in the ``SELECT * FROM sys.types;`` table.
+Data types should be lower cased to match the exact case that is in the ``SELECT * FROM sys.types;`` table. This will ensure collation differences won't cause unexpected errors.
+
+**Use:** ``DECLARE @Id AS int`` **instead of:** ``DECLARE @Id AS INT``
+
+**Use:**
+
+```sql
+CREATE TABLE dbo.Person (
+    PersonId  int          IDENTITY(1, 1) NOT NULL
+   ,FirstName nvarchar(50) NULL
+   ,LastName  varchar(50)  NULL
+);
+```
+
+**instead of:**
+
+```sql
+CREATE TABLE dbo.Person (
+    PersonId  INT          IDENTITY(1, 1) NOT NULL
+   ,FirstName NVARCHAR(50) NULL
+   ,LastName  NVARCHAR(50) NULL
+);
+```
 
 
 [Back to top](#top)

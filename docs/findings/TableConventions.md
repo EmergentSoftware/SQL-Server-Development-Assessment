@@ -26,7 +26,7 @@ Table design matters because it is essential for building software applications 
 ---
 
 ## Incorrect Inheritance Type
-**Check Id:** None yet
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Inheritance+Type)
 
 Use the [Table Per Type (TPT)](https://entityframework.net/tpt) table design pattern.
 
@@ -39,7 +39,7 @@ TPC & TPH do not follow normal form. See [Not Normalizing Tables](#not-normalizi
 ---
 
 ## Incorrect Weak or Strong Table
-**Check Id:** None yet
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Weak+or+Strong+Table)
 
 Use the proper weak or strong table type based on the entity.
 
@@ -255,7 +255,7 @@ Heaps have performance issues like table scans, forward fetches.
 ---
 
 ## Not Normalizing Tables
-**Check Id:** None yet
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Normalizing+Tables)
 
 Normalizing tables is regarded as a best practice methodology for relational databases design. Relational database tables should be normalized to at least the [Boyce–Codd normal form (BCNF or 3.5NF)](https://en.wikipedia.org/wiki/Boyce%E2%80%93Codd_normal_form).
 

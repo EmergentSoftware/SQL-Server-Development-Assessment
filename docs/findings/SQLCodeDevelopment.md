@@ -1159,6 +1159,26 @@ Keywords like `SELECT`, `FROM`, `GROUP BY` should be in UPPERCASE. See [Not Usin
 
 ---
 
+## Not Converting to Unicode
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Converting+to+Unicode)
+
+You need to put an ``N`` in from of your strings to ensure the characters are converted to Unicode before being places into a ```nvarchar``` column.
+
+In the example below FirstName is varchar(100) and LastName is nvarchar(100).
+
+```sql
+INSERT INTO dbo.Person (FirstName, LastName) 
+VALUES ('Kevin', N'马丁');
+```
+
+Not converting to Unicode for ``nvarchar()`` columns will also cause implicit conversions which will make a query non-SARGable in ``WHERE`` clauses.
+
+See [Using a Non-SARGable Expression in a WHERE Clause](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-a-non-sargable-expression-in-a-where-clause)
+
+[Back to top](#top)
+
+---
+
 ## Not Using lower case for Data Types
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+lower+case+for+Data+Types)
 

@@ -641,6 +641,17 @@ By changed the WHERE clause to not use the YEAR() function and doing a bit more 
 
 ---
 
+## Using Unnecessary Functions
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Unnecessary+Functions)
+
+- Use ``TRIM(string)`` instead of ``LTRIM(RTRIM(string))``
+- If your database is set to 'case insensitive', you do not need to use the ``LOWER(string)`` function when comparing two strings.
+   - Execute the query ``SELECT CONVERT(varchar(256), SERVERPROPERTY('collation'));`` to verify the database shows it is a 'case insensitive'  collation (\_CI\_). The default SQL Server collation is 'SQL_Latin1_General_CP1_CI_AS'.
+
+[Back to top](#top)
+
+---
+
 ## Using Missing Indexes Recommendations
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/166)
 
@@ -925,7 +936,7 @@ A use case for `SET XACT_ABORT OFF` is when debugging to trap an error.
 ---
 
 ## Not Using Transactions
-**Check Id:** None yet, click here to view the issue
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Transactions)
 
 Transactions allow for database operations to be [atomic](https://en.wikipedia.org/wiki/Atomicity_(database_systems)). A group of related SQL commands that must all complete successfully or not at all and must be rolled back.
 
@@ -949,7 +960,7 @@ BEGIN CATCH
         BEGIN
             ROLLBACK TRANSACTION;
         END;
-    /* Handle the error, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled or logged. */
+    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled or logged. */
     THROW;
 END CATCH;
 ```

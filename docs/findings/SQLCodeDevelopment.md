@@ -1345,6 +1345,8 @@ It is always better to specify the type of join you require, INNER JOIN, LEFT OU
 
 While you can choose any supported JOIN style, without affecting the query plan used by SQL Server, using the ANSI-standard syntax will make your code easier to understand, more consistent, and portable to other relational database systems.
 
+[Back to top](#top)
+
 ---
 
 ## View Usage

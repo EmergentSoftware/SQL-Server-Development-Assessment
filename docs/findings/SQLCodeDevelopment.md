@@ -92,6 +92,8 @@ SELECT
 **Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.
 
 ```sql
+SET NOCOUNT, XACT_ABORT ON;
+
 BEGIN TRANSACTION;
 
 UPDATE
@@ -103,7 +105,10 @@ WHERE
 
 IF @@ROWCOUNT = 0
     BEGIN
-        INSERT dbo.Person (FirstName, LastName) VALUES ('Kevin', 'Martin');
+        INSERT 
+            dbo.Person (FirstName, LastName) 
+        VALUES
+            ('Kevin', 'Martin');
     END;
 
 COMMIT TRANSACTION;
@@ -113,6 +118,8 @@ COMMIT TRANSACTION;
 **Use this UPSERT pattern when a record insert is more likely:** Don't worry about checking for a records existence just perform the insert.
 
 ```sql
+SET NOCOUNT, XACT_ABORT ON;
+
 BEGIN TRANSACTION;
 
 INSERT dbo.Person (FirstName, LastName)
@@ -131,7 +138,12 @@ WHERE
 
 IF @@ROWCOUNT = 0
     BEGIN
-        UPDATE dbo.Person SET FirstName = 'Kevin' WHERE LastName = 'Martin';
+        UPDATE
+            dbo.Person
+        SET
+            FirstName = 'Kevin'
+        WHERE
+            LastName = 'Martin';
     END;
 
 COMMIT TRANSACTION;
@@ -140,6 +152,8 @@ COMMIT TRANSACTION;
 **Use this UPSERT pattern to allow the client application to handle the exception:** Ensure you handle the exception in your code.
 
 ```sql
+SET NOCOUNT, XACT_ABORT ON;
+
 BEGIN TRANSACTION;
 
 BEGIN TRY
@@ -159,6 +173,8 @@ COMMIT TRANSACTION;
 For JSON, XML or comma-separated list ensure you insert the records into a temporary table for performance considerations.
 
 ```sql
+SET NOCOUNT, XACT_ABORT ON;
+
 BEGIN TRANSACTION;
 
 CREATE TABLE #Update (FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL);
@@ -490,6 +506,8 @@ GO
 ```
 
 See [Dynamic Search Conditions in T‑SQL](http://www.sommarskog.se/dyn-search-2008.html) by Erland Sommarskog
+
+Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate the dynamic SQL query for you.
 
 [Back to top](#top)
 
@@ -901,6 +919,42 @@ Don't convert dates to strings to compare. Dates should be stored with the patte
 - When `SET XACT_ABORT OFF`, in some cases only the T-SQL statement that raised the error is rolled back and the transaction continues processing. Depending upon the severity of the error, the entire transaction may be rolled back even when SET XACT_ABORT is OFF. OFF is the default setting in a T-SQL statement, while ON is the default setting in a trigger.
 
 A use case for `SET XACT_ABORT OFF` is when debugging to trap an error.
+
+[Back to top](#top)
+
+---
+
+## Not Using Transactions
+**Check Id:** None yet, click here to view the issue
+
+Transaction allow for database operations to be [atomic](https://en.wikipedia.org/wiki/Atomicity_(database_systems)). A group of related SQL commands that all have to complete successfully or not at all must be rolled back. 
+
+If you are performing a funds transfer and updating multiple bank account tables with debiting one and crediting the other, they must all complete successfully or there will be an imbalance.
+
+Here is a basic transaction pattern
+
+```sql
+SET NOCOUNT, XACT_ABORT ON;
+
+BEGIN TRY
+    BEGIN TRANSACTION;
+
+    UPDATE dbo.Account SET Balance = 100.00 WHERE AccountId = 1;
+    UPDATE dbo.Account SET Balance = 'a' WHERE AccountId = 2;
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        BEGIN
+            ROLLBACK TRANSACTION;
+        END;
+    /* Handle the error, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled or logged. */
+    THROW;
+END CATCH;
+```
+
+See [SET XACT_ABORT OFF](#not-using-set-xact_abort-on)
 
 [Back to top](#top)
 

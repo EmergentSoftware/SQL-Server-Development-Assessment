@@ -20,6 +20,7 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 1. TOC
 {:toc}
 </details>
+
 [Back to top](#top)
 
 ---
@@ -47,19 +48,19 @@ This data warehouse date & time key pattern can be used with the [Date-Time-Numb
 
 The primary keys in the date and time dimension tables are integers and the T-SQL below extracts and converts them.
 
-If the datetime column in the source table is a DATETIMEOFFSET data type you can remove the first 'AT TIME ZONE'.
+If the datetime column in the source table is a datetimeoffset data type you can remove the first 'AT TIME ZONE'.
 
-See [Using DATETIME Instead of DATETIMEOFFSET](/SQL-Server-Development-Assessment/findings/data-type-conventions#using-datetime-instead-of-datetimeoffset).
+See [Using datetime Instead of datetimeoffset](/SQL-Server-Development-Assessment/findings/data-type-conventions#using-datetime-instead-of-datetimeoffset).
 
 ```sql
 SELECT
     [Date Key] = 
 		ISNULL(
 			CAST(
-				CONVERT(CHAR(8), 
+				CONVERT(char(8), 
 					CAST(
 						CAST(
-							GETDATE() AS DATETIME2(7) /* use the table date column instead of GETDATE() here */
+							GETDATE() AS datetime2(7) /* use the table date column instead of GETDATE() here */
 						) 
 						AT TIME ZONE 'UTC' /* use this 1st AT TIME ZONE to set the offset if the data type is not using datetimeoffset(7) */
 						AT TIME ZONE 'Central Standard Time' /* this 2nd AT TIME ZONE converts into the time zone */
@@ -70,10 +71,10 @@ SELECT
 		)
    ,[Time Key] = 
 		REPLACE(
-			CONVERT(VARCHAR(8), 
+			CONVERT(varchar(8), 
 				CAST(
 					CAST(
-						GETDATE() AS DATETIME2(7) /* use the table date column instead of GETDATE() here */
+						GETDATE() AS datetime2(7) /* use the table date column instead of GETDATE() here */
 					) 
 					AT TIME ZONE 'UTC' /* use this 1st AT TIME ZONE to set the offset if the data type is not using datetimeoffset(7) */
 					AT TIME ZONE 'Central Standard Time' AS TIME /* this 2nd AT TIME ZONE converts into the time zone */
@@ -179,7 +180,7 @@ SET NOCOUNT, XACT_ABORT ON;
 
 BEGIN TRANSACTION;
 
-CREATE TABLE #Update (FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL);
+CREATE TABLE #Update (FirstName varchar(50) NOT NULL, LastName varchar(50) NOT NULL);
 
 INSERT INTO #Update (FirstName, LastName)
 VALUES
@@ -320,8 +321,8 @@ It is likely a bad idea to use any cursor other than one that is read-only and f
 ```sql
 DECLARE
     @MyId          INT
-   ,@MyName        NVARCHAR(50)
-   ,@MyDescription NVARCHAR(MAX);
+   ,@MyName        nvarchar(50)
+   ,@MyDescription nvarchar(MAX);
 
 DECLARE MyCursor CURSOR LOCAL FAST_FORWARD FOR
 SELECT
@@ -371,10 +372,10 @@ Here is a `WHILE` loop pattern. You might be able to create a SQL statement that
 
 ```sql
 CREATE TABLE #Person (
-    PersonId        INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
-   ,FirstName       NVARCHAR(100) NOT NULL
-   ,LastName        NVARCHAR(128) NOT NULL
-   ,IsProcessedFlag BIT           NOT NULL DEFAULT (0)
+    PersonId        int           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+   ,FirstName       nvarchar(100) NOT NULL
+   ,LastName        nvarchar(128) NOT NULL
+   ,IsProcessedFlag bit           NOT NULL DEFAULT (0)
 );
 
 INSERT INTO
@@ -384,8 +385,8 @@ VALUES
 
 DECLARE
     @PersonId  INT
-   ,@FirstName NVARCHAR(100)
-   ,@LastName  NVARCHAR(100);
+   ,@FirstName nvarchar(100)
+   ,@LastName  nvarchar(100);
 
 WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
     BEGIN
@@ -428,15 +429,15 @@ Use Temporary Tables and not Table Variables.
 
 ```sql
 CREATE TABLE #UseMe (
-    UseMeId   INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
-   ,FirstName NVARCHAR(100) NOT NULL
-   ,LastName  NVARCHAR(100) NOT NULL
+    UseMeId   int           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+   ,FirstName nvarchar(100) NOT NULL
+   ,LastName  nvarchar(100) NOT NULL
 );
 
 DECLARE @DoNotUseMe TABLE (
-    DoNotUseMeId INT           NOT NULL IDENTITY(1, 1) PRIMARY KEY
-   ,FirstName    NVARCHAR(100) NOT NULL
-   ,LastName     NVARCHAR(100) NOT NULL
+    DoNotUseMeId int           NOT NULL IDENTITY(1, 1) PRIMARY KEY
+   ,FirstName    nvarchar(100) NOT NULL
+   ,LastName     nvarchar(100) NOT NULL
 );
 ```
 
@@ -466,9 +467,9 @@ You will also know this based on the `WHERE` clause of the query. You will see `
 
 ```sql
 CREATE PROCEDURE dbo.SearchHistory
-    @ProductId       INT     = NULL
-   ,@OrderId         INT     = NULL
-   ,@TransactionType CHAR(1) = NULL
+    @ProductId       int     = NULL
+   ,@OrderId         int     = NULL
+   ,@TransactionType char(1) = NULL
 AS
     BEGIN
         SELECT
@@ -488,9 +489,9 @@ For simple to moderately complex queries add `OPTION (RECOMPILE)`.
 
 ```sql
 CREATE PROCEDURE dbo.SearchHistory
-    @ProductId       INT     = NULL
-   ,@OrderId         INT     = NULL
-   ,@TransactionType CHAR(1) = NULL
+    @ProductId       int     = NULL
+   ,@OrderId         int     = NULL
+   ,@TransactionType char(1) = NULL
 AS
     BEGIN
         SELECT
@@ -739,9 +740,9 @@ You should be using SET ANSI_NULLS ON; unless you have a good reason not to.
 ## Using Types of Variable Length That Are Size 1 or 2
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/63)
 
-If the length of the type will be very small (size 1 or 2) and consistent, declare them as a type of fixed length, such as `CHAR`, `NCHAR`, and `BINARY`.
+If the length of the type will be very small (size 1 or 2) and consistent, declare them as a type of fixed length, such as `char`, `nchar`, and `binary`.
 
-When you use data types of variable length such as `VARCHAR`, `NVARCHAR`, and `VARBINARY`, you incur an additional storage cost to track the length of the value stored in the data type. In addition, columns of variable length are stored after all columns of fixed length, which can have performance implications.
+When you use data types of variable length such as `varchar`, `nvarchar`, and `varbinary`, you incur an additional storage cost to track the length of the value stored in the data type. In addition, columns of variable length are stored after all columns of fixed length, which can have performance implications.
 
 [Back to top](#top)
 
@@ -752,8 +753,8 @@ When you use data types of variable length such as `VARCHAR`, `NVARCHAR`, and `V
 
 Always specify lengths for a data type.
 
-- A `VARCHAR`, or `NVARCHAR` that is declared without an explicit length will use a default length. It is safer to be explicit.
-- `DECIMAL`, `NUMERIC`. If no precision and scale are provided, SQL Server will use (18, 0)
+- A `varchar`, or `nvarchar` that is declared without an explicit length will use a default length. It is safer to be explicit.
+- `decimal`, `numeric`. If no precision and scale are provided, SQL Server will use (18, 0)
 
 [Back to top](#top)
 
@@ -767,7 +768,7 @@ The ISNULL function and the COALESCE expression have a similar purpose but can b
 1. Because `ISNULL` is a function, it's evaluated only once. As described above, the input values for the `COALESCE` expression can be evaluated multiple times.
 2. Data type determination of the resulting expression is different. `ISNULL` uses the data type of the first parameter, `COALESCE` follows the `CASE` expression rules and returns the data type of value with the highest precedence.
 3. The NULLability of the result expression is different for `ISNULL` and `COALESCE`.
-4. Validations for `ISNULL` and `COALESCE` are also different. For example, a NULL value for `ISNULL` is converted to INT though for `COALESCE`, you must provide a data type.
+4. Validations for `ISNULL` and `COALESCE` are also different. For example, a NULL value for `ISNULL` is converted to int though for `COALESCE`, you must provide a data type.
 5. `ISNULL` takes only two parameters. By contrast `COALESCE` takes a variable number of parameters.
 6. `COALESCE` is faster but your results could depend on different circumstances.
 
@@ -1059,9 +1060,9 @@ Use `SET NOCOUNT ON;` at the beginning of your SQL batches, stored procedures fo
 ```sql
 CREATE OR ALTER PROCEDURE dbo.PersonInsert
     @PersonId INT
-   ,@JobTitle NVARCHAR(100)
+   ,@JobTitle nvarchar(100)
    ,@HiredOn  DATE
-   ,@Gender   CHAR(1)
+   ,@Gender   char(1)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -1141,11 +1142,9 @@ SQL code statements should be arranged in an easy-to-read manner. When statement
 
 Your SQL code should be formatted in a consistent manner so specific elements like keywords, data types, table names, functions can be identified at a quick glance.
 
-Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/blob/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Formatting%20Styles/Team%20Collapsed.sqlpromptstylev2)" or "[Team Expanded](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/blob/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Formatting%20Styles/Team%20Expanded.sqlpromptstylev2)". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
+Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/tree/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Styles)" or "[Team Expanded](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/tree/master/Development%20Application%20Settings/Red%20Gate/SQL%20Prompt/Styles)". If you edit T-SQL code that was in a one of the two styles, put the style back to its original style after you completed editing.
 
 See [RedGate SQL Server Prompt](/SQL-Server-Development-Assessment/development-app-settings#redgate-sql-server-prompt)
-
-
 
 [Back to top](#top)
 
@@ -1155,6 +1154,38 @@ See [RedGate SQL Server Prompt](/SQL-Server-Development-Assessment/development-a
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/113)
 
 Keywords like `SELECT`, `FROM`, `GROUP BY` should be in UPPERCASE. See [Not Using SQL Formatting](#not-using-sql-formatting)
+
+[Back to top](#top)
+
+---
+
+## Not Using lower case for Data Types
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+lower+case+for+Data+Types)
+
+Data types should be lower cased to match the exact case that is in the ``SELECT * FROM sys.types;`` table. This will ensure collation differences won't cause unexpected errors.
+
+**Use:** ``DECLARE @Id AS int`` **instead of:** ``DECLARE @Id AS INT``
+
+**Use:**
+
+```sql
+CREATE TABLE dbo.Person (
+    PersonId  int          IDENTITY(1, 1) NOT NULL
+   ,FirstName nvarchar(50) NULL
+   ,LastName  varchar(50)  NULL
+);
+```
+
+**instead of:**
+
+```sql
+CREATE TABLE dbo.Person (
+    PersonId  INT          IDENTITY(1, 1) NOT NULL
+   ,FirstName NVARCHAR(50) NULL
+   ,LastName  NVARCHAR(50) NULL
+);
+```
+
 
 [Back to top](#top)
 
@@ -1306,8 +1337,8 @@ GO
 UPDATE Sales.Orders SET PickingCompletedWhen = '2013-01-09 23:59:59.9999999' WHERE OrderId = 469
 
 DECLARE
-    @PickingCompletedWhenFrom DATETIME2(7) = '2013-01-09'
-   ,@PickingCompletedWhenTo   DATETIME2(7) = '2013-01-09';
+    @PickingCompletedWhenFrom datetime2(7) = '2013-01-09'
+   ,@PickingCompletedWhenTo   datetime2(7) = '2013-01-09';
 
 SELECT
     O.OrderID
@@ -1344,6 +1375,8 @@ See [Not Specifying JOIN Type](#not-specifying-join-type)
 It is always better to specify the type of join you require, INNER JOIN, LEFT OUTER JOIN (LEFT JOIN), RIGHT OUTER JOIN (RIGHT JOIN), FULL OUTER JOIN (FULL JOIN) and CROSS JOIN, which has been standard since ANSI SQL-92 was published.
 
 While you can choose any supported JOIN style, without affecting the query plan used by SQL Server, using the ANSI-standard syntax will make your code easier to understand, more consistent, and portable to other relational database systems.
+
+[Back to top](#top)
 
 ---
 

@@ -754,7 +754,15 @@ When you use data types of variable length such as `varchar`, `nvarchar`, and `v
 Always specify lengths for a data type.
 
 - A `varchar`, or `nvarchar` that is declared without an explicit length will use a default length. It is safer to be explicit.
-- `decimal`, `numeric`. If no precision and scale are provided, SQL Server will use (18, 0)
+- `decimal`, `numeric`. If no precision and scale are provided, SQL Server will use (18, 0), and that might not be what you want.
+- Explicitly define data type default lengths instead of excluding them.
+  - [n][var]char(1) or [n][var]char(30)
+    - The default length is 1 when n isn't specified in a data definition or variable declaration statement. When n isn't specified with the CAST function, the default length is 30.
+  - datetime2(7)
+  - datetimeoffset(7)
+  - float(53)
+  - [var]binary(1) or [var]binary(30)
+    - The default length is 1 when n isn't specified in a data definition or variable declaration statement. When n isn't specified with the CAST function, the default length is 30.
 
 [Back to top](#top)
 

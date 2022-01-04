@@ -235,7 +235,7 @@ For all parts of the table name, including prefixes, use Pascal Case. `PascalCas
 ## Using Reserved Words in Name
 **Check Id:** 4
 
-Using reserved words makes code more difficult to read, can cause problems to code formatters, and can cause errors when writing code.
+Using reserved or future reserved words makes code more difficult to read, can cause problems to code formatters, and can cause errors when writing code.
 
 [Reserved Keywords](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/reserved-keywords-transact-sql)
 

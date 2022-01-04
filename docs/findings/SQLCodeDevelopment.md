@@ -615,10 +615,37 @@ A development environment allows developers to program and perform test ensuring
 ## Not Using Semicolon to Terminate Statements
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/35)
 
-Although the semicolon isn't required for most statements prior to SQL Server 2016, it will be required in a future version. If you do not include them now database migration in the future will need to add them.
+Although the semicolon isn't required for most statements prior to SQL Server 2016, it will be required in a future version. If you do not include them now database migration in the future will need to add them. Terminating semicolon are requred by the ANSI SQL Standard.
 
 ```sql
-SELECT P.FirstName FROM Person.Person AS P; /* <-- semicolon goes at the end here */
+SET NOCOUNT, XACT_ABORT ON; /* <-- semicolon goes at the end here */
+
+DECLARE @FirstName nvarchar(100); /* <-- semicolon goes at the end here */
+SET @FirstName = N'Kevin'; /* <-- semicolon goes at the end here */
+
+SELECT LastName FROM dbo.Person WHERE FirstName = @FirstName; /* <-- semicolon goes at the end here */
+SELECT Balance FROM dbo.Account; /* <-- semicolon goes at the end here */
+
+IF EXISTS (SELECT * FROM dbo.Person)
+    BEGIN
+        SELECT PersonId, FirstName, LastName FROM dbo.Person; /* <-- semicolon goes at the end here */
+    END; /* <-- semicolon goes at the end here */
+
+BEGIN TRY
+    BEGIN TRANSACTION; /* <-- semicolon goes at the end here */
+
+    UPDATE dbo.Account SET Balance = 100.00 WHERE AccountId = 1; /* <-- semicolon goes at the end here */
+    UPDATE dbo.Account SET Balance = 'a' WHERE AccountId = 2; /* <-- semicolon goes at the end here */
+
+    COMMIT TRANSACTION; /* <-- semicolon goes at the end here */
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        BEGIN
+            ROLLBACK TRANSACTION; /* <-- semicolon goes at the end here */
+        END; /* <-- semicolon goes at the end here */
+    THROW; /* <-- semicolon goes at the end here */
+END CATCH; /* <-- semicolon goes at the end here */
 ```
 
 [Back to top](#top)

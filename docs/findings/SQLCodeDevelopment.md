@@ -454,6 +454,39 @@ Because the SQL Server Query Optimizer typically selects the best execution plan
 
 ---
 
+## Parameters or Variables Do Not Match Column Data Type
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Parameters+or+Variables+Do+Not+Match+Column+Data+Type)
+
+Parameters and variables should match the column data type, length, and precision.
+
+The example below is how not to create parameters and variables with mismatching types and lengths.
+
+```sql
+CREATE OR ALTER PROCEDURE dbo.BusinessEntityAction (
+    @FirstName AS nvarchar(100) /* ← 100 characters */
+)
+AS
+    BEGIN
+        SET NOCOUNT ON;
+                                              /* ↓ 50 characters */
+        SELECT LastName FROM dbo.Person WHERE FirstName = @FirstName;
+
+
+                            /* ↓ 100 characters and varchar() */
+        DECLARE @LastName AS varchar(100) = N'martin'
+
+                                              /* ↓ 50 characters and nvarchar() */
+        SELECT FirstName FROM dbo.Person WHERE LastName = @LastName;
+
+    END;
+```
+
+
+[Back to top](#top)
+
+---
+
+
 ## Using Dynamic Search Conditions
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/179)
 

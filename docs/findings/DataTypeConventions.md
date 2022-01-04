@@ -43,8 +43,13 @@ There are two situations where this is going to hurt performance. When you have 
 ## Using of Deprecated Data Type
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/30)
 
-- Use of deprecated data types such as ``text`` and ``ntext``
-- There is no good reason to use ``text`` or ``ntext``. They were a flawed attempt at BLOB storage and are there only for backward compatibility. Likewise, the WRITETEXT, UPDATETEXT and READTEXT statements are also deprecated. All this complexity has been replaced by the ``varchar(MAX)`` and ``nvarchar(MAX)`` data types, which work with all of SQL Server’s string functions.
+- Do not use the deprecated data types below.
+  - ``text``
+  - ``ntext``
+  - ``image``
+  - ``timestamp``
+
+There is no good reason to use ``text`` or ``ntext``. They were a flawed attempt at BLOB storage and are there only for backward compatibility. Likewise, the WRITETEXT, UPDATETEXT and READTEXT statements are also deprecated. All this complexity has been replaced by the ``varchar(MAX)`` and ``nvarchar(MAX)`` data types, which work with all of SQL Server’s string functions.
 
 [Back to top](#top)
 

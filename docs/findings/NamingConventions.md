@@ -212,7 +212,7 @@ Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvio
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Index+Naming)
 
 - Index Names should be "TableName_Column1_Column2_Column3" 
-- Index Names should indicate if there are included columns with "Table-Name_Column1_Column2_Column3_Includes"
+- Index Names should indicate if there are included columns with "TableName_Column1_Column2_Column3_Includes"
 - When using ``UNIQUEIDENTIFIER/GUID`` columns for clustered index you can use "TableName_ColumnName_INDEX_REBUILD_ONLY" to signify special index maintenance handling.
   - See [UNIQUEIDENTIFIER in a Clustered Index](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/table-conventions#uniqueidentifier-in-a-clustered-index)
 

@@ -208,14 +208,26 @@ Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvio
 
 ---
 
+## Index Naming
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Index+Naming)
+
+- Index Names should be "TableName_Column1_Column2_Column3" 
+- Index Names should indicate if there are included columns with "Table-Name_Column1_Column2_Column3_Includes"
+- When using ``UNIQUEIDENTIFIER/GUID`` columns for clustered index you can use "TableName_ColumnName_INDEX_REBUILD_ONLY" to signify special index maintenance handling.
+  - See [UNIQUEIDENTIFIER in a Clustered Index](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/table-conventions#uniqueidentifier-in-a-clustered-index)
+
+See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
+
+[Back to top](#top)
+
+---
+
 ## Using Prefix in Index Name
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/72)
 
 No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 
-* Names should be "TableName_Column1_Column2_Column3" 
-* Names should indicate if there are included columns with "Table-Name_Column1_Column2_Column3_Includes"
-* When using UNIQUEIDENTIFIER/GUID columns you can use "Table-Name_ColumnN_INDEX_REBUILD_ONLY" to signify special index maintenance handling.
+See [Index Naming](/SQL-Server-Development-Assessment/findings/naming-conventions#index-naming)
 
 See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
 

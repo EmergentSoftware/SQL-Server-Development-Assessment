@@ -56,9 +56,9 @@ If you do not specify an object name SQL Server will create one for you. This ca
 
 ```sql
 CREATE TABLE dbo.TableName (
-    TableNameId INT         NOT NULL PRIMARY KEY                           /* This creates a primary key with a name like "PK__TableNam__38F491856B661278" */
-   ,SpecialCode CHAR(1)     NOT NULL CHECK (SpecialCode IN ('A', 'B', 'C'))/* This creates a SpecialCode constraint with a name like "CK__TableName__Speci__49C3F6B7" */
-   ,SomeName    VARCHAR(50) NOT NULL DEFAULT ('')                          /* This creates a SomeName default constraint with a name like "DF__TableName__SomeN__4AB81AF0" */
+    TableNameId int         NOT NULL PRIMARY KEY                           /* This creates a primary key with a name like "PK__TableNam__38F491856B661278" */
+   ,SpecialCode char(1)     NOT NULL CHECK (SpecialCode IN ('A', 'B', 'C'))/* This creates a SpecialCode constraint with a name like "CK__TableName__Speci__49C3F6B7" */
+   ,SomeName    varchar(50) NOT NULL DEFAULT ('')                          /* This creates a SomeName default constraint with a name like "DF__TableName__SomeN__4AB81AF0" */
 );
 
 /* Drop the bad version of the table */
@@ -66,9 +66,9 @@ DROP TABLE dbo.TableName;
 
 /* Create a better version of the table with actual constraint names */
 CREATE TABLE dbo.TableName (
-    TableNameId INT         NOT NULL CONSTRAINT TableNameId PRIMARY KEY
-   ,SpecialCode CHAR(1)     NOT NULL CONSTRAINT SpecialCodeInList CHECK (SpecialCode IN ('A', 'B', 'C'))
-   ,SomeName    VARCHAR(50) NOT NULL CONSTRAINT SomeNameEmpty DEFAULT ('')
+    TableNameId int         NOT NULL CONSTRAINT TableName_TableNameId PRIMARY KEY
+   ,SpecialCode char(1)     NOT NULL CONSTRAINT TableName_SpecialCodeInList CHECK (SpecialCode IN ('A', 'B', 'C'))
+   ,SomeName    varchar(50) NOT NULL CONSTRAINT TableName_SomeNameEmpty DEFAULT ('')
 );
 ```
 
@@ -202,7 +202,7 @@ The use of the tbl_prefix for a table, often called "tibbling", came from databa
 
 SQL Server is a strongly typed language. There is never a doubt what type of object something is in SQL Server if you know its name, schema and database, because its type is there in sys.objects: Also it is obvious from the usage. Columns can be easily identified as such and character columns would have to be checked for length in the Object Browser anyway or Intellisense tool-tip hover in SQL Server Management Studio.
 
-Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvious in SQL statements which items are columns (before or after the FROM clause). Do not use a data type prefix for the column either, for example, "IntCustomerId" for a numeric type or "VcName" for a VARCHAR type.
+Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvious in SQL statements which items are columns (before or after the FROM clause). Do not use a data type prefix for the column either, for example, "IntCustomerId" for a numeric type or "VcName" for a ``varchar`` type.
 
 [Back to top](#top)
 
@@ -213,7 +213,7 @@ Do not prefix your columns with "fld_", "col_", "f_", "u_" as it should be obvio
 
 No need for prefixing (PK_, IX_, UK_, UX_) your index names.
 
-* Names should be "Table-Name_Column1_Column2_Column3" 
+* Names should be "TableName_Column1_Column2_Column3" 
 * Names should indicate if there are included columns with "Table-Name_Column1_Column2_Column3_Includes"
 * When using UNIQUEIDENTIFIER/GUID columns you can use "Table-Name_ColumnN_INDEX_REBUILD_ONLY" to signify special index maintenance handling.
 
@@ -314,9 +314,9 @@ Bit columns should be given affirmative boolean names like "IsDeletedFlag", "Has
   - RowUpdate**PersonId** is the person who last updated a record
   - RowUpdate**Time** is the date and time something was modified
   - RowCreate**Time** is the date and time something was created
-  - RowVersion**Stamp** is the RowVersion/Timestamp (unique binary numbers) to increment for each insert or update
+  - RowVersion**Stamp** is the ``rowversion/timestamp`` (unique binary numbers) to increment for each insert or update
   - Line**Amount** is a currency amount not dependent on the data type like DECIMAL(19, 4)
-  - Group**Name** is the text string not dependent on the data type like VARCHAR() or NVARCHAR()
+  - Group**Name** is the text string not dependent on the data type like ``varchar()`` or ``nvarchar()``
   - State**Code** indicates the short form of something
   - IsDeleted**Flag** indicates a status see [Non-Affirmative Boolean Name Use](#non-affirmative-boolean-name-use) for boolean column naming
   - Unit**Price**

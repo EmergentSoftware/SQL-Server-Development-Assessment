@@ -708,6 +708,20 @@ By changed the WHERE clause to not use the YEAR() function and doing a bit more 
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Unnecessary+Functions)
 
 - Use ``TRIM(string)`` instead of ``LTRIM(RTRIM(string))``
+- When comparing a string for blank it is unnecessary to trim the string before the comparison. The examples below are two ways to check for parameter/variable blanks.
+```sql
+DECLARE @String nvarchar(100) = N'    '
+
+IF @String = N''
+BEGIN
+    /* Do the thing here */
+END
+
+IF LEN(@String) = 0
+BEGIN
+    /* Do the thing here */
+END
+```
 - If your database is set to 'case insensitive', you do not need to use the ``LOWER(string)`` function when comparing two strings.
    - Execute the query ``SELECT CONVERT(varchar(256), SERVERPROPERTY('collation'));`` to verify the database shows it is a 'case insensitive'  collation (\_CI\_). The default SQL Server collation is 'SQL_Latin1_General_CP1_CI_AS'.
 

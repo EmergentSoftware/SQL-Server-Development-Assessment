@@ -709,6 +709,7 @@ By changed the WHERE clause to not use the YEAR() function and doing a bit more 
 
 - Use ``TRIM(string)`` instead of ``LTRIM(RTRIM(string))``
 - When comparing a string for blank it is unnecessary to trim the string before the comparison. The examples below are two ways to check for parameter/variable blanks.
+
 ```sql
 DECLARE @String nvarchar(100) = N'    '
 

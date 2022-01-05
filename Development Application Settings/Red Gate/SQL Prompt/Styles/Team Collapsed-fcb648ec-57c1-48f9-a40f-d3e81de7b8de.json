@@ -61,9 +61,6 @@
       "indentContents": true
     }
   },
-  "functionCalls": {
-    "addSpacesAroundParentheses": true
-  },
   "caseExpressions": {
     "collapseCaseExpressionsShorterThan": 75
   },

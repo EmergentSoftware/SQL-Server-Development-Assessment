@@ -434,7 +434,7 @@ CREATE TABLE #UseMe (
    ,LastName  nvarchar(100) NOT NULL
 );
 
-DECLARE @DoNotUseMe TABLE (
+DECLARE @DoNotUseMe table (
     DoNotUseMeId int           NOT NULL IDENTITY(1, 1) PRIMARY KEY
    ,FirstName    nvarchar(100) NOT NULL
    ,LastName     nvarchar(100) NOT NULL
@@ -709,6 +709,7 @@ By changed the WHERE clause to not use the YEAR() function and doing a bit more 
 
 - Use ``TRIM(string)`` instead of ``LTRIM(RTRIM(string))``
 - When comparing a string for blank it is unnecessary to trim the string before the comparison. The examples below are two ways to check for parameter/variable blanks.
+
 ```sql
 DECLARE @String nvarchar(100) = N'    '
 

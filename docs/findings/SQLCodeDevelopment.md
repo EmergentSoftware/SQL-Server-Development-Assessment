@@ -434,7 +434,7 @@ CREATE TABLE #UseMe (
    ,LastName  nvarchar(100) NOT NULL
 );
 
-DECLARE @DoNotUseMe TABLE (
+DECLARE @DoNotUseMe table (
     DoNotUseMeId int           NOT NULL IDENTITY(1, 1) PRIMARY KEY
    ,FirstName    nvarchar(100) NOT NULL
    ,LastName     nvarchar(100) NOT NULL

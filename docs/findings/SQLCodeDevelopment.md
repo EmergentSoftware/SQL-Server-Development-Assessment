@@ -1142,9 +1142,9 @@ Use `SET NOCOUNT ON;` at the beginning of your SQL batches, stored procedures fo
 
 ```sql
 CREATE OR ALTER PROCEDURE dbo.PersonInsert
-    @PersonId INT
+    @PersonId int
    ,@JobTitle nvarchar(100)
-   ,@HiredOn  DATE
+   ,@HiredOn  date
    ,@Gender   char(1)
 AS
 BEGIN

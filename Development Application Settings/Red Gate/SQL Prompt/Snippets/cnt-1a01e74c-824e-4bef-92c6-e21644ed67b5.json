@@ -1,0 +1,6 @@
+{
+  "id": "1a01e74c-824e-4bef-92c6-e21644ed67b5",
+  "prefix": "cnt",
+  "description": "ES: Safe count all rows in all tables (does not lock tables)",
+  "body": "SELECT\r\n    SchemaName    = SCHEMA_NAME(T.schema_id)\r\n   ,TableName     = T.name\r\n   ,TotalRowCount = FORMAT(SUM(P.rows), '#,##0')\r\nFROM\r\n    sys.tables                AS T\r\n    INNER JOIN sys.partitions AS P\r\n        ON T.object_id = P.object_id\r\n        AND P.index_id IN (0, 1)\r\nWHERE\r\n    SCHEMA_NAME(T.schema_id) <> 'History'\r\nAND T.name NOT IN ('__RefactorLog')\r\nGROUP BY\r\n    SCHEMA_NAME(T.schema_id)\r\n   ,T.name\r\nORDER BY\r\n    SCHEMA_NAME(T.schema_id)\r\n   ,T.name;"
+}

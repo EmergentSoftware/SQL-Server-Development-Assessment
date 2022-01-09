@@ -1,0 +1,6 @@
+{
+  "id": "e87e077b-daf4-44d9-b183-9ab230059201",
+  "prefix": "azscale",
+  "description": "ES: Azure Database scale check and alter",
+  "body": "SELECT\r\n    Edition          = DATABASEPROPERTYEX(DB_NAME(), 'EDITION')\r\n   ,ServiceObjective = DATABASEPROPERTYEX(DB_NAME(), 'ServiceObjective')\r\n   ,MaxSizeInGB      = CONVERT(bigint, DATABASEPROPERTYEX(DB_NAME(), 'MaxSizeInBytes')) / 1024 / 1024 / 1024\r\n   ,CurrentSizeInGB  = (\r\n        SELECT (SUM(CAST((size * 8.0 / 1024 / 1024) AS decimal(15, 2))))\r\n        FROM\r\n            sys.database_files\r\n    );\r\n\r\n/*\r\nDECLARE @StringToExecute AS nvarchar(MAX) = N''\r\n\r\n-- EDITION = Basic, Standard, Premium\r\n-- SERVICE_OBJECTIVE = S0, S1, S2, S3, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15\r\n\r\nSET @StringToExecute = 'ALTER DATABASE [' + DB_NAME() + '] MODIFY (EDITION = ''Standard'', MAXSIZE = 250 GB, SERVICE_OBJECTIVE = ''S0'');'\r\n\r\n--SELECT @StringToExecute\r\n\r\nEXECUTE sp_executesql @stmt = @StringToExecute;\r\n */"
+}

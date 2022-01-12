@@ -181,20 +181,20 @@ The `CHECK CHECK` syntax is correct. The 1st `CHECK` is the end of `WITH CHECK` 
 
 ---
 
-## UNIQUEIDENTIFIER in a Clustered Index
+## uniqueidentifier in a Clustered Index
 **Check Id:** 22
 
-UNIQUEIDENTIFIER/GUID columns should not be in a clustered index. Even NEWSEQUENTIALID() should not be used in a clustered index. The sequential UNIQUEIDENTIFIER/GUID is based on the SQL Server's MAC address. When an Availability Group fails over the next UNIQUEIDENTIFIER/GUID will not be sequential anymore.
+``uniqueidentifier/guid`` columns should not be in a clustered index. Even NEWSEQUENTIALID() should not be used in a clustered index. The sequential ``uniqueidentifier/guid`` is based on the SQL Server's MAC address. When an Availability Group fails over the next ``uniqueidentifier/guid`` will not be sequential anymore.
 
-SQL Server will bad page split and fragment an index when a new record is inserted instead of being inserting on the last page using standard best practices for index maintenance. The clustered index will become fragmented because of randomness of UNIQUEIDENTIFIER/GUID. Index maintenance set to the default fill factor of 0 (packed 100%) will force bad page splits.
+SQL Server will bad page split and fragment an index when a new record is inserted instead of being inserting on the last page using standard best practices for index maintenance. The clustered index will become fragmented because of randomness of ``uniqueidentifier/guid``. Index maintenance set to the default fill factor of 0 (packed 100%) will force bad page splits.
 
-A use case for when you can use UNIQUEIDENTIFIER/GUID as a primary key & clustered index, is when there are separate systems and merging rows would be difficult. The uniqueness of UNIQUEIDENTIFIER/GUID simplifies the data movements.
+A use case for when you can use ``uniqueidentifier/guid`` as a primary key & clustered index, is when there are separate systems and merging rows would be difficult. The uniqueness of ``uniqueidentifier/guid`` simplifies the data movements.
 
-DBAs have historically not implemented UNIQUEIDENTIFIER/GUID as primary keys and/or clustered indexes. The traditional index maintenance jobs would keep the UNIQUEIDENTIFIER/GUID indexes in a perpetual state of fragmentation causing bad page splits, which is an expensive process.
+DBAs have historically not implemented ``uniqueidentifier/guid`` as primary keys and/or clustered indexes. The traditional index maintenance jobs would keep the ``uniqueidentifier/guid`` indexes in a perpetual state of fragmentation causing bad page splits, which is an expensive process.
 
-A new index maintenance strategy is to name these UNIQUEIDENTIFIER/GUID indexes with the ending "*_INDEX_REBUILD_ONLY" and create a customized index maintenance plan. One job step will perform the standard index maintenance ignoring the UNIQUEIDENTIFIER/GUID indexes and another job step will only perform an index rebuild, skipping index reorganizations. [Ola Hallengren maintenance scripts](https://ola.hallengren.com/) is recommended.
+A new index maintenance strategy is to name these ``uniqueidentifier/guid`` indexes with the ending "*_INDEX_REBUILD_ONLY" and create a customized index maintenance plan. One job step will perform the standard index maintenance ignoring the ``uniqueidentifier/guid`` indexes and another job step will only perform an index rebuild, skipping index reorganizations. [Ola Hallengren maintenance scripts](https://ola.hallengren.com/) is recommended.
 
-These UNIQUEIDENTIFIER/GUID indexes should be created and rebuilt with a custom fill factor to account for at least a weeks' worth of data. This is not a "set it, and forget it" maintenance plan and will need some looking after.
+These ``uniqueidentifier/guid`` indexes should be created and rebuilt with a custom fill factor to account for at least a weeks' worth of data. This is not a "set it, and forget it" maintenance plan and will need some looking after.
 
 These are a 400 level tasks and please feel free to reach out to a DBA for assistance.
 
@@ -220,18 +220,18 @@ Every table should have some column (or set of columns) that uniquely identifies
 
 ---
 
-## UNIQUEIDENTIFIER For Primary Key
+## uniqueidentifier For Primary Key
 **Check Id:** 8
 
-Using UNIQUEIDENTIFIER/GUID as primary keys causes issues with SQL Server databases. UNIQUEIDENTIFIER/GUID are unnecessarily wide (4x wider than an INT).
+Using ``uniqueidentifier/guid`` as primary keys causes issues with SQL Server databases. ``uniqueidentifier/guid`` are unnecessarily wide (4x wider than an INT).
 
-UNIQUEIDENTIFIERs/GUIDs are not user friendly when working with data. PersonId = 2684 is more user friendly then PersonId = 0B7964BB-81C8-EB11-83EC-A182CB70C3ED.
+``uniqueidentifiers/guids`` are not user friendly when working with data. PersonId = 2684 is more user friendly then PersonId = 0B7964BB-81C8-EB11-83EC-A182CB70C3ED.
 
-![UNIQUEIDENTIFIER For Primary Key](../Images/UNIQUEIDENTIFIER_For_Primary_Key.png)
+![uniqueidentifier For Primary Key](../Images/uniqueidentifier_For_Primary_Key.png)
 
-A use case for when you can use UNIQUEIDENTIFIER/GUID as primary keys, is when there are separate systems and merging rows would be difficult. The uniqueness of UNIQUEIDENTIFIER/GUID simplifies the data movements.
+A use case for when you can use ``uniqueidentifier/guid`` as primary keys, is when there are separate systems and merging rows would be difficult. The uniqueness of ``uniqueidentifier/guid`` simplifies the data movements.
 
-See [UNIQUEIDENTIFIER in a Clustered Index for details](#uniqueidentifier-in-a-clustered-index)
+See [uniqueidentifier in a Clustered Index for details](#uniqueidentifier-in-a-clustered-index)
 
 [Back to top](#top)
 

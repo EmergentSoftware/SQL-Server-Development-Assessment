@@ -1,4 +1,4 @@
-title: "sp_Develop"
+title: "SQL Server Development Best Practices Assessment (sp_Develop)"
 description: "sp_Develop can be used by database developers, software developers and for performing database code (smell) reviews."
 remote_theme: "pmarsceill/just-the-docs"
 color_scheme: "light"

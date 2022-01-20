@@ -38,6 +38,81 @@ TPC & TPH do not follow normal form. See [Not Normalizing Tables](#not-normalizi
 
 ---
 
+## Using Entity Attribute Value
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Entity+Attribute+Value)
+
+The [Entity–Attribute–Value (EAV) model ](https://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model) falls victim to the [Inner-platform effect](https://en.wikipedia.org/wiki/Inner-platform_effect).
+
+The inner-platform effect is the tendency of software architects to create a system so customizable as to become a replica, and often a poor replica, of the software development platform they are using. This is generally inefficient and such systems are often considered to be examples of an [anti-pattern](https://en.wikipedia.org/wiki/Anti-pattern).
+
+In the database world, developers are sometimes tempted to bypass the SQL Server relations database, for example by storing everything in one big table with three columns labelled EntityId, Key, and Value. While this entity-attribute-value model allows the developer to break out from the structure imposed by a SQL Server database, it loses out on all the benefits, since all of the work that could be done efficiently by the SQL Server relational database is forced onto the application instead. Queries become much more convoluted, the indexes and query optimizer can no longer work effectively, and data validity constraints are not enforced. Performance and maintainability can be extremely poor.
+
+[Azure Table storage](https://docs.microsoft.com/en-us/azure/storage/tables/table-storage-overview) or [Azure Cosmos DB Table API](https://docs.microsoft.com/en-us/azure/cosmos-db/table/introduction) are two alternative services to assess for EAV requirements. There are some feature differences between Table API in Azure Cosmos DB and Azure table storage. For ease of development, Azure provides a unified [Azure Tables SDK](https://devblogs.microsoft.com/azure-sdk/announcing-the-new-azure-data-tables-libraries/) that can be used to target both the original Table storage as well as the Cosmos DB Table API.
+
+A use case exception for utilizing an EAV model in a database is where the attributes are user defined and a developer will not have control over them.
+
+Another use case exception for utilizing an EAV model is for something like a multiple product (entity) type shopping cart. Where each specific product (entity) type has its own list of attributes. If the product (entity) catalog only sells a manageable number of product different types the attributes, the attributes should be materialized as physical columns in the table schema. This type of EAV model will have diminishing returns for performance with more data housed in the database. Caching this type of EAV model will allow for a larger data set as to lessen the chance of performance issues. Ensure this is communicated to the stakeholders.
+
+**Basic table model for a product catalog that supports multiple product types**
+
+```sql
+CREATE TABLE dbo.Attribute (
+    AttributeId   int           IDENTITY(1, 1) NOT NULL
+   ,AttributeName nvarchar(100) NOT NULL
+   ,CONSTRAINT Attribute_AttributeId PRIMARY KEY CLUSTERED (AttributeId ASC)
+);
+
+/* Insert values like "Size", "Color" */
+
+
+CREATE TABLE dbo.AttributeTerm (
+    AttributeTermId int           IDENTITY(1, 1) NOT NULL
+   ,AttributeId     int           NOT NULL CONSTRAINT AttributeTerm_Attribute FOREIGN KEY REFERENCES dbo.Attribute (AttributeId)
+   ,TermName        nvarchar(100) NOT NULL
+   ,CONSTRAINT AttributeTerm_AttributeTermId PRIMARY KEY CLUSTERED (AttributeTermId ASC)
+);
+
+/* Insert values like "Small", "Large", "Red", "Green" */
+
+
+CREATE TABLE dbo.Product (
+    ProductId          int           IDENTITY(1, 1) NOT NULL
+   ,ProductName        nvarchar(200) NOT NULL
+   ,ProductSlug        nvarchar(400) NOT NULL
+   ,ProductDescription nvarchar(MAX) NULL
+   ,CONSTRAINT Product_ProductId PRIMARY KEY CLUSTERED (ProductId ASC)
+   ,CONSTRAINT Product_ProductName UNIQUE NONCLUSTERED (ProductName ASC)
+   ,CONSTRAINT Product_ProductSlug UNIQUE NONCLUSTERED (ProductSlug ASC)
+);
+
+/* Insert values like "Shirt", "Pants" */
+
+
+CREATE TABLE dbo.ProductItem (
+    ProductItemId int            IDENTITY(1, 1) NOT NULL
+   ,ProductId     int            NOT NULL CONSTRAINT ProductItem_Product FOREIGN KEY REFERENCES dbo.Product (ProductId)
+   ,UPC           varchar(12)    NULL
+   ,RegularPrice  decimal(18, 2) NOT NULL
+   ,SalePrice     decimal(18, 2) NULL
+   ,CONSTRAINT ProductItem_ProductItemId PRIMARY KEY CLUSTERED (ProductItemId ASC)
+);
+
+/* Insert values product UPC codes and prices */
+
+
+CREATE TABLE dbo.ProductVariant (
+    ProductVariantId int IDENTITY(1, 1) NOT NULL
+   ,ProductItemId    int NOT NULL CONSTRAINT ProductVariant_ProductItem FOREIGN KEY REFERENCES dbo.ProductItem (ProductItemId)
+   ,AttributeTermId  int NOT NULL CONSTRAINT ProductVariant_AttributeTerm FOREIGN KEY REFERENCES dbo.AttributeTerm (AttributeTermId)
+   ,CONSTRAINT ProductVariant_ProductVariantId PRIMARY KEY CLUSTERED (ProductVariantId ASC)
+);
+
+/* Insert values that link Shirt or Pants product items to the attributes available for sale */
+```
+
+[Back to top](#top)
+--
+
 ## Incorrect Weak or Strong Table
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Weak+or+Strong+Table)
 

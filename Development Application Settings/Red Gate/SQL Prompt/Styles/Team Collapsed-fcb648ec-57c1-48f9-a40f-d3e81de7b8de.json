@@ -71,8 +71,7 @@
     },
     "in": {
       "placeFirstValueOnNewLine": "never",
-      "placeSubsequentValuesOnNewLines": "never",
-      "addSpaceAroundInContents": true
+      "placeSubsequentValuesOnNewLines": "never"
     }
   }
 }

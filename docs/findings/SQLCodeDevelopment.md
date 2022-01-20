@@ -1347,21 +1347,49 @@ Commented code hides what's important and it is out of date. Rely on the version
 
 Important code blocks within stored procedures and functions should be commented. Brief functionality descriptions should be included where important or complicated processing is taking place.
 
-Use block comments instead of single line comments in your T-SQL code. Single line comments that are copy and pasted when performance tuning makes it difficult to know where the single line comment ends.
+Use block comments `/* comment */` instead of double-dash `-- comment` comments in your T-SQL code. Double-dash comments that are copy and pasted when performance tuning makes it difficult to know where the single line comment ends. 
 
-
+If this is the query and double-dash `-- comment` comment is used:
 ```sql
-/*
-  block comment 1 (use me)
-  block comment 2 (use me)
-*/
-
-/* block comment (use me) */
-
--- single line comment (do not use me)
+SELECT
+    *
+FROM
+    dbo.Person
+WHERE
+    FirstName = 'Kevin' -- This line is a comment
+    AND LastName = 'Martin'
+ORDER BY
+    LastName;
 ```
 
+It turns into this in monitoring tools and Dynamic Management Views:
+```sql
+SELECT * FROM dbo.Person WHERE FirstName = 'Kevin' -- This line is a comment AND LastName = 'Martin' ORDER BY LastName;
+```
 
+You cannot tell where the query ends and it will break tools like Redgate SQL Prompt.
+
+The better method is to use the block style comments `/* comment */` like:
+
+```sql
+SELECT
+    *
+FROM 
+    dbo.Person
+WHERE
+    FirstName = 'Kevin' /* This line is a comment */
+    AND LastName = 'Martin'
+ORDER BY
+    LastName;
+```
+
+The collapse query below will format correctly in SSMS with Redgate SQL Prompt.
+
+```sql
+SELECT * FROM dbo.Person WHERE FirstName = 'Kevin' /* This line is a comment */ AND LastName = 'Martin' ORDER BY LastName;
+```
+
+---
 Stored procedures and functions should include at a minimum a header comment with a brief overview of the batch's functionality and author information.
 
 You can skip including the Author, Created On & Modified On details when you use source control. (You should be using source control!)

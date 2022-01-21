@@ -554,6 +554,8 @@ Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate the
 
 You might being using square brackets [] unnecessarily for object names. If object names are valid and not reserved words, there is no need to use square brackets. Use them only for invalid names.
 
+See [Removing the Square Bracket Decorations with SQL Prompt](https://www.red-gate.com/hub/product-learning/sql-prompt/removing-the-square-bracket-decorations-with-sql-prompt)
+
 ```sql
 SELECT 
     P.[FirstName]

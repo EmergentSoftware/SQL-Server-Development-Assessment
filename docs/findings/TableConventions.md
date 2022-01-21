@@ -302,7 +302,8 @@ Using ``uniqueidentifier/guid`` as primary keys causes issues with SQL Server da
 
 ``uniqueidentifiers/guids`` are not user friendly when working with data. PersonId = 2684 is more user friendly then PersonId = 0B7964BB-81C8-EB11-83EC-A182CB70C3ED.
 
-![uniqueidentifier For Primary Key](../Images/uniqueidentifier_For_Primary_Key.png)
+![uniqueidentifier For Primary Key](../Images/UNIQUEIDENTIFIER_For_Primary_Key.png)
+
 
 A use case for when you can use ``uniqueidentifier/guid`` as primary keys, is when there are separate systems and merging rows would be difficult. The uniqueness of ``uniqueidentifier/guid`` simplifies the data movements.
 

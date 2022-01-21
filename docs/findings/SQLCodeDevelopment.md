@@ -1347,6 +1347,8 @@ Commented code hides what's important and it is out of date. Rely on the version
 
 Important code blocks within stored procedures and functions should be commented. Brief functionality descriptions should be included where important or complicated processing is taking place.
 
+---
+
 Use block comments `/* comment */` instead of double-dash `-- comment` comments in your T-SQL code. Double-dash comments that are copy and pasted when performance tuning makes it difficult to know where the single line comment ends. 
 
 If this is the query and double-dash `-- comment` comment is used:

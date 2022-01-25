@@ -1307,7 +1307,7 @@ Setting options in batches, stored procedures and triggers cause recompilation. 
 ## Using Column Number in ORDER BY
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/102)
 
-Use the column name in your ORDER BY instead of the column number. It makes it difficult to understand the code at a glance and leads to issue when alter the order of the columns in the SELECT.
+Use the column name in your ORDER BY instead of the column number. The use of constants in the ORDER BY is deprecated for future removal. It makes it difficult to understand the code at a glance and leads to issue when alter the order of the columns in the SELECT.
 
 ```sql
 SELECT

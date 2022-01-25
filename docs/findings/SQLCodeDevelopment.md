@@ -848,14 +848,13 @@ Always specify lengths for a data type.
 ## COALESCE vs ISNULL
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/66)
 
-The ISNULL function and the COALESCE expression have a similar purpose but can behave differently.
+The ``ISNULL`` function and the ``COALESCE`` expression have a similar purpose but can behave differently.
 
 1. Because `ISNULL` is a function, it's evaluated only once. As described above, the input values for the `COALESCE` expression can be evaluated multiple times.
 2. Data type determination of the resulting expression is different. `ISNULL` uses the data type of the first parameter, `COALESCE` follows the `CASE` expression rules and returns the data type of value with the highest precedence.
 3. The NULLability of the result expression is different for `ISNULL` and `COALESCE`.
 4. Validations for `ISNULL` and `COALESCE` are also different. For example, a NULL value for `ISNULL` is converted to int though for `COALESCE`, you must provide a data type.
 5. `ISNULL` takes only two parameters. By contrast `COALESCE` takes a variable number of parameters.
-6. `COALESCE` is faster but your results could depend on different circumstances.
 
 Source: [Microsoft Docs: Comparing COALESCE and ISNULL](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/coalesce-transact-sql?view=sql-server-ver15#comparing-coalesce-and-isnull)
 

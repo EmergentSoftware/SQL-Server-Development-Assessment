@@ -1345,12 +1345,39 @@ Commented code hides what's important and it is out of date. Rely on the version
 
 ---
 
-## Not Using Code Comments
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/88)
+## Not Using Location Comment
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Location+Comments)
 
-Important code blocks within stored procedures and functions should be commented. Brief functionality descriptions should be included where important or complicated processing is taking place.
+When creating dynamic SQL or software originated SQL code, insert a comment explaining where it came from, be it a stored procedure name, method name, function name, some name that will help track down what is generating this SQL Code.
+
+When looking at the SQL Server execution plan cache for dynamic SQL and SQL originating in software code, we cannot see the parent object like we can with non-dynamic database stored procedures or functions. It only reports as ‘Statement’ for Query Type. The SQL command location comment helps a team member or query tuner easier identify the lineage of which piece of code built the SQL command. The location comment can be found in the stored query plan by viewing the query text.
+
+![Query Type Statement vs. Parent](../Images/Not_Using_Location_Comment_Statement_Parent.png)
+
+Use static text for the location comment and do not create dynamic comments. Static comment text allows for a single plan cache to be created and reused.
+
+**Below is good:**
+
+```sql
+/* dbo.MyStoredProcedure */ 
+SELECT * FROM dbo.Person WHERE FirstName = 'Kevin'
+```
+
+It is tempting to add things like the date and time or the username who ran the SQL command. Dynamic comment text will create plan cache pollution having multiple plan caches.
+
+**Below is bad:**
+
+```sql
+/* Namespace.MyMethod – ran at 2022-01-28 22:48:12.423 */ 
+SELECT * FROM dbo.Person WHERE FirstName = 'Kevin'
+```
+
+[Back to top](#top)
 
 ---
+
+## Using Double Dash Instead of Block Comment
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+double+dash+instead+of+block+comments)
 
 Use block comments `/* comment */` instead of double-dash `-- comment` comments in your T-SQL code. Double-dash comments that are copy and pasted when performance tuning makes it difficult to know where the single line comment ends. 
 
@@ -1394,7 +1421,18 @@ The collapse query below will format correctly in SSMS with Redgate SQL Prompt.
 SELECT * FROM dbo.Person WHERE FirstName = 'Kevin' /* This line is a comment */ AND LastName = 'Martin' ORDER BY LastName;
 ```
 
+
+[Back to top](#top)
+
 ---
+
+
+## Not Using Code Comments
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/88)
+
+Important code blocks within stored procedures and functions should be commented. Brief functionality descriptions should be included where important or complicated processing is taking place.
+
+
 Stored procedures and functions should include at a minimum a header comment with a brief overview of the batch's functionality and author information.
 
 You can skip including the Author, Created On & Modified On details when you use source control. (You should be using source control!)

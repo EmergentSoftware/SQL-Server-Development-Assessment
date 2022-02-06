@@ -1144,7 +1144,10 @@ BEGIN CATCH
         BEGIN
             ROLLBACK TRANSACTION;
         END;
-    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled or logged. */
+
+    /* - Handle the error here, cleanup, et cetera.
+        - In most cases it is best to bubble up (THROW) the error to the application/client to be displaed to the user and/or logged.
+    */
     THROW;
 END CATCH;
 ```
@@ -1189,7 +1192,7 @@ BEGIN CATCH
     IF @@TRANCOUNT > 0
         BEGIN
             ROLLBACK TRANSACTION;
-        END; /* Always included IF statements with BEGIN...END blocks followed up with a semicolon to terminate the statement. */
+        END;
         
         /* - Handle the error here, cleanup, et cetera.
            - In most cases it is best to bubble up (THROW) the error to the application/client to be displaed to the user and/or logged.
@@ -1200,6 +1203,8 @@ END CATCH;
 
 - See [SET XACT_ABORT OFF](#not-using-set-xact_abort-on)
 - See [Not Using BEGIN END](#not-using-begin-end)
+- See [Not Using Semicolon THROW](#not-using-semicolon-throw)
+- See [Using RAISERROR Instead of THROW](#using-raiserror-instead-of-throw)
 
 [Back to top](#top)
 

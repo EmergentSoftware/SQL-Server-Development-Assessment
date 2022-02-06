@@ -1210,6 +1210,297 @@ END CATCH;
 
 ---
 
+## Error Handling
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Error+Handling)
+
+There are different methodologies for handling errors that originate in a database. [New applications should use the THROW methodologies](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?redirectedfrom=MSDN#:~:text=New%20applications%20should%20use%20THROW%20instead.).
+
+The sample stored procedures below can be used to wire up and test software code to ensure errors are bubbled up, and the user is notified, and error data is logged. After each sample stored procedure below is commented out code to execute each of them.
+
+- See [Using RAISERROR Instead of THROW](#using-raiserror-instead-of-throw)
+- See [Not Using Transactions](#not-using-transactions)
+
+```sql
+/**********************************************************************************************************************/
+CREATE OR ALTER PROCEDURE dbo.TestTHROW (
+    @ThowSystemError     bit = 0
+   ,@ThowCustomError     bit = 0
+   ,@ThrowMultipleErrors bit = 0 /* Only works on SQL Server and not Azure SQL Databases. */
+)
+AS
+    BEGIN
+        SET NOCOUNT, XACT_ABORT ON;
+
+        IF @ThowSystemError = 1
+            BEGIN
+                BEGIN TRY
+                    BEGIN TRANSACTION;
+
+                    SELECT DivideByZero = 1 / 0 INTO
+                        #IgnoreMe1;
+
+                    COMMIT TRANSACTION;
+                END TRY
+                BEGIN CATCH
+                    IF @@TRANCOUNT > 0
+                        BEGIN
+                            ROLLBACK TRANSACTION;
+                        END;
+
+                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    THROW;
+                END CATCH;
+            END;
+
+        IF @ThowCustomError = 1
+            BEGIN
+                DECLARE @ErrorMessageText nvarchar(2048);
+
+                BEGIN TRY
+                    BEGIN TRANSACTION;
+
+                    SELECT JustAOne = 1 INTO
+                        #IgnoreMe2;
+
+                    /* Custom error check */
+                    IF @@ROWCOUNT = 1
+                        BEGIN
+                            SET @ErrorMessageText = N'Two rows were expected to be impacted.';
+                        END;
+
+                    /* Another custom error check */
+                    IF @@ROWCOUNT = 3
+                        BEGIN
+                            /* https://docs.microsoft.com/en-us/sql/t-sql/language-elements/throw-transact-sql?view=sql-server-ver15#c-using-formatmessage-with-throw */
+                            SET @ErrorMessageText = N'Three rows were expected to be impacted.';
+                        END;
+
+                    /* Check if we have any errors to throw */
+                    IF @ErrorMessageText <> ''
+                        BEGIN
+                            ; THROW 50001, @ErrorMessageText, 1;
+                        END;
+
+                    COMMIT TRANSACTION;
+                END TRY
+                BEGIN CATCH
+                    IF @@TRANCOUNT > 0
+                        BEGIN
+                            ROLLBACK TRANSACTION;
+                        END;
+
+                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    THROW;
+                END CATCH;
+
+            END;
+        IF @ThrowMultipleErrors = 1
+            BEGIN
+                BEGIN TRY
+                    BACKUP DATABASE master TO DISK = 'E:\FOLDER_NOT_EXISTS\test.bak';
+                END TRY
+                BEGIN CATCH
+                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    THROW;
+                END CATCH;
+            END;
+    END;
+GO
+
+/* Execute stored procedure
+DECLARE @ReturnCode int = NULL;
+
+EXECUTE @ReturnCode = dbo.TestTHROW
+    -- Set both parameters to 0 (zero) will not throw an error --
+    @ThowSystemError = 0      -- Set to 1 will throw a system generated error (8134: Divide by zero error encountered.) --
+   ,@ThowCustomError = 0      -- Set to 1 will throw a custom error (50001: Two rows were expected to be impacted.) --
+   ,@ThrowMultipleErrors = 0; -- Set to 1 will throw multiple error (3201: Cannot open backup device...) OR (911: Database 'AdventureWorks2019' does not exist. Make sure that the name is entered correctly.) AND (3013: BACKUP DATABASE is terminating abnormally.) NOTE: Will not work on an Azure SQL Database. --
+
+-- NOTE: There is no return code when an error is THROWN --
+SELECT ReturnCode = @ReturnCode;
+GO
+*/
+
+
+/**********************************************************************************************************************/
+CREATE OR ALTER PROCEDURE dbo.TestReturnCode (
+    @ReturnDefaultReturnCode     bit = 0
+   ,@ReturnSystemErrorReturnCode bit = 0
+   ,@ReturnCustomReturnCode      bit = 0
+)
+AS
+    BEGIN
+        SET NOCOUNT, XACT_ABORT ON;
+
+        IF @ReturnDefaultReturnCode = 1
+            BEGIN
+                /* The return code will automatically be 0 (zero) even if it is not specified */
+                SELECT JustAOne = 1 INTO
+                    #IgnoreMe1;
+            END;
+
+        IF @ReturnSystemErrorReturnCode = 1
+            BEGIN
+                BEGIN TRY
+                    SELECT DivideByZero = 1 / 0 INTO
+                        #IgnoreMe2;
+                END TRY
+                BEGIN CATCH
+
+                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    RETURN ERROR_NUMBER();
+                END CATCH;
+            END;
+
+        IF @ReturnCustomReturnCode = 1
+            BEGIN
+                DECLARE @ReturnCode int;
+
+                SELECT JustAOne = 1 INTO
+                    #IgnoreMe3;
+
+                IF @@ROWCOUNT <> 2
+                    BEGIN
+                        SET @ReturnCode = 123123;
+                    END;
+
+                /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                RETURN @ReturnCode;
+            END;
+    END;
+GO
+
+/* Execute stored procedure
+DECLARE @ReturnCode int;
+
+EXECUTE @ReturnCode = dbo.TestReturnCode
+    @ReturnDefaultReturnCode = 0 -- Set to 1 to see the default return code 0 (zero). All parameters set to 0 will also be the default return code of 0 (zero). --
+   ,@ReturnSystemErrorReturnCode = 0 -- Set to 1 to see a system error return code (8134:) --
+   ,@ReturnCustomReturnCode = 0; -- Set to 1 to see a custom return code (123123:) --
+
+SELECT ReturnCode = @ReturnCode;
+GO
+*/
+
+
+/**********************************************************************************************************************/
+CREATE OR ALTER PROCEDURE dbo.TestReturnCodeParameter (
+    @ReturnError   bit            = 0
+   ,@ReturnCode    int            = 0   OUTPUT
+   ,@ReturnMessage nvarchar(2048) = N'' OUTPUT
+)
+AS
+    BEGIN
+        SET NOCOUNT, XACT_ABORT ON;
+
+        IF @ReturnError = 0
+            BEGIN
+                SET @ReturnCode = 0;
+                SET @ReturnMessage = N'';
+            END;
+        ELSE
+            BEGIN
+                BEGIN TRY
+                    SELECT DivideByZero = 1 / 0 INTO
+                        #IgnoreMe2;
+                END TRY
+                BEGIN CATCH
+                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    SET @ReturnCode = ERROR_NUMBER();
+                    SET @ReturnMessage = ERROR_MESSAGE();
+                END CATCH;
+            END;
+    END;
+GO
+
+/* Execute stored procedure
+DECLARE
+    @ReturnCode    int
+   ,@ReturnMessage nvarchar(2048);
+
+EXECUTE dbo.TestReturnCodeParameter
+    @ReturnError = 0 -- Set to 1 will simulate a return code (8134) and return message (Divide by zero error encountered.) in the output parameters. --
+   ,@ReturnCode = @ReturnCode OUTPUT
+   ,@ReturnMessage = @ReturnMessage OUTPUT;
+
+SELECT ReturnCode = @ReturnCode, ReturnMessage = @ReturnMessage;
+GO
+*/
+
+
+/**********************************************************************************************************************/
+CREATE OR ALTER PROCEDURE dbo.TestRAISERROR (@ThowSystemError bit = 0, @ThowCustomError bit = 0)
+AS
+    BEGIN
+        /* New applications should use THROW instead of RAISERROR. https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?view=sql-server-ver15#:~:text=the%20raiserror%20statement%20does%20not%20honor%20set%20xact_abort.%20new%20applications%20should%20use%20throw%20instead%20of%20raiserror. */
+
+        /* SET NOCOUNT, XACT_ABORT ON; */
+        SET NOCOUNT ON; /* The RAISERROR statement does not honor SET XACT_ABORT. */
+
+        IF @ThowSystemError = 1
+            BEGIN
+                BEGIN TRY
+                    BEGIN TRANSACTION;
+
+                    SELECT DivideByZero = 1 / 0 INTO
+                        #IgnoreMe1;
+
+                    COMMIT TRANSACTION;
+                END TRY
+                BEGIN CATCH
+                    IF @@TRANCOUNT > 0
+                        BEGIN
+                            ROLLBACK TRANSACTION;
+                        END;
+
+                    DECLARE @ErrorMessage nvarchar(2048) = ERROR_MESSAGE();
+                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    RAISERROR(@ErrorMessage, 16, 1);
+                    RETURN 1;
+                END CATCH;
+            END;
+
+        IF @ThowCustomError = 1
+            BEGIN
+                BEGIN TRY
+                    BEGIN TRANSACTION;
+
+                    SELECT DivideByZero = 1 / 0 INTO
+                        #IgnoreMe2;
+
+                    COMMIT TRANSACTION;
+                END TRY
+                BEGIN CATCH
+                    IF @@TRANCOUNT > 0
+                        BEGIN
+                            ROLLBACK TRANSACTION;
+                        END;
+
+                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    RAISERROR(N'My Custom Error.', 16, 1);
+                    RETURN 1;
+                END CATCH;
+            END;
+    END;
+GO
+
+/* Execute stored procedure
+DECLARE @ReturnCode int;
+
+EXECUTE @ReturnCode = dbo.TestRAISERROR
+    -- Set both parameters to 0 (zero) will not throw an error --
+    @ThowSystemError = 0  -- Set to 1 will throw a system generated error (50000: Divide by zero error encountered.) --
+   ,@ThowCustomError = 0; -- Set to 1 will throw a system generated error (50000: My Custom Error.) --
+
+SELECT ReturnCode = @ReturnCode
+GO
+*/
+```
+
+[Back to top](#top)
+
+---
+
 ## Scalar Function Is Not Inlineable
 **Check Id:** 25
 

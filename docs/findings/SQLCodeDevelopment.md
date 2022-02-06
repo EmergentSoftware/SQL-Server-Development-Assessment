@@ -848,7 +848,7 @@ The `BEGIN...END` control-of-flow statement block is optional for stored procedu
 
 #### IF Statements 
 
-Always included ```BEGIN...END``` blocks for ```IF``` statements with with a semicolon to terminate the statement. Using ```BEGIN...END``` in an ```IF``` statement and semicolon is critical in some cases. 
+Always included ```BEGIN...END``` blocks for ```IF``` statements with a semicolon to terminate the statement. Using ```BEGIN...END``` in an ```IF``` statement and semicolon is critical in some cases. 
 
 - See [Not Using Semicolon to Terminate Statements](#not-using-semicolon-to-terminate-statements)
 - See [Not Using Semicolon THROW](#not-using-semicolon-throw)

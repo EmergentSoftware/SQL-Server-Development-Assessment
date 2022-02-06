@@ -772,10 +772,107 @@ In the `WHERE` clause below you will notice the "!" mark on the SELECT indicatin
 
 ---
 
-## Stored Procedures not Using BEGIN END
+## Using RAISERROR Instead of THROW
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/37)
+
+[New applications should use THROW instead of RAISERROR](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?redirectedfrom=MSDN#:~:text=New%20applications%20should%20use%20THROW%20instead.)
+
+The ```RAISERROR``` statement does not honor ```SET XACT_ABORT```. See [Not Using SET XACT_ABORT ON](#not-using-set-xact_abort-on)
+
+```RAISERROR``` never aborts execution, so execution will continue with the next statement.
+
+A use case exception for using ```RAISERROR``` instead of ```THROW``` is for legacy compability reasons. ```THROW``` was introduced in SQL Server 2012 so when making modification on this code ```THROW``` can break the current code.
+
+See [Not Using Transactions](#not-using-transactions)
+
+[Back to top](#top)
+
+---
+
+## Not Using Semicolon THROW
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Semicolon+THROW)
+
+```THROW``` is not a reserved keyword so it could be used as a transaction name or savepoint. Always use a ```BEGIN...END``` block after the ```IF``` statement in the ```BEGIN CATCH``` along with a terminating semicolon.
+
+- See [Not Using BEGIN END](#not-using-begin-end)
+- See [Not Using Semicolon to Terminate Statements](#not-using-semicolon-to-terminate-statements)
+
+
+**Use this:**
+```sql
+SET NOCOUNT, XACT_ABORT ON;
+
+BEGIN TRY
+    BEGIN TRANSACTION;
+
+    SELECT 1 / 0;
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        BEGIN
+            ROLLBACK TRANSACTION;
+        END;
+    THROW;
+END CATCH;
+```
+
+**Instead of this:**
+```sql
+SET NOCOUNT, XACT_ABORT ON;
+
+BEGIN TRY
+    BEGIN TRANSACTION;
+
+    SELECT 1 / 0;
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION
+    THROW;
+END CATCH;
+```
+
+[Back to top](#top)
+
+---
+
+<a name="stored-procedures-not-using-begin-end"></a>
+## Not Using BEGIN END
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/41)
 
-The `BEGIN` and `END` block is optional for stored procedures but is required for multi-line user-defined functions. It is best to avoid confusion and be consistent.
+The `BEGIN...END` control-of-flow statement block is optional for stored procedures and IF statements but is required for multi-line user-defined functions. It is best to avoid confusion and be consistent and specific.
+
+#### IF Statements 
+
+Always included ```BEGIN...END``` blocks for ```IF``` statements with with a semicolon to terminate the statement. Using ```BEGIN...END``` in an ```IF``` statement and semicolon is critical in some cases. 
+
+- See [Not Using Semicolon to Terminate Statements](#not-using-semicolon-to-terminate-statements)
+- See [Not Using Semicolon THROW](#not-using-semicolon-throw)
+
+**Use this:**
+```sql
+IF @@TRANCOUNT > 0
+    BEGIN
+        ROLLBACK TRANSACTION;
+    END;
+```
+
+**Instead of this:**
+```sql
+IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION;
+```
+
+**Instead of this:**
+```sql
+IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+```
+
+#### Stored Procedures
 
 **Use this:**
 ```sql
@@ -1037,8 +1134,8 @@ SET NOCOUNT, XACT_ABORT ON;
 BEGIN TRY
     BEGIN TRANSACTION;
 
-    UPDATE dbo.Account SET Balance = 100.00 WHERE AccountId = 1;
-    UPDATE dbo.Account SET Balance = 'a' WHERE AccountId = 2;
+        UPDATE dbo.Account SET Balance = -100.00 WHERE AccountId = 1;
+        UPDATE dbo.Account SET Balance = 'not a decimal' WHERE AccountId = 2;
 
     COMMIT TRANSACTION;
 END TRY
@@ -1052,7 +1149,57 @@ BEGIN CATCH
 END CATCH;
 ```
 
-See [SET XACT_ABORT OFF](#not-using-set-xact_abort-on)
+Here is transaction pattern with a custom ```THROW``` error.
+
+```sql
+SET NOCOUNT, XACT_ABORT ON;
+
+BEGIN TRY
+    DECLARE @ErrorMessageText nvarchar(2048);
+
+    BEGIN TRANSACTION;
+
+    /* Debit the first account */
+    UPDATE dbo.Account SET Balance = -100.00 WHERE AccountId = 1;
+
+    /* Check the first account was debited */
+    IF @@ROWCOUNT <> 1
+        BEGIN
+            SET @ErrorMessageText = N'The debited account failed to update.';
+        END;
+
+    /* Credit the second account */
+    UPDATE dbo.Account SET Balance = 100.00 WHERE AccountId = 2;
+
+    /* Check the second account was credited */
+    IF @@ROWCOUNT <> 1
+        BEGIN
+            SET @ErrorMessageText = N'The credited account failed to update.';
+        END;
+
+    /* Check if we have any errors to throw */
+    IF @ErrorMessageText <> ''
+        BEGIN
+            ; THROW 50001, @ErrorMessageText, 1;
+        END;
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        BEGIN
+            ROLLBACK TRANSACTION;
+        END; /* Always included IF statements with BEGIN...END blocks followed up with a semicolon to terminate the statement. */
+        
+        /* - Handle the error here, cleanup, et cetera.
+           - In most cases it is best to bubble up (THROW) the error to the application/client to be displaed to the user and/or logged.
+        */
+    THROW;
+END CATCH;
+```
+
+- See [SET XACT_ABORT OFF](#not-using-set-xact_abort-on)
+- See [Not Using BEGIN END](#not-using-begin-end)
 
 [Back to top](#top)
 

@@ -38,7 +38,7 @@ Applications that connect to a SQL Server should be built to expect these transi
 
 Ensure you are using the failover group name or availability group listener name in your connection string. The SQL Server name should not be something like 'SQL01'. This indicates you are connecting directly to a specific SQL Server instance instead of a group of SQL Servers.
 
-See [Troubleshoot transient connection errors in SQL Database and SQL Managed Instance](https://docs.microsoft.com/en-us/azure/azure-sql/database/troubleshoot-common-connectivity-issues)
+- See [Troubleshoot transient connection errors in SQL Database and SQL Managed Instance](https://docs.microsoft.com/en-us/azure/azure-sql/database/troubleshoot-common-connectivity-issues)
 
 [Back to top](#top)
 
@@ -51,7 +51,7 @@ You will want to give an account or process only those privileges which are esse
 
 When a vulnerability is found in the code, service or operating system the "Principle of least privilege" lessens the blast radius of damage caused by hackers and malware.
 
-See [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)
+- See [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)
 
 [Back to top](#top)
 
@@ -62,7 +62,7 @@ See [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_le
 
 Users that only access one database should generally be created as contained users which means they don't have a SQL Server "login" and are not found as users in the master database. This makes the database portable by not requiring a link to a SQL Server Login. A database with contained users can be restored to your development SQL Server or a migration event needs to occur in production to a different SQL Server.
 
-See [Contained Database Users - Making Your Database Portable](https://docs.microsoft.com/en-us/sql/relational-databases/security/contained-database-users-making-your-database-portable?view=sql-server-ver15)
+- See [Contained Database Users - Making Your Database Portable](https://docs.microsoft.com/en-us/sql/relational-databases/security/contained-database-users-making-your-database-portable?view=sql-server-ver15)
 
 [Back to top](#top)
 

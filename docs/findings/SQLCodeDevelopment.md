@@ -1227,18 +1227,18 @@ The sample stored procedures below can be used to wire up and test software code
 - See [Not Using Transactions](#not-using-transactions)
 
 
-#### THROW Methodology (dbo.TestTHROW)
+### THROW Methodology (dbo.TestTHROW)
 This error catching and trowing methodology is the newest. [```THROW```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/throw-transact-sql), introduced in SQL Server 2012 and raises an exception and transfers execution to a ```CATCH``` block of a ```TRY...CATCH``` construct.
 
-#### Return Code Methodology (dbo.TestReturnCode)
+### Return Code Methodology (dbo.TestReturnCode)
 The return code methodology utilizes [```RETURN```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/return-transact-sql). ```RETURN```, exits unconditionally from a query or procedure. ```RETURN``` is immediate and complete and can be used at any point to exit from a procedure, batch, or statement block. Statements that follow RETURN are not executed.
 
 When ```THROW``` is utilized, a return code is not assigned. ```RETURN``` was commonly utilized with [```RAISERROR```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql) which never aborts execution, so ```RETURN``` could be used afterwards. (See [Using RAISERROR Instead of THROW](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-raiserror-instead-of-throw)). Utilizing ```RAISERROR``` with the return code would provide context to the error that occured to present to the user and log the error.
 
-#### Output Parameter Methodology (dbo.TestReturnCodeParameter)
+### Output Parameter Methodology (dbo.TestReturnCodeParameter)
 This methodology utilizes stored procedure ```OUTPUT``` parameters. Here you can set a return code and a return message that is passed back to the software code to present to the user and log the error
 
-#### RAISERROR Methodology (dbo.TestRAISERROR)
+### RAISERROR Methodology (dbo.TestRAISERROR)
 
 [New applications should use THROW instead of RAISERROR](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?redirectedfrom=MSDN#:~:text=New%20applications%20should%20use%20THROW%20instead.)
 

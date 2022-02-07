@@ -1145,8 +1145,8 @@ BEGIN CATCH
             ROLLBACK TRANSACTION;
         END;
 
-    /* - Handle the error here, cleanup, et cetera.
-        - In most cases it is best to bubble up (THROW) the error to the application/client to be displaed to the user and/or logged.
+    /* Handle the error here, cleanup, et cetera.
+       In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
     */
     THROW;
 END CATCH;
@@ -1194,8 +1194,8 @@ BEGIN CATCH
             ROLLBACK TRANSACTION;
         END;
         
-        /* - Handle the error here, cleanup, et cetera.
-           - In most cases it is best to bubble up (THROW) the error to the application/client to be displaed to the user and/or logged.
+        /* Handle the error here, cleanup, et cetera.
+           In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
         */
     THROW;
 END CATCH;
@@ -1215,10 +1215,31 @@ END CATCH;
 
 There are different methodologies for handling errors that originate in a database. [New applications should use the THROW methodologies](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?redirectedfrom=MSDN#:~:text=New%20applications%20should%20use%20THROW%20instead.).
 
+In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+
 The sample stored procedures below can be used to wire up and test software code to ensure errors are bubbled up, and the user is notified, and error data is logged. After each sample stored procedure below is commented out code to execute each of them.
 
 - See [Using RAISERROR Instead of THROW](#using-raiserror-instead-of-throw)
 - See [Not Using Transactions](#not-using-transactions)
+
+
+#### THROW Methodology (dbo.TestTHROW)
+This error catching and trowing methodology is the newest. [```THROW```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/throw-transact-sql), introduced in SQL Server 2012 and raises an exception and transfers execution to a ```CATCH``` block of a ```TRY...CATCH``` construct.
+
+#### Return Code Methodology (dbo.TestReturnCode)
+The return code methodology utilizes [```RETURN```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/return-transact-sql). ```RETURN```, exits unconditionally from a query or procedure. ```RETURN``` is immediate and complete and can be used at any point to exit from a procedure, batch, or statement block. Statements that follow RETURN are not executed.
+
+When ```THROW``` is utilized, a return code is not assigned. ```RETURN``` was commonly utilized with [```RAISERROR```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql) which never aborts execution, so ```RETURN``` could be used afterwards. See [Using RAISERROR Instead of THROW](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-raiserror-instead-of-throw). Utilizing ```RAISERROR``` with the return code would provide context to the error that occured to present to the user and log the error.
+
+#### Output Parameter Methodology (dbo.TestReturnCodeParameter)
+This methodology utilizes stored procedure ```OUTPUT``` parameters. Here you can set a return code and a return message that is passed back to the software code to present to the user and log the error
+
+#### RAISERROR Methodology (dbo.TestRAISERROR)
+
+[New applications should use THROW instead of RAISERROR](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?redirectedfrom=MSDN#:~:text=New%20applications%20should%20use%20THROW%20instead.)
+
+- See [Using RAISERROR Instead of THROW](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-raiserror-instead-of-throw).
+
 
 ```sql
 /**********************************************************************************************************************/
@@ -1247,7 +1268,9 @@ AS
                             ROLLBACK TRANSACTION;
                         END;
 
-                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    /* Handle the error here, cleanup, et cetera.
+                       In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+                    */
                     THROW;
                 END CATCH;
             END;
@@ -1289,7 +1312,9 @@ AS
                             ROLLBACK TRANSACTION;
                         END;
 
-                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    /* Handle the error here, cleanup, et cetera.
+                       In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+                    */
                     THROW;
                 END CATCH;
 
@@ -1300,7 +1325,10 @@ AS
                     BACKUP DATABASE master TO DISK = 'E:\FOLDER_NOT_EXISTS\test.bak';
                 END TRY
                 BEGIN CATCH
-                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+
+                    /* Handle the error here, cleanup, et cetera.
+                       In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+                    */
                     THROW;
                 END CATCH;
             END;
@@ -1347,7 +1375,9 @@ AS
                 END TRY
                 BEGIN CATCH
 
-                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    /* Handle the error here, cleanup, et cetera.
+                       In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+                    */
                     RETURN ERROR_NUMBER();
                 END CATCH;
             END;
@@ -1364,7 +1394,9 @@ AS
                         SET @ReturnCode = 123123;
                     END;
 
-                /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                /* Handle the error here, cleanup, et cetera.
+                   In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+                */
                 RETURN @ReturnCode;
             END;
     END;
@@ -1405,7 +1437,10 @@ AS
                         #IgnoreMe2;
                 END TRY
                 BEGIN CATCH
-                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+
+                    /* Handle the error here, cleanup, et cetera.
+                       In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+                    */
                     SET @ReturnCode = ERROR_NUMBER();
                     SET @ReturnMessage = ERROR_MESSAGE();
                 END CATCH;
@@ -1453,8 +1488,10 @@ AS
                             ROLLBACK TRANSACTION;
                         END;
 
+                    /* Handle the error here, cleanup, et cetera.
+                       In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+                    */
                     DECLARE @ErrorMessage nvarchar(2048) = ERROR_MESSAGE();
-                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
                     RAISERROR(@ErrorMessage, 16, 1);
                     RETURN 1;
                 END CATCH;
@@ -1476,7 +1513,9 @@ AS
                             ROLLBACK TRANSACTION;
                         END;
 
-                    /* Handle the error here, cleanup, et cetera. In most cases it is best to bubble up the error to the application to be handled and/or logged. */
+                    /* Handle the error here, cleanup, et cetera.
+                       In most cases it is best to bubble up (THROW) the error to the application/client to be displayed to the user and logged.
+                    */
                     RAISERROR(N'My Custom Error.', 16, 1);
                     RETURN 1;
                 END CATCH;

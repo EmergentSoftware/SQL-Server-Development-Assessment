@@ -28,7 +28,9 @@ The purpose of naming and style convention allows you and others to identify the
 ## Naming Foreign Key Relationships
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/160)
 
-No need to use the ``FX_`` prefix in foreign key relationships. See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
+No need to use the ``FX_`` prefix in foreign key relationships. 
+
+- See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
 
 Use the format of ``[FOREIGN-KEY-TABLE]_[PRIMARY-KEY-TABLE]`` in most cases. This gives you a quick view of the tables that are involved in the relationship. The first table named depends on the second table named.
 
@@ -216,6 +218,7 @@ Do not prefix your columns with ``fld_``, ``col_``, ``f_``, ``u_`` as it should 
 - When using ``uniqueidentifier/guid`` columns for clustered index you can use ``[SchemaName_]TableName_ColumnName_INDEX_REBUILD_ONLY`` to signify special index maintenance handling.
   - See [UNIQUEIDENTIFIER in a Clustered Index](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/table-conventions#uniqueidentifier-in-a-clustered-index)
 
+
 See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
 
 [Back to top](#top)
@@ -227,9 +230,9 @@ See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-co
 
 No need for prefixing (``PK_``, ``IX_``, ``UK_``, ``UX_``) your index names.
 
-See [Index Naming](/SQL-Server-Development-Assessment/findings/naming-conventions#index-naming)
+- See [Index Naming](/SQL-Server-Development-Assessment/findings/naming-conventions#index-naming)
 
-See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
+- See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
 
 [Back to top](#top)
 
@@ -330,7 +333,7 @@ Bit columns should be given affirmative boolean names like ``IsDeletedFlag``, ``
   - Line**Amount** is a currency amount not dependent on the data type like ``decimal(19, 4)``
   - Group**Name** is the text string not dependent on the data type like ``varchar()`` or ``nvarchar()``
   - State**Code** indicates the short form of something
-  - IsDeleted**Flag** indicates a status see [Non-Affirmative Boolean Name Use](#non-affirmative-boolean-name-use) for boolean column naming
+  - IsDeleted**Flag** indicates a status (See [Non-Affirmative Boolean Name Use](#non-affirmative-boolean-name-use)) for boolean column naming
   - Unit**Price**
 
 

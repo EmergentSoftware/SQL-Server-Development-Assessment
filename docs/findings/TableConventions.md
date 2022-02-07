@@ -32,7 +32,9 @@ Use the [Table Per Type (TPT)](https://entityframework.net/tpt) table design pat
 
 The [Table Per Concrete (TPC)](https://entityframework.net/tpc) design is not good as it would have redundant data and no relationship between the sub tables. The redundant data would just be in multiple tables vs squished into one table with [Table Per Hierarchy (TPH)](https://entityframework.net/tph). TPC would help with the extra nullable columns compared to TPH.
 
-TPC & TPH do not follow normal form. See [Not Normalizing Tables](#not-normalizing-tables).
+TPC & TPH do not follow normal form. 
+
+- See [Not Normalizing Tables](#not-normalizing-tables).
 
 [Back to top](#top)
 
@@ -307,7 +309,7 @@ Using ``uniqueidentifier/guid`` as primary keys causes issues with SQL Server da
 
 A use case for when you can use ``uniqueidentifier/guid`` as primary keys, is when there are separate systems and merging rows would be difficult. The uniqueness of ``uniqueidentifier/guid`` simplifies the data movements.
 
-See [uniqueidentifier in a Clustered Index for details](#uniqueidentifier-in-a-clustered-index)
+- See [uniqueidentifier in a Clustered Index for details](#uniqueidentifier-in-a-clustered-index)
 
 [Back to top](#top)
 

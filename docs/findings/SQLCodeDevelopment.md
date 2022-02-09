@@ -96,11 +96,11 @@ Locating the row to confirm it exists is doing the work twice.
 IF EXISTS (SELECT * FROM dbo.Person WHERE PersonId = @PersonId)
     BEGIN
         UPDATE dbo.Person SET FirstName = @FirstName WHERE PersonId = @PersonId;
-    END
+    END;
 ELSE
     BEGIN
-      INSERT dbo.Person(PersonId, FirstName) VALUES(@PersonId, @FirstName);
-    END
+        INSERT dbo.Person (PersonId, FirstName) VALUES (@PersonId, @FirstName);
+    END;
 ```
 
 **Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.

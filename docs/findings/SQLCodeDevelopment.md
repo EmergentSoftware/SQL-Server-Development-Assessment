@@ -90,6 +90,19 @@ SELECT
 ## UPSERT Pattern
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/151)
 
+Locating the row to confirm it exists is doing the work twice.
+
+```sql
+IF EXISTS (SELECT * FROM dbo.Person WHERE PersonId = @PersonId)
+    BEGIN
+        UPDATE dbo.Person SET FirstName = @FirstName WHERE PersonId = @PersonId;
+    END
+ELSE
+    BEGIN
+      INSERT dbo.Person(PersonId, FirstName) VALUES(@PersonId, @FirstName);
+    END
+```
+
 **Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.
 
 Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate an UPSERT stored procedure at least as starting point.

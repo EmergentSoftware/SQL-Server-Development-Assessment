@@ -44,7 +44,7 @@ Most importantly, you work from a single source of truth, greatly reducing the r
 ## Data Warehouse Date & Time Key Pattern
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/155)
 
-This data warehouse date & time key pattern can be used with the [Date-Time-Number-Dimensions](https://github.com/EmergentSoftware/Date-Time-Number-Dimensions) tables. The grain of the time dimension records are in seconds.
+This data warehouse date & time key pattern can be used with the [Date-Time-Number-Dimensions](https://github.com/EmergentSoftware/Date-Time-Number-Dimensions) tables. The grain of the time dimension records is in seconds.
 
 The primary keys in the date and time dimension tables are integers and the T-SQL below extracts and converts them.
 
@@ -435,9 +435,9 @@ WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
 
 Use Temporary Tables and not Table Variables.
 
-- There are optimization limitation like lack of statistics that very frequently lead to performance issues. The advice of "use table variables if you have less than NNN rows" is flawed. It might seem like temporary tables are performant but they are not scalable with a couple more years of data.
+- There is optimization limitation like lack of statistics that very frequently lead to performance issues. The advice of "use table variables if you have less than NNN rows" is flawed. It might seem like temporary tables are performant, but they are not scalable with a couple more years of data.
 - There are two use cases for table variable and are infrequently called for.
-  1. Extremely highly-called code where recompiles from temporary table activity is a problem
+  1. Extremely highly called code where recompiles from temporary table activity is a problem
   2. Audit scenarios when you need to keep data after a transaction is rolled back.
 
 ```sql
@@ -565,7 +565,7 @@ Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate the
 ## Using Brackets
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/32)
 
-You might being using square brackets [] unnecessarily for object names. If object names are valid and not reserved words, there is no need to use square brackets. Use them only for invalid names.
+You might be using square brackets [] unnecessarily for object names. If object names are valid and not reserved words, there is no need to use square brackets. Use them only for invalid names.
 
 - See [Removing the Square Bracket Decorations with SQL Prompt](https://www.red-gate.com/hub/product-learning/sql-prompt/removing-the-square-bracket-decorations-with-sql-prompt)
 
@@ -651,7 +651,7 @@ You should have a Development, Testing & Production environment.
 
 SQL Server development is a continuous process to avoid the issues caused by development and reducing the risks of blocking business.
 
-Accidents happen! Imagine you accidentally made an update to thousands of records that you can not undo without hours of work. Imagine that you do not have access to original data before you changed it. Feeling scared yet? This is where a development and test environment saves effort.
+Accidents happen! Imagine you accidentally made an update to thousands of records that you cannot undo without hours of work. Imagine that you do not have access to original data before you changed it. Feeling scared yet? This is where a development and test environment save effort.
 
 A development environment allows developers to program and perform test ensuring their code is correct before pushing to a centralized testing environment for UAT (User Acceptance Testing) or staging for production.
 
@@ -663,7 +663,7 @@ A development environment allows developers to program and perform test ensuring
 ## Not Using Semicolon to Terminate Statements
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/35)
 
-Although the semicolon isn't required for most statements prior to SQL Server 2016, it will be required in a future version. If you do not include them now database migration in the future will need to add them. Terminating semicolon are requred by the ANSI SQL Standard.
+Although the semicolon isn't required for most statements prior to SQL Server 2016, it will be required in a future version. If you do not include them now database migration in the future will need to add them. Terminating semicolon are required by the ANSI SQL Standard.
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON; /* <-- semicolon goes at the end here */
@@ -752,7 +752,7 @@ END
 
 The SQL Server Missing Indexes recommendations feature has limitations and even recommends you create indexes that already exist. It is not meant for you fine tune and only provides sometimes adequate recommendations.
 
-You should assess the missing index recommendation but create a fine tuned custom index that includes all that is excluded items.
+You should assess the missing index recommendation but create a fine-tuned custom index that includes all that is excluded items.
 
 See the [Books Online: Limitations of the Missing Indexes Feature](http://msdn.microsoft.com/en-us/library/ms345485(v=sql.105).aspx)
 
@@ -798,7 +798,7 @@ The ```RAISERROR``` statement does not honor ```SET XACT_ABORT```.
 
 ```RAISERROR``` never aborts execution, so execution will continue with the next statement.
 
-A use case exception for using ```RAISERROR``` instead of ```THROW``` is for legacy compability reasons. ```THROW``` was introduced in SQL Server 2012 so when making modification on this code ```THROW``` can break the current code.
+A use case exception for using ```RAISERROR``` instead of ```THROW``` is for legacy compatibility reasons. ```THROW``` was introduced in SQL Server 2012 so when making modification on this code ```THROW``` can break the current code.
 
 - See [Not Using Transactions](#not-using-transactions)
 
@@ -988,7 +988,7 @@ Avoid using the `ISNUMERIC()` function, because it can often lead to data type c
 ## Using SELECT DISTINCT
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/69)
 
-So while DISTINCT and GROUP BY are identical in a lot of scenarios, there is one case where the GROUP BY approach leads to better performance (at the cost of less clear declarative intent in the query itself).
+So, while DISTINCT and GROUP BY are identical in a lot of scenarios, there is one case where the GROUP BY approach leads to better performance (at the cost of less clear declarative intent in the query itself).
 
 You also might be using SELECT DISTINCT to mask a JOIN problem. It’s much better to determine why rows are being duplicated and fix the problem.
 
@@ -999,7 +999,7 @@ You also might be using SELECT DISTINCT to mask a JOIN problem. It’s much bett
 ## Not Using SSIS
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/164)
 
-Use SSIS (SQL Server Integration Service) to move data around. You can use stored procedures and SQL Server Agent Jobs instead of SSIS to ETL data but it will make it difficult to orchestrate tasks between different environments. 
+Use SSIS (SQL Server Integration Service) to move data around. You can use stored procedures and SQL Server Agent Jobs instead of SSIS to ETL data, but it will make it difficult to orchestrate tasks between different environments. 
 
 SSIS gives you the ability to create project and package parameters that can be configured in the SSIS catalog Environments. SSIS has built in logging and Execution run reports you can access from SSMS (SQL Server Management Studio).
 
@@ -1052,7 +1052,7 @@ WHERE
 ## Using Unfinished Notes
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/96)
 
-You might have still have some work to do. One of the codetags below was found.
+You might still have some work to do. One of the codetags below was found.
 
 - TODO
 - FIXME
@@ -1100,7 +1100,7 @@ You might have still have some work to do. One of the codetags below was found.
 ## Missing Index on WHERE Clause
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/97)
 
-Check WHERE clauses for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) amount of records.
+Check WHERE clauses for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) number of records.
 
 [Back to top](#top)
 
@@ -1109,7 +1109,7 @@ Check WHERE clauses for columns that are not included in an index. Might also wa
 ## Missing Index on IN Columns
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/98)
 
-Check IN() predicates for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) amount of records.
+Check IN() predicates for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) number of records.
 
 [Back to top](#top)
 
@@ -1566,7 +1566,7 @@ Review the [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-u
 
 - See [05c Blueprint Functions Scalar Function Rewrites Demo video by Erik Darling](https://www.erikdarlingdata.com/sql-server/software-vendor-mistakes-with-sql-server-not-using-inline-table-valued-functions/?mc_cid=e0205e6bac&mc_eid=90079896ec#:~:text=In%20the%20videos%20below%2C%20I%E2%80%99m%20going%20to%20show%20you%20how%20to%20rewrite%20T%2DSQL%20Scalar%20User%20Defined%20Functions%2C%20and%20a%20really%20cool%20thing%20they%20can%20do%20on%20top%20of%20just%20replacing%20the%20bad%20kinds%20of%20functions.) to see how to rewrite T-SQL Scalar User Defined Function into a Inline Table Valued function.
 
-Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions you should ensure they are being inlined. Reference: [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
+Microsoft has been removing (instead of fixing) the inlineablity of scalar functions with every cumulative update. If your query requires scalar functions, you should ensure they are being inlined. Reference: [Inlineable scalar UDFs requirements](https://docs.microsoft.com/en-us/sql/relational-databases/user-defined-functions/scalar-udf-inlining?view=sql-server-ver15#inlineable-scalar-udfs-requirements)
 
 **Run this query to check if your function is inlineable. (SQL Server 2019+ & Azure SQL Server)**
 
@@ -1587,7 +1587,7 @@ WHERE
 
 **Iterative invocation:** UDFs are invoked in an iterative manner, once per qualifying tuple. This incurs additional costs of repeated context switching due to function invocation. Especially, UDFs that execute Transact-SQL queries in their definition are severely affected.
 
-**Lack of costing:** During optimization, only relational operators are costed, while scalar operators are not. Prior to the introduction of scalar UDFs, other scalar operators were generally cheap and did not require costing. A small CPU cost added for a scalar operation was enough. There are scenarios where the actual cost is significant, and yet still remains underrepresented.
+**Lack of costing:** During optimization, only relational operators are costed, while scalar operators are not. Prior to the introduction of scalar UDFs, other scalar operators were generally cheap and did not require costing. A small CPU cost added for a scalar operation was enough. There are scenarios where the actual cost is significant, and yet remains underrepresented.
 
 **Interpreted execution:** UDFs are evaluated as a batch of statements, executed statement-by-statement. Each statement itself is compiled, and the compiled plan is cached. Although this caching strategy saves some time as it avoids recompilations, each statement executes in isolation. No cross-statement optimizations are carried out.
 
@@ -1695,7 +1695,7 @@ Only use `NOLOCK` when the application stakeholders understand the problems and 
 ## Not Using Table Alias
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/85)
 
-Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g. “Site” becomes "S" and "SiteType" becomes “ST”.
+Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g., “Site” becomes "S" and "SiteType" becomes “ST”.
 
 [Back to top](#top)
 
@@ -1801,7 +1801,7 @@ CREATE TABLE dbo.Person (
 ## Set Option Cause Recompile
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/103)
 
-Setting options in batches, stored procedures and triggers cause recompilation. They should be compiled just once and have their plans reused for subsequent calls. The query will be more performant and use less memory.
+Setting options in batches, stored procedures, and triggers cause recompilation. They should be compiled just once and have their plans reused for subsequent calls. The query will be more performant and use less memory.
 
 [Back to top](#top)
 

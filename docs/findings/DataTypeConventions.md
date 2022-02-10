@@ -55,6 +55,17 @@ There is no good reason to use ``text`` or ``ntext``. They were a flawed attempt
 
 ---
 
+## sysname Column
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Semicolon+THROW)
+
+sysname is a special data type used for database objects like database names, table names, column names, et cetera. When you need to store database, table or column names in a table use nvarchar(128).
+
+- See [Microsoft docs](https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms191240(v=sql.100)?redirectedfrom=MSDN#:~:text=KEY(ObjectID%2C%20PropertyName))-,sysname,-The%20sysname%20data)
+
+[Back to top](#top)
+
+---
+
 ## Email Address Column
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/44)
 

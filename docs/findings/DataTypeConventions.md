@@ -60,7 +60,7 @@ There is no good reason to use ``text`` or ``ntext``. They were a flawed attempt
 
 sysname is a special data type used for database objects like database names, table names, column names, et cetera. When you need to store database, table or column names in a table use nvarchar(128).
 
-- See [Microsoft docs](https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms191240(v=sql.100)?redirectedfrom=MSDN#:~:text=KEY(ObjectID%2C%20PropertyName))-,sysname,-The%20sysname%20data)
+- See [Microsoft docs](https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms191240(v=sql.100)?redirectedfrom=MSDN#:~:text=The%20sysname%20data%20type%20is%20used%20for%20table%20columns%2C%20variables%2C%20and%20stored%20procedure%20parameters%20that%20store%20object%20names.)
 
 [Back to top](#top)
 

@@ -659,6 +659,27 @@ A development environment allows developers to program and perform test ensuring
 
 ---
 
+## Using Deprecated or Discontinued Features
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Deprecated+or+Discontinued+Features)
+
+When a feature is marked deprecated, it means:
+
+- The feature is in maintenance mode only. No new changes will be done, including those related to addressing inter-operability with new features.
+- We strive not to remove a deprecated feature from future releases to make upgrades easier. However, under rare situations, we may choose to permanently discontinue (remove) the feature from SQL Server if it limits future innovations.
+- For new development work, do not use deprecated features. For existing aplications, plan to modify applications that currently use these features as soon as possible.
+
+See:
+- [Deprecated database engine features in SQL Server 2019](https://docs.microsoft.com/en-us/sql/database-engine/deprecated-database-engine-features-in-sql-server-version-15?view=sql-server-ver15)
+  - [Discontinued features in SQL Server 2019](https://docs.microsoft.com/en-us/sql/database-engine/discontinued-database-engine-functionality-in-sql-server?view=sql-server-ver15#discontinued-features-in-)
+- [Deprecated Database Engine Features in SQL Server 2017](https://docs.microsoft.com/en-us/sql/database-engine/deprecated-database-engine-features-in-sql-server-2017?view=sql-server-ver15)
+- [Deprecated Database Engine Features in SQL Server 2016](https://docs.microsoft.com/en-us/sql/database-engine/deprecated-database-engine-features-in-sql-server-2016?view=sql-server-ver15)
+  - [Discontinued features in SQL Server 2016](https://docs.microsoft.com/en-us/sql/database-engine/discontinued-database-engine-functionality-in-sql-server?view=sql-server-ver15#discontinued-features-in--1)
+- [Discontinued Database Engine Functionality in SQL Server 2014](https://docs.microsoft.com/en-us/previous-versions/sql/2014/database-engine/discontinued-database-engine-functionality-in-sql-server-2016?view=sql-server-2014&preserve-view=true)
+- [Discontinued Features in SQL Server 2012](https://docs.microsoft.com/en-us/previous-versions/sql/2014/database-engine/discontinued-database-engine-functionality-in-sql-server-2016?view=sql-server-2014&preserve-view=true#Denali)
+
+[Back to top](#top)
+
+---
 
 ## Not Using Semicolon to Terminate Statements
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/35)
@@ -666,6 +687,8 @@ A development environment allows developers to program and perform test ensuring
 Although the semicolon isn't required for most statements prior to SQL Server 2016, it will be required in a future version. If you do not include them now database migration in the future will need to add them. Terminating semicolon are required by the ANSI SQL Standard.
 
 Continued use of deprecated features will cause database migrations fail. An example is ```RAISERROR``` in the format ```RAISERROR 15600 'MyCreateCustomer';```  is discontinued. ```RAISERROR (15600, -1, -1, 'MyCreateCustomer');``` is the current syntax. A database will not migrate to a newer SQL Server version without refactoring the TSQL code.
+
+Microsoft recommends: [For new development work, do not use deprecated features. For existing aplications, plan to modify applications that currently use these features as soon as possible](https://docs.microsoft.com/en-us/sql/database-engine/deprecated-database-engine-features-in-sql-server-version-15?view=sql-server-ver15#:~:text=For%20new%20development%20work%2C%20do%20not%20use%20deprecated%20features.%20For%20existing%20aplications%2C%20plan%20to%20modify%20applications%20that%20currently%20use%20these%20features%20as%20soon%20as%20possible.).
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON; /* <-- semicolon goes at the end here */

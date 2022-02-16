@@ -665,6 +665,8 @@ A development environment allows developers to program and perform test ensuring
 
 Although the semicolon isn't required for most statements prior to SQL Server 2016, it will be required in a future version. If you do not include them now database migration in the future will need to add them. Terminating semicolon are required by the ANSI SQL Standard.
 
+Continued use of deprecated features will cause database migrations fail. An example is ```RAISERROR``` in the format ```RAISERROR 15600 'MyCreateCustomer';```  is discontinued. ```RAISERROR (15600, -1, -1, 'MyCreateCustomer');``` is the current syntax. A database will not migrate to a newer SQL Server version without refactoring the TSQL code.
+
 ```sql
 SET NOCOUNT, XACT_ABORT ON; /* <-- semicolon goes at the end here */
 

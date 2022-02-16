@@ -659,14 +659,16 @@ A development environment allows developers to program and perform test ensuring
 
 ---
 
-## Using Deprecated or Discontinued Features
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Deprecated+or+Discontinued+Features)
+## Using Deprecated or Discontinued Feature
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Deprecated+or+Discontinued+Feature)
 
 When a feature is marked deprecated, it means:
 
 - The feature is in maintenance mode only. No new changes will be done, including those related to addressing inter-operability with new features.
 - We strive not to remove a deprecated feature from future releases to make upgrades easier. However, under rare situations, we may choose to permanently discontinue (remove) the feature from SQL Server if it limits future innovations.
 - For new development work, do not use deprecated features. For existing aplications, plan to modify applications that currently use these features as soon as possible.
+
+A discontinued feature means it is no longer available. If a discontinued feature is being used, when we upgrade to a new SQL Server version, the code will break.
 
 See:
 - [Deprecated database engine features in SQL Server 2019](https://docs.microsoft.com/en-us/sql/database-engine/deprecated-database-engine-features-in-sql-server-version-15?view=sql-server-ver15)

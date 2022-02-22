@@ -296,16 +296,27 @@ A temporary fix is to for parameterization until you can refactor the code and i
 
 ---
 
----
-
 ## Nullable Columns with No Non-Null Records
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/192)
 
-If the row data in the table does not contain any NULL values you should assess setting the column to not 'Allow Nulls'.
+If the row data in the table does not contain any ```NULL``` values you should assess setting the column to not 'Allow Nulls'.
 
-Null-ness does more than constraining the data, it factors in on optimizer decisions.
+Null-ness does more than constraining the data, it factors in on performace optimizer decisions.
 
-For data warehouses do not allow NULL values for dimensional tables. You can create a -1 identifier with the value of [UNKNOWN]. This helps business users who might not understand the difference between INNER and OUTER JOINs.
+For data warehouses do not allow ```NULL``` values for dimensional tables. You can create a -1 identifier with the value of [UNKNOWN]. This helps business analysts who might not understand the difference between INNER and OUTER JOINs exclude data in their TSQL queries.
+
+#### Nullable Columns and JOIN Elimination
+
+If a column has a foreign key and nullable, it will not be trusted and ```JOIN``` Elimination will not occur, forcing your query to perform more query operations than needed.
+
+This execution plan shows how ```JOIN``` elimination works. There is a foreign key on the column and the column does not allow null. There is only one index operation in the execution plan. SQL Server is able to eliminate JOINs because it "trusts" the data relationship.
+
+![Non-SARGable Scan vs. SARGable Seek](../Images/JOIN_Elimination_NOT_NULL.png)
+
+This execution plan shows ```JOIN``` elimination has not occured. While there is a forien key on the column, the column allows null. There are two index operations and a merge operation causing SQL Server to perform more work.
+
+![Non-SARGable Scan vs. SARGable Seek](../Images/JOIN_Elimination_NULL.png)
+
 
 [Back to top](#top)
 

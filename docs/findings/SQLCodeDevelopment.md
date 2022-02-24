@@ -305,7 +305,7 @@ Null-ness does more than constraining the data, it factors in on performace opti
 
 For data warehouses do not allow ```NULL``` values for dimensional tables. You can create a -1 identifier with the value of [UNKNOWN]. This helps business analysts who might not understand the difference between INNER and OUTER JOINs exclude data in their TSQL queries.
 
-#### Nullable Columns and JOIN Elimination
+### Nullable Columns and JOIN Elimination
 
 If a column has a foreign key and nullable, it will not be trusted and ```JOIN``` Elimination will not occur, forcing your query to perform more query operations than needed.
 

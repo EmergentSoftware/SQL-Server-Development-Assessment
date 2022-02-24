@@ -511,7 +511,7 @@ AS
 ---
 
 ## When to Breakdown Complex Queries
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=????)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=When+to+Breakdown+Complex+Queries)
 
 Source: https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries
 

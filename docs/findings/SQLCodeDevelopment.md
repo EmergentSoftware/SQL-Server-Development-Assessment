@@ -2114,6 +2114,8 @@ Ask yourself what you are gaining by creating a view.
 
 Views do not lend themselves to being deeply nested. Views that reference views are difficult to maintain.
 
+A view can be helpful with the use cases below and should be no less performant, it matters what you put in the view that will give you problems.
+
 - **View Use Cases**
   - Create a temporary indexed view for performance issues you cannot solve without changing T-SQL code
   - You need to retire a table and use a new table with similar data (still should be a temporary use)

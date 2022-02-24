@@ -313,7 +313,7 @@ This execution plan shows how ```JOIN``` elimination works. There is a foreign k
 
 ![Non-SARGable Scan vs. SARGable Seek](../Images/JOIN_Elimination_NOT_NULL.png)
 
-This execution plan shows ```JOIN``` elimination has not occured. While there is a forien key on the column, the column allows null. There are two index operations and a merge operation causing SQL Server to perform more work.
+This execution plan shows ```JOIN``` elimination has not occurred. While there is a foreign key on the column, the column allows null. There are two index operations and a merge operation causing SQL Server to perform more work.
 
 ![Non-SARGable Scan vs. SARGable Seek](../Images/JOIN_Elimination_NULL.png)
 

@@ -487,7 +487,7 @@ AS
 ## When to Breakdown Complex Queries
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=When+to+Breakdown+Complex+Queries)
 
-Source: https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries
+Source: [When To Break Down Complex Queries](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries)
 
 Microsoft SQL Server is able to create very efficient query plans in most cases. However, there are certain query patterns that can cause problems for the query optimizer; this paper describes four of these patterns. These problematic query patterns generally create situations in which SQL Server must either make multiple passes through data sets or materialize intermediate result sets for which statistics cannot be maintained. Or, these patterns create situations in which the cardinality of the intermediate result sets cannot be accurately calculated.
 
@@ -611,6 +611,28 @@ SELECT
 FROM 
 	dbo.Person AS P
 ```
+
+[Back to top](#top)
+
+---
+
+## Using RANGE Instead of ROWS
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+RANGE+Instead+of+ROWS)
+
+The default window function frame ```RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW``` is less performant than ```ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW```.
+
+Source: [What is the Difference between ROWS and RANGE?](https://auntkathisql.com/2014/09/27/what-is-the-difference-between-rows-and-range)
+
+[Back to top](#top)
+
+---
+
+## Using EXECUTE
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+EXECUTE)
+
+Do not use ```EXECUTE('SQL script');``` to execute T-SQL command. The ```EXEC()``` command is retained for backward compatibility and is susceptible to SQL injection.
+
+Instead use ```sp_executesql``` as it allows parameter substitutions. Using parameters allows SQL Server to reuse the execution plan and avoid execution plan pollution.
 
 [Back to top](#top)
 

@@ -616,6 +616,15 @@ FROM
 
 ---
 
+## Excessive Use of Parentheses
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Excessive+Use+of+Parentheses)
+
+Excessive use of parentheses makes code difficult to understand and maintain.
+
+[Back to top](#top)
+
+---
+
 ## Using '== NULL' or '<> NULL' to Filter a Nullable Column
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/33)
 

@@ -156,10 +156,40 @@ A use case exception for using the proper weak or strong type is for security pu
 
 ---
 
+## Nullable Columns with No Non-Null Records
+**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/192)
+
+If the row data in the table does not contain any ```NULL``` values you should assess setting the column to not 'Allow Nulls'.
+
+Null-ness does more than constraining the data, it factors in on performace optimizer decisions.
+
+For data warehouses do not allow ```NULL``` values for dimensional tables. You can create a -1 identifier with the value of [UNKNOWN]. This helps business analysts who might not understand the difference between INNER and OUTER JOINs exclude data in their TSQL queries.
+
+### Nullable Columns and JOIN Elimination
+
+If a column has a foreign key and nullable, it will not be trusted and ```JOIN``` Elimination will not occur, forcing your query to perform more query operations than needed.
+
+This execution plan shows how ```JOIN``` elimination works. There is a foreign key on the column and the column does not allow null. There is only one index operation in the execution plan. SQL Server is able to eliminate JOINs because it "trusts" the data relationship.
+
+![Non-SARGable Scan vs. SARGable Seek](../Images/JOIN_Elimination_NOT_NULL.png)
+
+This execution plan shows ```JOIN``` elimination has not occurred. While there is a foreign key on the column, the column allows null. There are two index operations and a merge operation causing SQL Server to perform more work.
+
+![Non-SARGable Scan vs. SARGable Seek](../Images/JOIN_Elimination_NULL.png)
+
+
+[Back to top](#top)
+
+---
+
 ## Column Named ????Id But No FK Exists
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/43)
 
-We found a column following the naming convention of ????Id and is not the PK but no FK exists, you might be missing a relationship to a parent table.
+In most cases, columns with the name ????Id that are not the primary key should have a foreign key relationship to another table.
+
+You will not get JOIN Eliminations without a foreign key and a column that allows NULLs.
+
+See [Nullable Columns and JOIN Elimination](#nullable-columns-and-join-elimination) 
 
 [Back to top](#top)
 

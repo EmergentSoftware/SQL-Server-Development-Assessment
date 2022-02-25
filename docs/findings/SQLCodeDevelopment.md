@@ -616,6 +616,18 @@ FROM
 
 ---
 
+## Unnecessarily Use of Common Table Expression CTE
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Unnecessarily+Use+of+Common+Table+Expression+CTE)
+
+Use a Common Table Expression (CTE) to make SQL statements easier to understand and for recursive statements. Generally anything beyond basic use of CTEs provide extra overhead and cause performance issues.
+
+A CTE will be evaluated every time you reference it. If a CTE is referenced only once it will give the same performance as a temporary table or subquery.
+
+
+[Back to top](#top)
+
+---
+
 ## Using NOT IN in the WHERE Clause
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+NOT+IN+in+the+WHERE+Clause)
 

@@ -625,6 +625,31 @@ Excessive use of parentheses makes code difficult to understand and maintain.
 
 ---
 
+## Using DATALENGTH to Find the Length of a String
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+DATALENGTH+to+Find+the+Length+of+a+String)
+
+```DATALENGTH()``` can give you an incorrect length with fixed length data types like ```char()```. Use ```LEN()```
+
+**Sample Query**
+
+```sql
+DECLARE @FixedString AS char(10) = 'a';
+
+SELECT
+    WrongLength   = DATALENGTH(@FixedString)
+   ,CorrectLength = LEN(@FixedString);
+```
+
+**Query Results**
+
+|WrongLength|CorrectLength|
+|-|-|
+|10|1|
+
+[Back to top](#top)
+
+---
+
 ## Using '== NULL' or '<> NULL' to Filter a Nullable Column
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/33)
 

@@ -526,6 +526,19 @@ An understanding of the concepts introduced in these four cases can help you ide
 
 ---
 
+## SQL Injection Risk
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=SQL+Injection+Risk)
+
+SQL injection is an attack in which malicious code is inserted into strings that are later passed to an instance of SQL Server for parsing and execution. Any procedure that constructs SQL statements should be reviewed for injection vulnerabilities because SQL Server will execute all syntactically valid queries that it receives. Even parameterized data can be manipulated by a skilled and determined attacker.
+
+- Source [SQL Injection](https://docs.microsoft.com/en-us/sql/relational-databases/security/sql-injection)
+
+See [Using EXECUTE](#using-execute)
+
+[Back to top](#top)
+
+---
+
 ## Using Dynamic Search Conditions
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/179)
 
@@ -1841,6 +1854,8 @@ Only use `NOLOCK` when the application stakeholders understand the problems and 
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/85)
 
 Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g., “Site” becomes "S" and "SiteType" becomes “ST”.
+
+Do not use 
 
 [Back to top](#top)
 

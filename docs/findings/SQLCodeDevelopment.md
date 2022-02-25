@@ -532,8 +532,7 @@ An understanding of the concepts introduced in these four cases can help you ide
 SQL injection is an attack in which malicious code is inserted into strings that are later passed to an instance of SQL Server for parsing and execution. Any procedure that constructs SQL statements should be reviewed for injection vulnerabilities because SQL Server will execute all syntactically valid queries that it receives. Even parameterized data can be manipulated by a skilled and determined attacker.
 
 - Source [SQL Injection](https://docs.microsoft.com/en-us/sql/relational-databases/security/sql-injection)
-
-See [Using EXECUTE](#using-execute)
+- See [Using EXECUTE](#using-execute)
 
 [Back to top](#top)
 
@@ -1853,9 +1852,18 @@ Only use `NOLOCK` when the application stakeholders understand the problems and 
 ## Not Using Table Alias
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/85)
 
-Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g., “Site” becomes "S" and "SiteType" becomes “ST”.
+Use aliases for your table names in most multi-table T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g., "Phone" becomes "P" and "PhoneType" becomes "PT".
 
-Do not use 
+```sql
+SELECT
+    P.PhoneId
+   ,P.PhoneNumber
+   ,PT.PhoneTypeName
+FROM
+    dbo.Phone                AS P
+    INNER JOIN dbo.PhoneType AS PT
+        ON P.PhoneTypeId = PT.PhoneTypeId;
+```
 
 [Back to top](#top)
 

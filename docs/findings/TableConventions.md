@@ -171,6 +171,8 @@ If a column has a foreign key and nullable, it will not be trusted and ```JOIN``
 
 This execution plan shows how ```JOIN``` elimination works. There is a foreign key on the column and the column does not allow null. There is only one index operation in the execution plan. SQL Server is able to eliminate JOINs because it "trusts" the data relationship.
 
+- See [Untrusted Foreign Key](#untrusted-foreign-key)
+
 ![Non-SARGable Scan vs. SARGable Seek](../Images/JOIN_Elimination_NOT_NULL.png)
 
 This execution plan shows ```JOIN``` elimination has not occurred. While there is a foreign key on the column, the column allows null. There are two index operations and a merge operation causing SQL Server to perform more work.

@@ -487,7 +487,7 @@ AS
 ## When to Breakdown Complex Queries
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=When+to+Breakdown+Complex+Queries)
 
-Source: https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries
+Source: [When To Break Down Complex Queries](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries)
 
 Microsoft SQL Server is able to create very efficient query plans in most cases. However, there are certain query patterns that can cause problems for the query optimizer; this paper describes four of these patterns. These problematic query patterns generally create situations in which SQL Server must either make multiple passes through data sets or materialize intermediate result sets for which statistics cannot be maintained. Or, these patterns create situations in which the cardinality of the intermediate result sets cannot be accurately calculated.
 
@@ -521,6 +521,18 @@ This pattern has CASE operators in the WHERE or JOIN clauses, which cause poor e
 
 An understanding of the concepts introduced in these four cases can help you identify other situations in which these or similar patterns are causing poor or inconsistent performance; you can then construct a replacement query which will give you better, more consistent performance.
 
+
+[Back to top](#top)
+
+---
+
+## SQL Injection Risk
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=SQL+Injection+Risk)
+
+SQL injection is an attack in which malicious code is inserted into strings that are later passed to an instance of SQL Server for parsing and execution. Any procedure that constructs SQL statements should be reviewed for injection vulnerabilities because SQL Server will execute all syntactically valid queries that it receives. Even parameterized data can be manipulated by a skilled and determined attacker.
+
+- Source [SQL Injection](https://docs.microsoft.com/en-us/sql/relational-databases/security/sql-injection)
+- See [Using EXECUTE](#using-execute)
 
 [Back to top](#top)
 
@@ -611,6 +623,96 @@ SELECT
 FROM 
 	dbo.Person AS P
 ```
+
+[Back to top](#top)
+
+---
+
+## Using RANGE Instead of ROWS
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+RANGE+Instead+of+ROWS)
+
+The default window function frame ```RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW``` is less performant than ```ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW```.
+
+Source: [What is the Difference between ROWS and RANGE?](https://auntkathisql.com/2014/09/27/what-is-the-difference-between-rows-and-range)
+
+[Back to top](#top)
+
+---
+
+## Using EXECUTE
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+EXECUTE)
+
+Do not use ```EXECUTE('SQL script');``` to execute T-SQL command. The ```EXEC()``` command is retained for backward compatibility and is susceptible to SQL injection.
+
+Instead use ```sp_executesql``` as it allows parameter substitutions. Using parameters allows SQL Server to reuse the execution plan and avoid execution plan pollution.
+
+[Back to top](#top)
+
+---
+
+## Unnecessarily Use of Common Table Expression CTE
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Unnecessarily+Use+of+Common+Table+Expression+CTE)
+
+Use a Common Table Expression (CTE) to make SQL statements easier to understand and for recursive statements. Generally anything beyond basic use of CTEs provide extra overhead and cause performance issues.
+
+A CTE will be evaluated every time you reference it. If a CTE is referenced only once it will give the same performance as a temporary table or subquery.
+
+
+[Back to top](#top)
+
+---
+
+## Using NOT IN in the WHERE Clause
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+NOT+IN+in+the+WHERE+Clause)
+
+When you utilize ```NOT IN``` in your ```WHERE``` clause the SQL Server optimizer will likely perform a table scan instead of an index seek. Index seeks are generally more performant than table scans.
+
+Try rewriting the query to use ```LEFT OUTER JOIN``` and check for ```NULL``` on the right-handed side table.
+
+[Back to top](#top)
+
+---
+
+## Using Correlated Subqueries Instead of Joins
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Correlated+Subqueries+Instead+of+Joins)
+
+Correlated subqueries can have a performance impact. Most correlated subqueries can be rewritten with joins or window functions and perform much faster.
+
+See [SQL Server Uncorrelated and Correlated Subquery](https://www.mssqltips.com/sqlservertip/6037/sql-server-uncorrelated-and-correlated-subquery/)
+
+[Back to top](#top)
+
+---
+
+## Excessive Use of Parentheses
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Excessive+Use+of+Parentheses)
+
+Excessive use of parentheses makes code difficult to understand and maintain.
+
+[Back to top](#top)
+
+---
+
+## Using DATALENGTH to Find the Length of a String
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+DATALENGTH+to+Find+the+Length+of+a+String)
+
+```DATALENGTH()``` can give you an incorrect length with fixed length data types like ```char()```. Use ```LEN()```
+
+**Sample Query**
+
+```sql
+DECLARE @FixedString AS char(10) = 'a';
+
+SELECT
+    WrongLength   = DATALENGTH(@FixedString)
+   ,CorrectLength = LEN(@FixedString);
+```
+
+**Query Results**
+
+|WrongLength|CorrectLength|
+|-|-|
+|10|1|
 
 [Back to top](#top)
 
@@ -1750,7 +1852,18 @@ Only use `NOLOCK` when the application stakeholders understand the problems and 
 ## Not Using Table Alias
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/85)
 
-Use aliases for your table names in most T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g., “Site” becomes "S" and "SiteType" becomes “ST”.
+Use aliases for your table names in most multi-table T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g., "Phone" becomes "P" and "PhoneType" becomes "PT".
+
+```sql
+SELECT
+    P.PhoneId
+   ,P.PhoneNumber
+   ,PT.PhoneTypeName
+FROM
+    dbo.Phone                AS P
+    INNER JOIN dbo.PhoneType AS PT
+        ON P.PhoneTypeId = PT.PhoneTypeId;
+```
 
 [Back to top](#top)
 

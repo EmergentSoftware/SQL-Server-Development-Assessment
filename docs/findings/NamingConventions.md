@@ -326,15 +326,18 @@ Bit columns should be given affirmative boolean names like ``IsDeletedFlag``, ``
   - Invoice**Id** is the identity of the invoice record
   - Part**Number** is an alternate key
   - Start**Date** is the date something started
-  - RowUpdate**PersonId** is the person who last updated a record
-  - RowUpdate**Time** is the date and time something was modified
-  - RowCreate**Time** is the date and time something was created
-  - RowVersion**Stamp** is the ``rowversion/timestamp`` (unique binary numbers) to increment for each insert or update
   - Line**Amount** is a currency amount not dependent on the data type like ``decimal(19, 4)``
   - Group**Name** is the text string not dependent on the data type like ``varchar()`` or ``nvarchar()``
   - State**Code** indicates the short form of something
   - IsDeleted**Flag** indicates a status (See [Non-Affirmative Boolean Name Use](#non-affirmative-boolean-name-use)) for boolean column naming
   - Unit**Price**
+  - RowUpdate**PersonId** is the person who last updated a record
+  - RowUpdate**Time** is the date and time something was modified
+  - RowCreate**PersonId** is the person who created a record
+  - RowCreate**Time** is the date and time something was created
+  - RowVersion**Stamp** is the ``rowversion/timestamp`` (unique binary numbers) to increment for each insert or update
+  - RowValidFrom**Time** is the period start for a system-versioned temporal tables
+  - RowValidTo**Time** is the period end for a system-versioned temporal tables
 
 
 [Back to top](#top)

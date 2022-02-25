@@ -616,6 +616,17 @@ FROM
 
 ---
 
+## Using NOT IN in the WHERE Clause
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+NOT+IN+in+the+WHERE+Clause)
+
+When you utilize ```NOT IN``` in your ```WHERE``` clause the SQL Server optimizer will likely perform a table scan instead of an index seek. Index seeks are generally more performant than table scans.
+
+Try rewriting the query to use ```LEFT OUTER JOIN``` and check for ```NULL``` on the right-handed side table.
+
+[Back to top](#top)
+
+---
+
 ## Using Correlated Subqueries Instead of Joins
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Correlated+Subqueries+Instead+of+Joins)
 

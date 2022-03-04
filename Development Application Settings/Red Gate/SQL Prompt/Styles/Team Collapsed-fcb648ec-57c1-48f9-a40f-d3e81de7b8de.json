@@ -58,7 +58,9 @@
   },
   "insertStatements": {
     "values": {
-      "indentContents": true
+      "parenthesisStyle": "expandedSplit",
+      "indentContents": true,
+      "placeSubsequentValuesOnNewLines": "always"
     }
   },
   "caseExpressions": {

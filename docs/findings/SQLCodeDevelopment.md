@@ -301,20 +301,20 @@ A temporary fix is to for parameterization until you can refactor the code and i
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/25)
 
 
-#### Overview
+### Overview
 Even though you'll hear DBAs and other experts say, "never use cursors!", there are a few cases were cursors come in handy and there are a few important pointers.
 
 SQL Server originally supported cursors to more easily port dBase II applications to SQL Server, but even then, you can sometimes use a `WHILE` loop (See [Using WHILE Loop](#using-while-loop)) as an effective substitute. Modern versions of SQL Server provide window functions and the CROSS/OUTER APPLY syntax to cope with some of the traditional valid uses of the cursor.
 
-#### Valid Use Cases
+### Valid Use Cases
 - Executing a complex stored procedure or series of stored procedures based on a set of data. It is true this can be handled with a `WHILE` loop and grabbing each record from the database, but a read-only, fast-forward cursor well and can be easier to manage.
 - Import scripts
 
-#### Cursor Type
+### Cursor Type
 It is likely a bad idea to use any cursor other than one that is read-only and fast-forward. However, you need to declare your cursor correctly in order to create the right type:
 `DECLARE MyCursor CURSOR LOCAL FAST_FORWARD FOR`
 
-#### Full Cursor Syntax
+### Full Cursor Syntax
 
 ```sql
 DECLARE
@@ -497,24 +497,24 @@ Although the query patterns discussed in this paper are based on customer extrac
 
 This paper focuses on the following four problematic query patterns:
 
-#### OR logic in the WHERE clause
+### OR logic in the WHERE clause
 In this pattern, the condition on each side of the OR operator in the WHERE or JOIN clause evaluates different tables. This can be resolved by use of a UNION operator instead of the OR operator in the WHERE or JOIN clause. 
 
 - See [Problematic Use of OR](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries#problematic-use-of-or)
 
-#### Aggregations in intermediate results sets
+### Aggregations in intermediate results sets
 This pattern has joins on aggregated data sets, which can result in poor performance. This can be resolved by placing the aggregated intermediate result sets in temporary tables.
 
 - See [Query Anti-Pattern 2: Aggregations in Intermediate Result Sets](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries#:~:text=Query%20Anti%2DPattern%202%3A%20Aggregations%20in%20Intermediate%20Result%20Sets)
 
 
-#### A large number of very complex joins
+### A large number of very complex joins
 This pattern has a large number of joins, especially joins on ranges, which can result in poor performance because of progressively degrading estimates of cardinality. This can be resolved by breaking down the query and using temporary tables.
 
 - See [Other Query Types to Break Down](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries#:~:text=A%20query%20with%20a%20large%20number%20of%20very%20complex%20joins)
 
 
-#### A CASE clause in the WHERE or JOIN clause
+### A CASE clause in the WHERE or JOIN clause
 This pattern has CASE operators in the WHERE or JOIN clauses, which cause poor estimates of cardinality. This can be resolved by breaking down the cases into separate queries and using the Transact-SQL IF statement to direct the flow for the conditions.
 
 - See [Other Query Types to Break Down](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries#:~:text=%C2%B7-,A%20CASE%20clause%20in%20the%20WHERE%20or%20JOIN%20clause,-This%20case%20refers)
@@ -1020,7 +1020,7 @@ END CATCH;
 
 The `BEGIN...END` control-of-flow statement block is optional for stored procedures and IF statements but is required for multi-line user-defined functions. It is best to avoid confusion and be consistent and specific.
 
-#### IF Statements 
+### IF Statements 
 
 Always included ```BEGIN...END``` blocks for ```IF``` statements with a semicolon to terminate the statement. Using ```BEGIN...END``` in an ```IF``` statement and semicolon is critical in some cases. 
 
@@ -1046,7 +1046,7 @@ IF @@TRANCOUNT > 0
 IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
 ```
 
-#### Stored Procedures
+### Stored Procedures
 
 **Use this:**
 ```sql

@@ -103,6 +103,7 @@ ELSE
     END;
 ```
 
+
 **Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.
 
 Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate an UPSERT stored procedure at least as starting point.
@@ -262,6 +263,28 @@ WHEN NOT MATCHED BY TARGET THEN
          (S.FirstName, S.LastName)
 WHEN NOT MATCHED BY SOURCE THEN
         DELETE;
+```
+
+#### UPSERT Use case exception
+ If an update is not wanted for a reason like system-versioned temporal table history pollution the ```WITH (UPDLOCK, SERIALIZABLE)``` hint below should be used.
+
+```UPDLOCK``` is used to protect against deadlocks and let other session wait instead of falling victim a deadlock event. ```SERIALIZABLE``` will protect against changes to the data in the transaction and ensure no other transactions can modify data that has been read by the current transaction until the current transaction completes.
+
+This method will not prevent a race condition and the last update will win.
+
+```sql
+SET NOCOUNT, XACT_ABORT ON;
+BEGIN TRANSACTION;
+
+IF EXISTS (SELECT * FROM dbo.Person WITH (UPDLOCK, SERIALIZABLE) WHERE PersonId = @PersonId)
+BEGIN
+    UPDATE dbo.Person SET FirstName = @FirstName WHERE PersonId = @PersonId;
+END;
+ELSE
+BEGIN
+    INSERT dbo.Person (PersonId, FirstName) VALUES (@PersonId, @FirstName);
+END;
+COMMIT TRANSACTION;
 ```
 
 [Back to top](#top)

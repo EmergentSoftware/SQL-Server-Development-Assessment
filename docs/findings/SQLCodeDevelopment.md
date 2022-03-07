@@ -2211,6 +2211,17 @@ ORDER BY
 
 ---
 
+## Using Non-ANSI NOT EQUAL Operator
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Non-ANSI+NOT+EQUAL+Operator)
+
+Use ANSI-style NOT_EQUAL operator ```<>```.
+
+The ```!=``` symbol for not equal is not part of the SQL language. It is understood but only for the sake of backward-compatibility.
+
+[Back to top](#top)
+
+---
+
 ## Using Old Sybase JOIN Syntax
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/92)
 

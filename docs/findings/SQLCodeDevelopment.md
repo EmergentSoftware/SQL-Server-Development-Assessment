@@ -2200,13 +2200,43 @@ The generation of an identity value is not transactional, so in some circumstanc
 [Back to top](#top)
 
 ---
+<a name="using-between-for-datetime-ranges"></a>
+## Not Accounting for Time in a Range
 
-## Using BETWEEN for DATETIME Ranges
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/91)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Accounting+for+Time+in+a+Range)
 
-You never get complete accuracy if you specify dates when using the BETWEEN logical operator with DATETIME values, due to the inclusion of both the date and time values in the range. 
+```BETWEEN``` is ambiguous. If a restaurant states they are open 9-5, that include all times between 9:00 AM and 5:00 PM. When you score a goal in hockey, the goal only counts when the puck is between the goal posts. In SQL Server, ```BETWEEN``` is a closed interval that includes both ends of the range.
 
-The greater and less than code below will not have the same issue.
+This can be an exclusion problem for dates with times and utilizing ```BETWEEN```. A day ends at "23:59:59.9999999" or shorter based on the ```datetime``` length, right before the chime of midnight.
+
+You need to account for the end range being a datetime data type, or you might exclude rows. There are two examples below to accomplish this using a subtraction trick. Some consider avoiding ```BETWEEN``` for range queries. Source [Bad Habits to Kick: Mis-handling date / range queries by Aaron Bertrand](
+https://sqlblog.org/2009/10/16/bad-habits-to-kick-mis-handling-date-range-queries#:~:text=avoid%20BETWEEN%20for%20range%20queries%3B)
+
+
+**With BETWEEN**
+
+```sql
+USE WideWorldImporters;
+GO
+
+UPDATE Sales.Orders SET PickingCompletedWhen = '2013-01-09 23:59:59.9999999' WHERE OrderId = 469
+
+DECLARE
+    @PickingCompletedWhenFrom datetime2(7) = '2013-01-09'
+   ,@PickingCompletedWhenTo   datetime2(7) = '2013-01-09';
+
+SELECT
+    O.OrderID
+   ,O.PickingCompletedWhen
+FROM
+    Sales.Orders AS O
+WHERE
+    O.PickingCompletedWhen BETWEEN @PickingCompletedWhenFrom AND DATEADD(NANOSECOND, -1, DATEADD(DAY, 1, @PickingCompletedWhenTo))
+ORDER BY
+    O.PickingCompletedWhen DESC;
+```
+
+**Without BETWEEN**
 
 ```sql
 USE WideWorldImporters;

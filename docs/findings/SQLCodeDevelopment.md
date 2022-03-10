@@ -2300,6 +2300,15 @@ While you can choose any supported JOIN style, without affecting the query plan 
 
 ---
 
+## Using LEFT OUTER JOIN Instead of INNER JOIN
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+LEFT+OUTER+JOIN+Instead+of+INNER+JOIN)
+
+Use ```INNER JOIN``` when rows will match in both tables. Rows will match in both tables if the foreign key column does not allow ```NULL```.
+
+[Back to top](#top)
+
+---
+
 ## View Usage
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/93)
 

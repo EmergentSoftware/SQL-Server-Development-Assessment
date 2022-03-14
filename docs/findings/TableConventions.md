@@ -49,9 +49,20 @@ The inner-platform effect is the tendency of software architects to create a sys
 
 In the database world, developers are sometimes tempted to bypass the SQL Server relations database, for example by storing everything in one big table with three columns labelled EntityId, Key, and Value. While this entity-attribute-value model allows the developer to break out from the structure imposed by a SQL Server database, it loses out on all the benefits, since all of the work that could be done efficiently by the SQL Server relational database is forced onto the application instead. Queries become much more convoluted, the indexes and query optimizer can no longer work effectively, and data validity constraints are not enforced. Performance and maintainability can be extremely poor.
 
-[Azure Table storage](https://docs.microsoft.com/en-us/azure/storage/tables/table-storage-overview) or [Azure Cosmos DB Table API](https://docs.microsoft.com/en-us/azure/cosmos-db/table/introduction) are two alternative services to assess for EAV requirements. There are some feature differences between Table API in Azure Cosmos DB and Azure table storage. For ease of development, Azure provides a unified [Azure Tables SDK](https://devblogs.microsoft.com/azure-sdk/announcing-the-new-azure-data-tables-libraries/) that can be used to target both the original Table storage as well as the Cosmos DB Table API.
+**Use Case Exceptions**
 
-A use case exception for utilizing an EAV model in a database is where the attributes are user defined and a developer will not have control over them.
+Data that meets the following criteria might be okay to use the EAV pattern at the discretion of the software or database architect.
+- The definition of the data is highly dynamic and is likely to change numerous times of the course of the development and/or life of the application.
+- The data has no intrinsic value outside the context of the application itself.
+- The data will not be materialized in models but simply passed through the application layers as key value pairs.
+
+Examples of valid use cases that meet this criteria are:
+- Application user preferences
+- User interface styling & custom layouts
+- Saved user interface state
+- Front-end application configuration
+
+Another use case exception for utilizing an EAV model in a database is where the attributes are user defined and a developer will not have control over them.
 
 Another use case exception for utilizing an EAV model is for something like a multiple product (entity) type shopping cart. Where each specific product (entity) type has its own list of attributes. If the product (entity) catalog only sells a manageable number of product different types the attributes, the attributes should be materialized as physical columns in the table schema. This type of EAV model will have diminishing returns for performance with more data housed in the database. Caching this type of EAV model will allow for a larger data set as to lessen the chance of performance issues. Ensure this is communicated to the stakeholders.
 

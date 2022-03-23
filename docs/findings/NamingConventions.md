@@ -28,7 +28,7 @@ The purpose of naming and style convention allows you and others to identify the
 ## Naming Foreign Key Relationships
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/160)
 
-No need to use the ``FX_`` prefix in foreign key relationships. 
+No need to use the ``FK_`` prefix in foreign key relationships. 
 
 - See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
 

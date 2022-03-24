@@ -25,10 +25,9 @@ Checks for data issues.
 
 ---
 
-## Using Placeholder Rows
+## Do not use Placeholder Rows 
+**Potential finding:** <a name="using-placeholder-rows"/>Using Placeholder Rows<br/>
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Placeholder+Rows)
-
-Do not use placeholder rows/records. 
 
 A placeholder is an empty row/record that is created to hold the place of possible future data in the row that may or may not be necessary.
 
@@ -39,7 +38,8 @@ While placeholder rows do not violate database normalization rules, it is not co
 [Back to top](#top)
 
 ---
-## Unencrypted Data
+## Data Should be Encrypted if Compliance Dictates
+**Potential finding:** <a name="unencrypted-data"/>Unencrypted Data<br/>
 **Check Id:** 28
 
 The table column returned for this check might have unencrypted data that you might want to have encrypted for best practices or industry specific compliance. You will need to determine if the data needs to be protected at rest, in transit or both.

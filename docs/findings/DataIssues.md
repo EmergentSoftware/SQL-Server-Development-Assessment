@@ -1,7 +1,7 @@
 ---
 title: Data Issues
-permalink: findings/data-issues
-parent: Findings
+permalink: best-practices-and-potential-findings/data-issues
+parent: Best Practices & Potential Findings
 nav_order: 5
 layout: default
 ---

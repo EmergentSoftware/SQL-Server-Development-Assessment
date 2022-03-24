@@ -1,6 +1,6 @@
 ---
-title: Findings
-permalink: findings
+title: Best Practices & Potential Findings
+permalink: best-practices-and-potential-findings
 nav_order: 9
 has_children: true
 layout: default

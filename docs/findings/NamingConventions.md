@@ -1,7 +1,7 @@
 ---
 title: Naming Conventions
-permalink: findings/naming-conventions
-parent: Findings
+permalink: best-practices-and-potential-findings/naming-conventions
+parent: Best Practices & Potential Findings
 nav_order: 1
 layout: default
 ---

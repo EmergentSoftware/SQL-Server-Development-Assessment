@@ -1,7 +1,7 @@
 ---
 title: Configuration Issues
-permalink: findings/configuration-issues
-parent: Findings
+permalink: best-practices-and-potential-findings/configuration-issues
+parent: Best Practices & Potential Findings
 nav_order: 6
 layout: default
 ---

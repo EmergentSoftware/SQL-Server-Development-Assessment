@@ -27,6 +27,7 @@ These checks are for configurations to the SQL Server.
 
 ## Use Code Retry Logic to Handle Transient Errors
 **Potential finding:** <a name="not-using-code-retry-logic-for-transient-errors"/>Not Using Code Retry Logic for Transient Errors
+
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/181)
 
 It is best practice to implement client code to mitigate connection errors and transient errors that your client application encounters when communicating with a SQL Server (On-premises SQL Server, Azure SQL Database, Azure SQL Managed Instance and Azure Synapse Analytics).

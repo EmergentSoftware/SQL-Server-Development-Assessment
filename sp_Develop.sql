@@ -69,7 +69,7 @@ AS
            ,@CheckId             INT
            ,@FindingGroup        VARCHAR(100)
            ,@Finding             VARCHAR(200)
-           ,@URLBase             VARCHAR(100)
+           ,@URLBase             VARCHAR(120)
            ,@URLSkipChecks       VARCHAR(100)
            ,@URLAnchor           VARCHAR(400)
            ,@Priority            INT
@@ -82,9 +82,9 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '0.12.1';
-        SET @VersionDate = '20211004';
-        SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/';
+        SET @Version = '0.12.2';
+        SET @VersionDate = '20220324';
+        SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/best-practices-and-potential-findings/';
         SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);

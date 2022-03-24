@@ -1,7 +1,7 @@
 ---
 title: Running Issues
-permalink: findings/running-issues
-parent: Findings
+permalink: best-practices-and-potential-findings/running-issues
+parent: Best Practices & Potential Findings
 nav_order: 7
 layout: default
 ---

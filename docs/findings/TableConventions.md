@@ -1,7 +1,7 @@
 ---
 title: Table Conventions
-permalink: findings/table-conventions
-parent: Findings
+permalink: best-practices-and-potential-findings/table-conventions
+parent: Best Practices & Potential Findings
 nav_order: 2
 layout: default
 ---

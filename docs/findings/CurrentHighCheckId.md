@@ -1,7 +1,7 @@
 ---
 title: Current High Check Id
-permalink: findings/current-high-check-id
-parent: Findings
+permalink: best-practices-and-potential-findings/current-high-check-id
+parent: Best Practices & Potential Findings
 nav_order: 99
 layout: default
 ---

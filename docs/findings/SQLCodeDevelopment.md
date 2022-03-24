@@ -1,7 +1,7 @@
 ---
 title: SQL Code Conventions
-permalink: findings/sql-code-conventions
-parent: Findings
+permalink: best-practices-and-potential-findings/sql-code-conventions
+parent: Best Practices & Potential Findings
 nav_order: 4
 layout: default
 ---

@@ -1,24 +1,23 @@
 IF OBJECT_ID('dbo.sp_Develop') IS NULL
     BEGIN
-        EXEC dbo.sp_executesql
-            @stmt = N'CREATE PROCEDURE dbo.sp_Develop AS BEGIN SET NOCOUNT ON; END';
+        EXEC dbo.sp_executesql @stmt = N'CREATE PROCEDURE dbo.sp_Develop AS BEGIN SET NOCOUNT ON; END';
     END;
 GO
 
 ALTER PROCEDURE dbo.sp_Develop
-    @DatabaseName      NVARCHAR(128) = NULL /*Defaults to current DB if not specified*/
-   ,@GetAllDatabases   BIT           = 0
-   ,@BringThePain      BIT           = 0
-   ,@SkipCheckServer   NVARCHAR(128) = NULL
-   ,@SkipCheckDatabase NVARCHAR(128) = NULL
-   ,@SkipCheckSchema   NVARCHAR(128) = NULL
-   ,@SkipCheckTable    NVARCHAR(128) = NULL
-   ,@OutputType        VARCHAR(20)   = 'TABLE'
-   ,@ShowSummary       BIT           = 0
-   ,@Debug             INT           = 0
-   ,@Version           VARCHAR(30)   = NULL OUTPUT
-   ,@VersionDate       DATETIME      = NULL OUTPUT
-   ,@VersionCheckMode  BIT           = 0
+    @DatabaseName      nvarchar(128) = NULL /*Defaults to current DB if not specified*/
+   ,@GetAllDatabases   bit           = 0
+   ,@BringThePain      bit           = 0
+   ,@SkipCheckServer   nvarchar(128) = NULL
+   ,@SkipCheckDatabase nvarchar(128) = NULL
+   ,@SkipCheckSchema   nvarchar(128) = NULL
+   ,@SkipCheckTable    nvarchar(128) = NULL
+   ,@OutputType        varchar(20)   = 'TABLE'
+   ,@ShowSummary       bit           = 0
+   ,@Debug             int           = 0
+   ,@Version           varchar(30)   = NULL OUTPUT
+   ,@VersionDate       datetime      = NULL OUTPUT
+   ,@VersionCheckMode  bit           = 0
 WITH RECOMPILE
 AS
     BEGIN
@@ -58,24 +57,24 @@ AS
 	    **********************************************************************************************************************/
 
         DECLARE
-            @LineFeed            NVARCHAR(5)
-           ,@NumDatabases        INT
-           ,@Message             NVARCHAR(4000)
-           ,@StringToExecute     NVARCHAR(MAX)
-           ,@ScriptVersionName   NVARCHAR(50)
-           ,@ErrorSeverity       INT
-           ,@ErrorState          INT
-           ,@DatabaseId          INT
-           ,@CheckId             INT
-           ,@FindingGroup        VARCHAR(100)
-           ,@Finding             VARCHAR(200)
-           ,@URLBase             VARCHAR(120)
-           ,@URLSkipChecks       VARCHAR(100)
-           ,@URLAnchor           VARCHAR(400)
-           ,@Priority            INT
-           ,@ProductVersion      NVARCHAR(128)
-           ,@ProductVersionMajor DECIMAL(10, 2)
-           ,@ProductVersionMinor DECIMAL(10, 2);
+            @LineFeed            nvarchar(5)
+           ,@NumDatabases        int
+           ,@Message             nvarchar(4000)
+           ,@StringToExecute     nvarchar(MAX)
+           ,@ScriptVersionName   nvarchar(50)
+           ,@ErrorSeverity       int
+           ,@ErrorState          int
+           ,@DatabaseId          int
+           ,@CheckId             int
+           ,@FindingGroup        varchar(100)
+           ,@Finding             varchar(200)
+           ,@URLBase             varchar(120)
+           ,@URLSkipChecks       varchar(100)
+           ,@URLAnchor           varchar(400)
+           ,@Priority            int
+           ,@ProductVersion      nvarchar(128)
+           ,@ProductVersionMajor decimal(10, 2)
+           ,@ProductVersionMinor decimal(10, 2);
 
 
         /**********************************************************************************************************************
@@ -89,9 +88,9 @@ AS
         SET @OutputType = UPPER(@OutputType);
         SET @LineFeed = CHAR(13) + CHAR(10);
         SET @ScriptVersionName = N'sp_Develop v' + @Version + N' - ' + DATENAME(MONTH, @VersionDate) + N' ' + RIGHT('0' + DATENAME(DAY, @VersionDate), 2) + N', ' + DATENAME(YEAR, @VersionDate);
-        SET @ProductVersion = CAST(SERVERPROPERTY('ProductVersion') AS NVARCHAR(128));
+        SET @ProductVersion = CAST(SERVERPROPERTY('ProductVersion') AS nvarchar(128));
         SET @ProductVersionMajor = SUBSTRING(@ProductVersion, 1, CHARINDEX('.', @ProductVersion) + 1);
-        SET @ProductVersionMinor = PARSENAME(CONVERT(VARCHAR(32), @ProductVersion), 2);
+        SET @ProductVersionMinor = PARSENAME(CONVERT(varchar(32), @ProductVersion), 2);
 
         IF @VersionCheckMode = 1
             BEGIN
@@ -120,20 +119,20 @@ AS
             END;
 
         CREATE TABLE #Finding (
-            DeveloperResultsId INT            IDENTITY(1, 1) NOT NULL
-           ,CheckId            INT            NOT NULL DEFAULT-1
-           ,Database_Id        INT            NOT NULL DEFAULT-1
-           ,DatabaseName       NVARCHAR(128)  NOT NULL DEFAULT N''
-           ,Priority           INT            NOT NULL DEFAULT-1
-           ,FindingGroup       VARCHAR(100)   NOT NULL
-           ,Finding            VARCHAR(200)   NOT NULL
-           ,URL                VARCHAR(2047)  NOT NULL
-           ,Details            NVARCHAR(4000) NOT NULL
-           ,Schema_Id          INT            NOT NULL DEFAULT-1
-           ,SchemaName         NVARCHAR(128)  NULL DEFAULT N''
-           ,Object_Id          INT            NOT NULL DEFAULT-1
-           ,ObjectName         NVARCHAR(128)  NOT NULL DEFAULT N''
-           ,ObjectType         NVARCHAR(60)   NOT NULL DEFAULT N''
+            DeveloperResultsId int            IDENTITY(1, 1) NOT NULL
+           ,CheckId            int            NOT NULL DEFAULT-1
+           ,Database_Id        int            NOT NULL DEFAULT-1
+           ,DatabaseName       nvarchar(128)  NOT NULL DEFAULT N''
+           ,Priority           int            NOT NULL DEFAULT-1
+           ,FindingGroup       varchar(100)   NOT NULL
+           ,Finding            varchar(200)   NOT NULL
+           ,URL                varchar(2047)  NOT NULL
+           ,Details            nvarchar(4000) NOT NULL
+           ,Schema_Id          int            NOT NULL DEFAULT-1
+           ,SchemaName         nvarchar(128)  NULL DEFAULT N''
+           ,Object_Id          int            NOT NULL DEFAULT-1
+           ,ObjectName         nvarchar(128)  NOT NULL DEFAULT N''
+           ,ObjectType         nvarchar(60)   NOT NULL DEFAULT N''
         );
 
         IF OBJECT_ID('tempdb..#DatabaseList') IS NOT NULL
@@ -142,8 +141,8 @@ AS
             END;
 
         CREATE TABLE #DatabaseList (
-            DatabaseName                          NVARCHAR(256) NOT NULL
-           ,secondary_role_allow_connections_desc NVARCHAR(50)  NULL DEFAULT 'YES'
+            DatabaseName                          nvarchar(256) NOT NULL
+           ,secondary_role_allow_connections_desc nvarchar(50)  NULL DEFAULT 'YES'
         );
 
         IF OBJECT_ID('tempdb..#DatabaseIgnore') IS NOT NULL
@@ -151,7 +150,7 @@ AS
                 DROP TABLE #DatabaseIgnore;
             END;
 
-        CREATE TABLE #DatabaseIgnore (DatabaseName NVARCHAR(128) NOT NULL, Reason NVARCHAR(100) NOT NULL);
+        CREATE TABLE #DatabaseIgnore (DatabaseName nvarchar(128) NOT NULL, Reason nvarchar(100) NOT NULL);
 
         IF OBJECT_ID('tempdb..#SkipCheck') IS NOT NULL
             BEGIN
@@ -159,22 +158,21 @@ AS
             END;
 
         CREATE TABLE #SkipCheck (
-            ServerName   NVARCHAR(128) NULL
-           ,DatabaseName NVARCHAR(128) NULL
-           ,SchemaName   NVARCHAR(128) NULL
-           ,ObjectName   NVARCHAR(128) NULL
-           ,CheckId      INT           NULL
+            ServerName   nvarchar(128) NULL
+           ,DatabaseName nvarchar(128) NULL
+           ,SchemaName   nvarchar(128) NULL
+           ,ObjectName   nvarchar(128) NULL
+           ,CheckId      int           NULL
         );
 
-        CREATE CLUSTERED INDEX CheckId_DatabaseName
-        ON #SkipCheck (CheckId, DatabaseName);
+        CREATE CLUSTERED INDEX CheckId_DatabaseName ON #SkipCheck (CheckId, DatabaseName);
 
         /**********************************************************************************************************************
         ** Skip Checks
         **********************************************************************************************************************/
         IF (@SkipCheckTable IS NOT NULL AND RTRIM(LTRIM(@SkipCheckTable)) <> '')
-           AND (@SkipCheckSchema IS NOT NULL AND RTRIM(LTRIM(@SkipCheckSchema)) <> '')
-           AND (@SkipCheckDatabase IS NOT NULL AND RTRIM(LTRIM(@SkipCheckDatabase)) <> '')
+        AND (@SkipCheckSchema IS NOT NULL AND RTRIM(LTRIM(@SkipCheckSchema)) <> '')
+        AND (@SkipCheckDatabase IS NOT NULL AND RTRIM(LTRIM(@SkipCheckDatabase)) <> '')
             BEGIN
 
                 IF @Debug IN (1, 2)
@@ -210,7 +208,7 @@ AS
 
                 EXEC sys.sp_executesql @stmt = @StringToExecute;
                 IF @Debug = 2
-                   AND @StringToExecute IS NOT NULL
+                AND @StringToExecute IS NOT NULL
                     PRINT @StringToExecute;
 
                 /* Check if we should be running checks on this server, exit out if not. */
@@ -221,8 +219,8 @@ AS
                         #SkipCheck AS SC
                     WHERE
                         SC.ServerName = SERVERPROPERTY('ServerName')
-                        AND SC.DatabaseName IS NULL
-                        AND SC.ObjectName IS NULL
+                    AND SC.DatabaseName IS NULL
+                    AND SC.ObjectName IS NULL
                 )
                     BEGIN
                         IF @Debug IN (1, 2)
@@ -240,11 +238,11 @@ AS
 	    **********************************************************************************************************************/
 
         /* If the server is Amazon RDS, skip checks that it doesn't allow */
-        IF LEFT(CAST(SERVERPROPERTY('ComputerNamePhysicalNetBIOS') AS VARCHAR(8000)), 8) = 'EC2AMAZ-'
-           AND LEFT(CAST(SERVERPROPERTY('MachineName') AS VARCHAR(8000)), 8) = 'EC2AMAZ-'
-           AND LEFT(CAST(SERVERPROPERTY('ServerName') AS VARCHAR(8000)), 8) = 'EC2AMAZ-'
-           AND DB_ID('rdsadmin') IS NOT NULL
-           AND EXISTS (
+        IF LEFT(CAST(SERVERPROPERTY('ComputerNamePhysicalNetBIOS') AS varchar(8000)), 8) = 'EC2AMAZ-'
+        AND LEFT(CAST(SERVERPROPERTY('MachineName') AS varchar(8000)), 8) = 'EC2AMAZ-'
+        AND LEFT(CAST(SERVERPROPERTY('ServerName') AS varchar(8000)), 8) = 'EC2AMAZ-'
+        AND DB_ID('rdsadmin') IS NOT NULL
+        AND EXISTS (
             SELECT
                 *
             FROM
@@ -267,7 +265,7 @@ AS
             END;
 
         /* If the server is Express Edition, skip checks that it doesn't allow */
-        IF CAST(SERVERPROPERTY('Edition') AS NVARCHAR(1000)) LIKE N'%Express%'
+        IF CAST(SERVERPROPERTY('Edition') AS nvarchar(1000)) LIKE N'%Express%'
             BEGIN
                 /* Check to skip go here */
                 /* INSERT INTO #SkipCheck (CheckId) VALUES (?); */
@@ -310,8 +308,9 @@ AS
             #SkipCheck AS SC
         WHERE
             (SC.ServerName = SERVERPROPERTY('ServerName') OR SC.ServerName IS NULL)
-            AND SC.ObjectName IS NULL
-            AND SC.CheckId IS NULL
+        AND SC.ObjectName IS NULL
+        AND SC.CheckId IS NULL
+        AND SC.DatabaseName IS NOT NULL
         OPTION (RECOMPILE);
 
         /**********************************************************************************************************************
@@ -325,14 +324,14 @@ AS
                 FROM
                     sys.databases
                 WHERE
-                    user_access_desc   = N'MULTI_USER'
-                    AND state_desc     = N'ONLINE'
-                    AND database_id    > 4
-                    AND DB_NAME(database_id)NOT LIKE N'ReportServer%' /* SQL Server Reporting Services */
-                    AND DB_NAME(database_id)NOT LIKE N'rdsadmin%' /* Amazon RDS default database */
-                    AND DB_NAME(database_id) NOT IN (N'DWQueue', N'DWDiagnostics', N'DWConfiguration') /* PolyBase databases do not need to be checked */
-                    AND DB_NAME(database_id) NOT IN (N'SSISDB') /* SQL Server Integration Services */
-                    AND is_distributor = 0
+                    user_access_desc = N'MULTI_USER'
+                AND state_desc       = N'ONLINE'
+                AND database_id      > 4
+                AND DB_NAME(database_id)NOT LIKE N'ReportServer%' /* SQL Server Reporting Services */
+                AND DB_NAME(database_id)NOT LIKE N'rdsadmin%' /* Amazon RDS default database */
+                AND DB_NAME(database_id) NOT IN (N'DWQueue', N'DWDiagnostics', N'DWConfiguration') /* PolyBase databases do not need to be checked */
+                AND DB_NAME(database_id) NOT IN (N'SSISDB') /* SQL Server Integration Services */
+                AND is_distributor   = 0
                 OPTION (RECOMPILE);
 
                 /* Skip non-readable databases in an AG */
@@ -341,9 +340,10 @@ AS
                         *
                     FROM
                         sys.all_objects            AS o
-                        INNER JOIN sys.all_columns AS c ON o.object_id = c.object_id
-                                                           AND o.name  = 'dm_hadr_availability_replica_states'
-                                                           AND c.name  = 'role_desc'
+                        INNER JOIN sys.all_columns AS c
+                            ON o.object_id = c.object_id
+                            AND o.name     = 'dm_hadr_availability_replica_states'
+                            AND c.name     = 'role_desc'
                 )
                     BEGIN
 
@@ -397,13 +397,7 @@ AS
             BEGIN
                 INSERT INTO #DatabaseList (DatabaseName)
                 SELECT
-                    CASE
-                        WHEN @DatabaseName IS NULL
-                             OR @DatabaseName = N'' THEN
-                            DB_NAME()
-                        ELSE
-                            @DatabaseName
-                    END;
+                    CASE WHEN @DatabaseName IS NULL OR @DatabaseName = N'' THEN DB_NAME()ELSE @DatabaseName END;
             END;
 
         SET @NumDatabases = (
@@ -411,12 +405,13 @@ AS
                 COUNT(*)
             FROM
                 #DatabaseList                   AS dl
-                LEFT OUTER JOIN #DatabaseIgnore AS i ON dl.DatabaseName = i.DatabaseName
+                LEFT OUTER JOIN #DatabaseIgnore AS i
+                    ON dl.DatabaseName = i.DatabaseName
             WHERE
                 COALESCE(dl.secondary_role_allow_connections_desc, 'OK') <> 'NO'
-                AND i.DatabaseName IS NULL
+            AND i.DatabaseName IS NULL
         );
-        SET @Message = N'Number of databases to examine: ' + CAST(@NumDatabases AS NVARCHAR(50));
+        SET @Message = N'Number of databases to examine: ' + CAST(@NumDatabases AS nvarchar(50));
         IF @Debug IN (1, 2)
             RAISERROR(@Message, 0, 1) WITH NOWAIT;
 
@@ -430,7 +425,7 @@ AS
         /**********************************************************************************************************************/
         BEGIN TRY
             IF @NumDatabases >= 50
-               AND @BringThePain <> 1
+            AND @BringThePain <> 1
                 BEGIN
 
                     INSERT #Finding (CheckId, FindingGroup, Finding, URL, Priority, Details)
@@ -440,7 +435,7 @@ AS
                        ,Finding      = @Finding
                        ,URL          = @URLBase + @URLAnchor
                        ,Priority     = @Priority
-                       ,Details      = N'You''re trying to run sp_Develop on a server with ' + CAST(@NumDatabases AS NVARCHAR(50)) + ' databases. If you''re sure you want to do this, run again with the parameter @BringThePain = 1.';
+                       ,Details      = N'You''re trying to run sp_Develop on a server with ' + CAST(@NumDatabases AS nvarchar(50)) + ' databases. If you''re sure you want to do this, run again with the parameter @BringThePain = 1.';
                     IF (@OutputType <> 'NONE')
                         BEGIN
 
@@ -507,9 +502,9 @@ AS
                 #SkipCheck AS SC
             WHERE
                 SC.CheckId = @CheckId
-                AND SC.ObjectName IS NULL
+            AND SC.ObjectName IS NULL
         )
-           AND DATEDIFF(MONTH, @VersionDate, GETDATE()) > 6
+        AND DATEDIFF(MONTH, @VersionDate, GETDATE()) > 6
             BEGIN
 
                 IF @Debug IN (1, 2)
@@ -533,15 +528,16 @@ AS
             RAISERROR(N'Starting loop through databases', 0, 1) WITH NOWAIT;
 
         DECLARE database_cursor CURSOR LOCAL FAST_FORWARD FOR
-        SELECT
-            dl.DatabaseName
-        FROM
-            #DatabaseList                   AS dl
-            LEFT OUTER JOIN #DatabaseIgnore AS i ON dl.DatabaseName = i.DatabaseName
-        WHERE
-            COALESCE(dl.secondary_role_allow_connections_desc, 'OK') <> 'NO'
+            SELECT
+                dl.DatabaseName
+            FROM
+                #DatabaseList                   AS dl
+                LEFT OUTER JOIN #DatabaseIgnore AS i
+                    ON dl.DatabaseName = i.DatabaseName
+            WHERE
+                COALESCE(dl.secondary_role_allow_connections_desc, 'OK') <> 'NO'
             AND i.DatabaseName IS NULL
-        OPTION (RECOMPILE);
+            OPTION (RECOMPILE);
 
         OPEN database_cursor;
         FETCH NEXT FROM database_cursor
@@ -563,9 +559,9 @@ AS
                 FROM
                     sys.databases
                 WHERE
-                    name                 = @DatabaseName
-                    AND user_access_desc = 'MULTI_USER'
-                    AND state_desc       = 'ONLINE'
+                    name             = @DatabaseName
+                AND user_access_desc = 'MULTI_USER'
+                AND state_desc       = 'ONLINE'
                 OPTION (RECOMPILE);
 
                 /**********************************************************************************************************************
@@ -1615,7 +1611,8 @@ AS
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.triggers    AS TR ON TR.parent_id = T.object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.sql_modules AS M  ON TR.object_id = M.object_id
 				        WHERE
-					        M.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS
+					        (M.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS
+                            AND M.definition NOT LIKE ''%SET NOCOUNT, XACT_ABORT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS)
                         OPTION (RECOMPILE);';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1646,7 +1643,8 @@ AS
 				        WHERE
 					        O.type IN (''P'')
                             AND O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'')
-					        AND SM.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS
+					        AND (SM.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS
+                            AND SM.definition NOT LIKE ''%SET NOCOUNT, XACT_ABORT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS)
                         OPTION (RECOMPILE);'
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1988,7 +1986,7 @@ AS
 	    ** Output the results
 	    ** After populating the #Finding table, time to dump it out.
 	    **********************************************************************************************************************/
-        DECLARE @Separator AS CHAR(1);
+        DECLARE @Separator AS char(1);
         IF @OutputType = 'RSV'
             SET @Separator = CHAR(31);
         ELSE
@@ -1996,10 +1994,11 @@ AS
 
         IF @OutputType = 'COUNT'
             BEGIN
-                SELECT Warnings = COUNT(*) FROM #Finding OPTION (RECOMPILE);
+                SELECT Warnings = COUNT(*)FROM #Finding
+                OPTION (RECOMPILE);
             END;
         ELSE IF @OutputType IN ('CSV', 'RSV')
-                 BEGIN
+            BEGIN
                     -- SQL Prompt formatting off
                      SELECT
                          Result =
@@ -2024,102 +2023,115 @@ AS
                         ,F.Finding
                     OPTION (RECOMPILE);
                     -- SQL Prompt formatting on
-                 END;
+            END;
         ELSE IF @OutputType = 'XML'
-                 BEGIN
-                     SELECT
-                         F.DatabaseName
-                        ,F.SchemaName
-                        ,F.ObjectName
-                        ,F.ObjectType
-                        ,F.FindingGroup
-                        ,F.Finding
-                        ,F.Details
-                        ,F.URL
-                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', @URLSkipChecks)
-                        ,F.Priority
-                        ,F.CheckId
-                     FROM
-                         #Finding AS F
-                     ORDER BY
-                         F.DatabaseName
-                        ,F.SchemaName
-                        ,F.ObjectName
-                        ,F.ObjectType
-                        ,F.FindingGroup
-                        ,F.Finding
-                     FOR XML PATH('Finding'), ROOT('sp_Develop_Output')
-                     OPTION (RECOMPILE);
-                 END;
+            BEGIN
+                SELECT
+                    F.DatabaseName
+                   ,F.SchemaName
+                   ,F.ObjectName
+                   ,F.ObjectType
+                   ,F.FindingGroup
+                   ,F.Finding
+                   ,F.Details
+                   ,F.URL
+                   ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS nvarchar(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS nvarchar(50)) + ');', @URLSkipChecks)
+                   ,F.Priority
+                   ,F.CheckId
+                FROM
+                    #Finding AS F
+                ORDER BY
+                    F.DatabaseName
+                   ,F.SchemaName
+                   ,F.ObjectName
+                   ,F.ObjectType
+                   ,F.FindingGroup
+                   ,F.Finding
+                FOR XML PATH('Finding'), ROOT('sp_Develop_Output')
+                OPTION (RECOMPILE);
+            END;
         ELSE IF @OutputType <> 'NONE'
-                 BEGIN
-                     SELECT
-                         F.DatabaseName
-                        ,F.SchemaName
-                        ,F.ObjectName
-                        ,F.ObjectType
-                        ,F.FindingGroup
-                        ,F.Finding
-                        ,F.Details
-                        ,F.URL
-                        ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS NVARCHAR(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS NVARCHAR(50)) + ');', @URLSkipChecks)
-                        ,F.Priority
-                        ,F.CheckId
-                     FROM
-                         #Finding AS F
-                     WHERE
-                         NOT EXISTS (
-                         SELECT
-                             SC.ServerName
-                            ,SC.DatabaseName
-                            ,SC.ObjectName
-                            ,SC.CheckId
-                         FROM
-                             #SkipCheck AS SC
-                         WHERE
-                             (SC.SchemaName    = F.SchemaName OR SC.SchemaName IS NULL)
-                             AND SC.ObjectName = F.ObjectName
-                             AND SC.CheckId    = F.CheckId
-                     )
-                         AND NOT EXISTS (
-                         SELECT
-                             SC.ServerName
-                            ,SC.DatabaseName
-                            ,SC.ObjectName
-                            ,SC.CheckId
-                         FROM
-                             #SkipCheck AS SC
-                         WHERE
-                             (SC.SchemaName    = F.SchemaName OR SC.SchemaName IS NULL)
-                             AND SC.ObjectName = F.ObjectName
-                             AND SC.CheckId IS NULL
-                     )
-                     ORDER BY
-                         F.DatabaseName
-                        ,F.SchemaName
-                        ,F.ObjectName
-                        ,F.ObjectType
-                        ,F.FindingGroup
-                        ,F.Finding
-                    OPTION (RECOMPILE);
-                 END;
+            BEGIN
+                SELECT
+                    F.DatabaseName
+                   ,F.SchemaName
+                   ,F.ObjectName
+                   ,F.ObjectType
+                   ,F.FindingGroup
+                   ,F.Finding
+                   ,F.Details
+                   ,F.URL
+                   ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS nvarchar(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS nvarchar(50)) + ');', @URLSkipChecks)
+                   ,F.Priority
+                   ,F.CheckId
+                FROM
+                    #Finding AS F
+                WHERE
+                    NOT EXISTS (
+                    SELECT
+                        SC.ServerName
+                       ,SC.DatabaseName
+                       ,SC.ObjectName
+                       ,SC.CheckId
+                    FROM
+                        #SkipCheck AS SC
+                    WHERE
+                        (SC.SchemaName = F.SchemaName OR SC.SchemaName IS NULL)
+                    AND SC.ObjectName  = F.ObjectName
+                    AND SC.CheckId     = F.CheckId
+                )
+                AND NOT EXISTS (
+                    SELECT
+                        SC.ServerName
+                       ,SC.DatabaseName
+                       ,SC.ObjectName
+                       ,SC.CheckId
+                    FROM
+                        #SkipCheck AS SC
+                    WHERE
+                        (SC.SchemaName = F.SchemaName OR SC.SchemaName IS NULL)
+                    AND SC.ObjectName  = F.ObjectName
+                    AND SC.CheckId IS NULL
+                )
+                AND NOT EXISTS (
+                    SELECT
+                        SC.ServerName
+                       ,SC.DatabaseName
+                       ,SC.ObjectName
+                       ,SC.CheckId
+                    FROM
+                        #SkipCheck AS SC
+                    WHERE
+                        (SC.SchemaName = F.SchemaName)
+                    AND SC.ObjectName IS NULL
+                    AND SC.CheckId IS NULL
+                )
+                ORDER BY
+                    F.DatabaseName
+                   ,F.SchemaName
+                   ,F.ObjectName
+                   ,F.ObjectType
+                   ,F.FindingGroup
+                   ,F.Finding
+                OPTION (RECOMPILE);
+            END;
 
         IF @ShowSummary = 1
-        BEGIN
-            SELECT
-                FindingGroup     = F.FindingGroup
-               ,Finding          = F.Finding
-               ,NumberOfFindings = COUNT_BIG(*)
-            FROM
-                #Finding AS F
-            GROUP BY
-                F.FindingGroup
-               ,F.Finding
-            ORDER BY
-                F.FindingGroup
-               ,F.Finding
-            OPTION (RECOMPILE);
-        END;
+            BEGIN
+                SELECT
+                    FindingGroup     = F.FindingGroup
+                   ,Finding          = F.Finding
+                   ,NumberOfFindings = COUNT_BIG(*)
+                FROM
+                    #Finding AS F
+                GROUP BY
+                    F.FindingGroup
+                   ,F.Finding
+                ORDER BY
+                    F.FindingGroup
+                   ,F.Finding
+                OPTION (RECOMPILE);
+            END;
 
         DROP TABLE #Finding;
 

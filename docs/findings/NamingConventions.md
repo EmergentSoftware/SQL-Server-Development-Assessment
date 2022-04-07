@@ -26,11 +26,10 @@ The purpose of naming and style convention allows you and others to identify the
 ---
 
 ## Naming Foreign Key Relationships
+**Potential Finding:** <a name="improper-named-foreign-key-relationship"/>Improper Named Foreign Key Relationship<br/>
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/160)
 
-No need to use the ``FK_`` prefix in foreign key relationships. 
-
-- See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
+No need to use the ``FK_`` prefix in foreign key relationships. See [Using Prefix in Name](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#using-prefix-in-name).
 
 Use the format of ``[FOREIGN-KEY-TABLE]_[PRIMARY-KEY-TABLE]`` in most cases. This gives you a quick view of the tables that are involved in the relationship. The first table named depends on the second table named.
 
@@ -44,12 +43,94 @@ In a more rare case when not referencing the primary key of the primary key tabl
 
 **Example:** ``Invoice_ProductCode_Product_ProductCode``
 
+If utilizing schemas other than ```dbo```, prefix the schema name before the [TABLE-NAME].
+
+**Example:** ``Purchasing_PurchaseOrderLine_Application_Product``
+
 
 [Back to top](#top)
 
 ---
 
-## Using System-Generated Object Names
+## Naming Primary Keys
+**Potential Finding:** <a name="improper-named-primary-key"/>Improper Named Primary Key<br/>
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Primary+Keys)
+
+No need to use the ``PK_`` prefix for primary keys. Use the format of ```[TABLE-NAME]_[COLUMN-NAME]```. See [Using Prefix in Name](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#using-prefix-in-name).
+
+**Basic Example:** ``Invoice_InvoiceId``
+
+If utilizing schemas other than ```dbo```, prefix the schema name before the ```[TABLE-NAME]```.
+
+**Example:** ```Purchasing_PurchaseOrder_PurchaseOrderId```
+
+- See [Index Naming](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#index-naming)
+- See [Naming Natural Keys](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#naming-natural-keys)
+
+
+[Back to top](#top)
+
+---
+
+
+## Naming Natural Keys
+**Potential Finding:** <a name="using-natural-key"/>Using Natural Key<br/>
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Natural+Keys)
+
+- See [Unique Constraint or Unique Indexes Usage](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#unique-constraint-or-unique-indexes-usage)
+
+[Back to top](#top)
+
+---
+
+
+## Unique Constraint or Unique Indexes Usage
+**Potential Finding:** <a name="using-unique-constraint-instead-of-unique-indexes"/>Using Unique Constraint Instead of Unique Indexes<br/>
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Primary+Keys)
+
+Create unique indexes instead of unique constraints (unique key). Doing so removes a dependency of a unique key to the unique index that is created automatically and tightly coupled.
+
+In some table design cases you might need to create uniqueness for one or more columns. This could be for a natural [composite] key or to ensure a person can only have one phone number and phone type combination.
+
+There is no functional or performance difference between a unique constraint (unique key) and a unique index. With both you get a unique index, but with a unique constraint (unique key) the 'Ignore Duplicate Keys' and 'Re-compute statistics' index creation options are not available.
+
+The only possible benefit of a unique constraint (unique key) has over a unique index is to emphasize the purpose of the index and is displayed in the SSMS (SQL Server Management Studio) table 'Keys' folder in the 'Object Explorer' side pane.
+
+[Back to top](#top)
+
+---
+
+
+## Naming Constraint Usage
+**Potential Finding:** <a name="improper-named-constraint"/>Improper Named Constraint<br/>
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Constraints+Usage)
+
+If utilizing schemas other than ```dbo```, prefix the schema name before the ```[TABLE-NAME]```.
+
+**Column Default Constraint Example:**
+
+Use the format Use the format ```[TABLE-NAME]_[COLUMN-NAME]_Default```
+
+```CONSTRAINT Person_RowUpdateTime_Default DEFAULT (SYSDATETIMEOFFSET())```
+
+**Column Check Constraint Examples:** 
+
+Use the format Use the format ```[TABLE-NAME]_[COLUMN-NAME]_[DESCRIPTION]```
+
+```CONSTRAINT ProductItem_RegularPrice_Minimum CHECK (RegularPrice > 0)```<br/>
+```CONSTRAINT ProductItem_SalePrice_Less_To_RegularPrice CHECK (SalePrice < RegularPrice)```<br/>
+```CONSTRAINT Feedback_Stars_Range CHECK (Stars BETWEEN 0 AND 5)```<br/>
+
+
+- See [Unique Constraint or Unique Indexes Usage](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#unique-constraint-or-unique-indexes-usage)
+
+[Back to top](#top)
+
+---
+
+
+## Do not use System-Generated Object Names
+**Potential Finding:** <a name="using-system-generated-object-names"/>Using System-Generated Object Names<br/>
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/42)
 
 Create logical names and do not let SQL Server name objects.
@@ -74,14 +155,18 @@ CREATE TABLE dbo.TableName (
 );
 ```
 
+- See [Naming Constraint Usage](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#naming-constraint-usage)
+- See [Naming Primary Keys](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#naming-primary-keys)
+
 [Back to top](#top)
 
 ---
 
-## Concatenating Two Table Names
+## Table Relationship Usage
+**Potential Finding:** <a name="concatenating-two-table-names"/>Concatenating Two Table Names<br/>
 **Check Id:** 13
 
-Avoid, where possible, concatenating two table names together to create the name of a relationship (junction, intersection, many-to-many) table when there is already a word to describe the relationship. e.g. use ``Subscription`` instead of ``NewspaperReader``.
+Avoid, where possible, concatenating two table names together to create the name of a relationship (junction, reference, intersection, many-to-many) table when there is already a word to describe the relationship. e.g. use ``Subscription`` instead of ``NewspaperReader``.
 
 When a word does not exist to describe the relationship use ``Table1Table2`` with no underscores.
 
@@ -89,7 +174,8 @@ When a word does not exist to describe the relationship use ``Table1Table2`` wit
 
 ---
 
-## Variable Naming
+## Parameter and Variable Naming
+**Potential Finding:** <a name="improper-parameter-and-variable-naming"/>Improper Parameter and Variable Naming<br/>
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/74)
 
 In addition to the general naming standards regarding no special characters, no spaces, and limited use of abbreviations and acronyms, common sense should prevail in naming variables and parameters; variable and parameter names should be meaningful and natural.
@@ -100,11 +186,16 @@ All variables and parameter should be written in PascalCase, e.g. ``@FirstName``
 
 Variable and parameter names should contain only letters and numbers. No special characters or spaces should be used.
 
+Parameter and variable and names should be named identically as the column names for the data they represent other than the ```@``` symbol.
+
+- See [Column Naming](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#column-naming)
+
 [Back to top](#top)
 
 ---
 
-## Stored Procedures & Function Naming
+## Stored Procedures and Function Naming
+**Potential Finding:** <a name="improper-stored-procedures-and-function-naming"/>Improper Stored Procedures and Function Naming<br/>
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/75)
 
 Stored procedures and functions should be named so they can be ordered by the table/business entity (ObjectAction) they perform a database operation on, and adding the database activity "Get, Update, Insert, Upsert, Delete, Merge" as a suffix, e.g., (``ProductGet`` or ``OrderUpdate``).
@@ -113,7 +204,8 @@ Stored procedures and functions should be named so they can be ordered by the ta
 
 ---
 
-## Using ID for Primary Key Column Name
+## Primary Key Column Name
+**Potential Finding:** <a name="using-id-for-primary-key-column-name"/>Using ID for Primary Key Column Name<br/>
 **Check Id:** 7
 
 For columns that are the primary key for a table and uniquely identify each record in the table, the name should be ``[TableName] + Id`` (e.g. On the Make table, the primary key column would be ``MakeId``).
@@ -152,7 +244,8 @@ FROM
 
 ---
 
-## Not Naming Foreign Key Column the Same as Parent Table
+## Name Foreign Key Columns the Same as the Parent Table
+**Potential Finding:** <a name="not-naming-foreign-key-column-the-same-as-parent-table"/>Not Naming Foreign Key Column the Same as Parent Table<br/>
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/76)
 
 Foreign key columns should have the exact same name as they do in the parent table where the column is the primary. For example, in the Customer table the primary key column might be ``CustomerId``. In an Order table where the customer id is kept, it would also be ``CustomerId``.
@@ -183,7 +276,8 @@ FROM
 
 ---
 
-## Using Plural in Name
+## Table and View Names Should be Singular
+**Potential Finding:** <a name="using-plural-in-name"/>Using Plural in Name<br/>
 **Check Id:** 1
 
 Table and view names should be singular, for example, ``Customer`` instead of ``Customers``. This rule is applicable because tables are patterns for storing an entity as a record – they are analogous to Classes serving up class instances. And if for no other reason than readability, you avoid errors due to the pluralization of English nouns in the process of database development. For instance, activity becomes activities, ox becomes oxen, person becomes people or persons, alumnus becomes alumni, while data remains data.
@@ -195,12 +289,13 @@ If writing code for a data integration and the source is plural keep the staging
 
 ---
 
-## Using Prefix in Name
+## Database Objects Should not Use Prefixes
+**Potential Finding:** <a name="using-prefix-in-name"/>Using Prefix in Name<br/>
 **Check Id:** 2
 
 Never use a descriptive prefix such as tbl_. This 'reverse-Hungarian' notation has never been a standard for SQL and clashes with SQL Server's naming conventions. Some system procedures and functions were given prefixes ``sp_``, ``fn_``, ``xp_`` or ``dt_`` to signify that they were "special" and should be searched for in the master database first. 
 
-The use of the tbl_prefix for a table, often called "tibbling", came from databases imported from Access when SQL Server was first introduced. Unfortunately, this was an access convention inherited from Visual Basic, a loosely typed language. 
+The use of the tbl_prefix for a table, often called "tibbling", came from databases imported from Access when SQL Server was first introduced. Unfortunately, this was an access convention inherited from Visual Basic, a loosely typed language.
 
 SQL Server is a strongly typed language. There is never a doubt what type of object something is in SQL Server if you know its name, schema and database, because its type is there in sys.objects: Also it is obvious from the usage. Columns can be easily identified as such and character columns would have to be checked for length in the Object Browser anyway or Intellisense tool-tip hover in SQL Server Management Studio.
 
@@ -211,34 +306,23 @@ Do not prefix your columns with ``fld_``, ``col_``, ``f_``, ``u_`` as it should 
 ---
 
 ## Index Naming
+**Potential Finding:** <a name="improper-index-name"/>Improper Index Name<br/>
+**Potential Finding:** <a name="using-prefix-in-index-name"/>Using Prefix in Index Name<br/>
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Index+Naming)
+
+No need for prefixing (``PK_``, ``IX_``, ``UK_``, ``UX_``) your index names. See [Using Prefix in Name](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#using-prefix-in-name).
 
 - Index Names should be ``[SchemaName_]TableName_Column1_Column2_Column3`` 
 - Index Names should indicate if there are included columns with ``[SchemaName_]TableName_Column1_Column2_Column3_Includes``
 - When using ``uniqueidentifier/guid`` columns for clustered index you can use ``[SchemaName_]TableName_ColumnName_INDEX_REBUILD_ONLY`` to signify special index maintenance handling.
-  - See [UNIQUEIDENTIFIER in a Clustered Index](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/table-conventions#uniqueidentifier-in-a-clustered-index)
-
-
-See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
+  - See [UNIQUEIDENTIFIER in a Clustered Index](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/table-conventions#uniqueidentifier-in-a-clustered-index)
 
 [Back to top](#top)
 
 ---
 
-## Using Prefix in Index Name
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/72)
-
-No need for prefixing (``PK_``, ``IX_``, ``UK_``, ``UX_``) your index names.
-
-- See [Index Naming](/SQL-Server-Development-Assessment/findings/naming-conventions#index-naming)
-
-- See [Using Prefix in Name](/SQL-Server-Development-Assessment/findings/naming-conventions#using-prefix-in-name)
-
-[Back to top](#top)
-
----
-
-## Not Using PascalCase
+## PascalCase Usage
+**Potential Finding:** <a name="not-using-pascalcase"/>Not Using PascalCase<br/>
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/77)
 
 For all parts of the table name, including prefixes, use Pascal Case. `PascalCase` also reduces the need for underscores to visually separate words in names.
@@ -247,27 +331,32 @@ For all parts of the table name, including prefixes, use Pascal Case. `PascalCas
 
 ---
 
-## Using Reserved Words in Name
+## Reserved Words Usage
+**Potential Finding:** <a name="using-reserved-words-in-name"/>Using Reserved Words in Name<br/>
 **Check Id:** 4
 
 Using reserved or future reserved words makes code more difficult to read, can cause problems to code formatters, and can cause errors when writing code.
 
-[Reserved Keywords](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/reserved-keywords-transact-sql)
+- See [Reserved Keywords](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/reserved-keywords-transact-sql)
 
 [Back to top](#top)
 
 ---
 
-## Including Special Characters in Name
+## Special Characters Usage
+**Potential Finding:** <a name="including-special-characters-in-name"/>Including Special Characters in Name<br/>
 **Check Id:** 5
 
 Special characters should not be used in names. Using PascalCase for your table name allows for the upper-case letter to denote the first letter of a new word or name. Thus, there is no need to do so with an underscore character. Do not use numbers in your table names either. This usually points to a poorly designed data model or irregularly-partitioned tables. Do not use spaces in your table names either. While most database systems can handle names that include spaces, systems such as SQL Server require you to add brackets around the name when referencing it (like ``[table name]`` for example) which goes against the rule of keeping things as short and simple as possible.
 
+- See [PascalCase Usage](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/table-conventions#pascalcase-usage)
+
 [Back to top](#top)
 
 ---
 
-## Including Numbers in Table Name
+## Number Usage in Database Objects
+**Potential Finding:** <a name="including-numbers-in-table-name"/>Including Numbers in Table Name<br/>
 **Check Id:** 11
 
 Beware of numbers in any object names, especially table names. It normally flags up clumsy denormalization where data is embedded in the name, as in ``Year2017``, ``Year2018`` etc. Usually the significance of the numbers is obvious to the perpetrator, but not to the maintainers of the system.
@@ -282,6 +371,10 @@ It is far better to use partitions than to create dated tables such as ``Invoice
 **Check Id:** 12
 
 Do not give a table the same name as one of its columns.
+
+A use case exception is for tables that store something like account numbers. The table could be named `dbo.AccountNumber` and there could be a column named `AccountNumber`. Number is a generic or class word so it should be prefixed with the table name.
+
+- See [Column Naming](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#column-naming)
 
 [Back to top](#top)
 

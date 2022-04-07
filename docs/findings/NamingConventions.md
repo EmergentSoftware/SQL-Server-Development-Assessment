@@ -349,7 +349,7 @@ Using reserved or future reserved words makes code more difficult to read, can c
 
 Special characters should not be used in names. Using PascalCase for your table name allows for the upper-case letter to denote the first letter of a new word or name. Thus, there is no need to do so with an underscore character. Do not use numbers in your table names either. This usually points to a poorly designed data model or irregularly-partitioned tables. Do not use spaces in your table names either. While most database systems can handle names that include spaces, systems such as SQL Server require you to add brackets around the name when referencing it (like ``[table name]`` for example) which goes against the rule of keeping things as short and simple as possible.
 
-- See [PascalCase Usage](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/table-conventions#pascalcase-usage)
+- See [PascalCase Usage](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#pascalcase-usage)
 
 [Back to top](#top)
 

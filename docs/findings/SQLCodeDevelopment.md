@@ -50,7 +50,7 @@ The primary keys in the date and time dimension tables are integers and the T-SQ
 
 If the datetime column in the source table is a datetimeoffset data type you can remove the first 'AT TIME ZONE'.
 
-- See [Using datetime Instead of datetimeoffset](/SQL-Server-Development-Assessment/findings/data-type-conventions#using-datetime-instead-of-datetimeoffset).
+- See [Using datetime Instead of datetimeoffset](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/data-type-conventions#using-datetime-instead-of-datetimeoffset).
 
 ```sql
 SELECT
@@ -328,7 +328,7 @@ A temporary fix is to for parameterization until you can refactor the code and i
 ### Overview
 Even though you'll hear DBAs and other experts say, "never use cursors!", there are a few cases were cursors come in handy and there are a few important pointers.
 
-SQL Server originally supported cursors to more easily port dBase II applications to SQL Server, but even then, you can sometimes use a `WHILE` loop (See [Using WHILE Loop](#using-while-loop)) as an effective substitute. Modern versions of SQL Server provide window functions and the CROSS/OUTER APPLY syntax to cope with some of the traditional valid uses of the cursor.
+SQL Server originally supported cursors to more easily port dBase II applications to SQL Server, but even then, you can sometimes use a `WHILE` loop (See [Using WHILE Loop](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-while-loop)) as an effective substitute. Modern versions of SQL Server provide window functions and the CROSS/OUTER APPLY syntax to cope with some of the traditional valid uses of the cursor.
 
 ### Valid Use Cases
 - Executing a complex stored procedure or series of stored procedures based on a set of data. It is true this can be handled with a `WHILE` loop and grabbing each record from the database, but a read-only, fast-forward cursor well and can be easier to manage.
@@ -844,7 +844,7 @@ Continued use of deprecated features will cause database migrations fail. An exa
 
 For new development work, do not use deprecated features. For existing aplications, plan to modify applications that currently use these features as soon as possible. [See Microsoft Docs](https://docs.microsoft.com/en-us/sql/database-engine/deprecated-database-engine-features-in-sql-server-version-15?view=sql-server-ver15#:~:text=For%20new%20development%20work%2C%20do%20not%20use%20deprecated%20features.%20For%20existing%20aplications%2C%20plan%20to%20modify%20applications%20that%20currently%20use%20these%20features%20as%20soon%20as%20possible.).
 
-- See [Using Deprecated or Discontinued Feature](#using-deprecated-or-discontinued-feature)
+- See [Using Deprecated or Discontinued Feature](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-deprecated-or-discontinued-feature)
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON; /* <-- semicolon goes at the end here */
@@ -891,7 +891,7 @@ Search ARGument..able. Avoid having a column or variable used within an expressi
 
 Another issue with non-sargable queries besides the forced table scan is SQL Server will not be able to provide a recommended index. 
 
-- See [Using Missing Indexes Recommendations](/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-missing-indexes-recommendations)
+- See [Using Missing Indexes Recommendations](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-missing-indexes-recommendations)
 
 By changed the WHERE clause to not use the YEAR() function and doing a bit more typing allows SQL Server to understand what you want it to do.
 
@@ -975,13 +975,13 @@ In the `WHERE` clause below you will notice the "!" mark on the SELECT indicatin
 
 The ```RAISERROR``` statement does not honor ```SET XACT_ABORT```. 
 
-- See [Not Using SET XACT_ABORT ON](#not-using-set-xact_abort-on)
+- See [Not Using SET XACT_ABORT ON](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-set-xact_abort-on)
 
 ```RAISERROR``` never aborts execution, so execution will continue with the next statement.
 
 A use case exception for using ```RAISERROR``` instead of ```THROW``` is for legacy compatibility reasons. ```THROW``` was introduced in SQL Server 2012 so when making modification on this code ```THROW``` can break the current code.
 
-- See [Not Using Transactions](#not-using-transactions)
+- See [Not Using Transactions](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-transactions)
 
 [Back to top](#top)
 
@@ -992,8 +992,8 @@ A use case exception for using ```RAISERROR``` instead of ```THROW``` is for leg
 
 ```THROW``` is not a reserved keyword so it could be used as a transaction name or savepoint. Always use a ```BEGIN...END``` block after the ```IF``` statement in the ```BEGIN CATCH``` along with a terminating semicolon.
 
-- See [Not Using BEGIN END](#not-using-begin-end)
-- See [Not Using Semicolon to Terminate Statements](#not-using-semicolon-to-terminate-statements)
+- See [Not Using BEGIN END](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-begin-end)
+- See [Not Using Semicolon to Terminate Statements](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-semicolon-to-terminate-statements)
 
 
 **Use this:**
@@ -1048,8 +1048,8 @@ The `BEGIN...END` control-of-flow statement block is optional for stored procedu
 
 Always included ```BEGIN...END``` blocks for ```IF``` statements with a semicolon to terminate the statement. Using ```BEGIN...END``` in an ```IF``` statement and semicolon is critical in some cases. 
 
-- See [Not Using Semicolon to Terminate Statements](#not-using-semicolon-to-terminate-statements)
-- See [Not Using Semicolon THROW](#not-using-semicolon-throw)
+- See [Not Using Semicolon to Terminate Statements](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-semicolon-to-terminate-statements)
+- See [Not Using Semicolon THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-semicolon-throw)
 
 **Use this:**
 ```sql
@@ -1399,10 +1399,10 @@ BEGIN CATCH
 END CATCH;
 ```
 
-- See [SET XACT_ABORT OFF](#not-using-set-xact_abort-on)
-- See [Not Using BEGIN END](#not-using-begin-end)
-- See [Not Using Semicolon THROW](#not-using-semicolon-throw)
-- See [Using RAISERROR Instead of THROW](#using-raiserror-instead-of-throw)
+- See [Not Using SET XACT_ABORT ON](/best-practices-and-potential-findings/sql-code-conventions#not-using-set-xact_abort-on)
+- See [Not Using BEGIN END](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-begin-end)
+- See [Not Using Semicolon THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-semicolon-throw)
+- See [Using RAISERROR Instead of THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-raiserror-instead-of-throw)
 
 [Back to top](#top)
 
@@ -1417,8 +1417,8 @@ In most cases it is best to bubble up (THROW) the error to the application/clien
 
 The sample stored procedures below can be used to wire up and test software code to ensure errors are bubbled up, and the user is notified, and error data is logged. After each sample stored procedure below is commented out code to execute each of them.
 
-- See [Using RAISERROR Instead of THROW](#using-raiserror-instead-of-throw)
-- See [Not Using Transactions](#not-using-transactions)
+- See [Using RAISERROR Instead of THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-raiserror-instead-of-throw)
+- See [Not Using Transactions](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-transactions)
 
 
 ### THROW Methodology (dbo.TestTHROW)
@@ -1427,7 +1427,7 @@ This error catching and trowing methodology is the newest. [```THROW```](https:/
 ### Return Code Methodology (dbo.TestReturnCode)
 The return code methodology utilizes [```RETURN```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/return-transact-sql). ```RETURN```, exits unconditionally from a query or procedure. ```RETURN``` is immediate and complete and can be used at any point to exit from a procedure, batch, or statement block. Statements that follow RETURN are not executed.
 
-When ```THROW``` is utilized, a return code is not assigned. ```RETURN``` was commonly utilized with [```RAISERROR```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql) which never aborts execution, so ```RETURN``` could be used afterwards. (See [Using RAISERROR Instead of THROW](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-raiserror-instead-of-throw)). Utilizing ```RAISERROR``` with the return code would provide context to the error that occured to present to the user and log the error.
+When ```THROW``` is utilized, a return code is not assigned. ```RETURN``` was commonly utilized with [```RAISERROR```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql) which never aborts execution, so ```RETURN``` could be used afterwards. (See [Using RAISERROR Instead of THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-raiserror-instead-of-throw)). Utilizing ```RAISERROR``` with the return code would provide context to the error that occured to present to the user and log the error.
 
 ### Output Parameter Methodology (dbo.TestReturnCodeParameter)
 This methodology utilizes stored procedure ```OUTPUT``` parameters. Here you can set a return code and a return message that is passed back to the software code to present to the user and log the error
@@ -1436,7 +1436,7 @@ This methodology utilizes stored procedure ```OUTPUT``` parameters. Here you can
 
 [New applications should use THROW instead of RAISERROR](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?redirectedfrom=MSDN#:~:text=New%20applications%20should%20use%20THROW%20instead.)
 
-- See [Using RAISERROR Instead of THROW](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-raiserror-instead-of-throw).
+- See [Using RAISERROR Instead of THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-raiserror-instead-of-throw).
 
 
 ```sql
@@ -1932,7 +1932,7 @@ Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https:
 
 Keywords like `SELECT`, `FROM`, `GROUP BY` should be in UPPERCASE. 
 
-- See [Not Using SQL Formatting](#not-using-sql-formatting)
+- See [Not Using SQL Formatting](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-sql-formatting)
 
 [Back to top](#top)
 
@@ -1952,7 +1952,7 @@ VALUES ('Kevin', N'马丁');
 
 Not converting to Unicode for ``nvarchar()`` columns will also cause implicit conversions which will make a query non-SARGable in ``WHERE`` clauses.
 
-- See [Using a Non-SARGable Expression in a WHERE Clause](https://emergentsoftware.github.io/SQL-Server-Development-Assessment/findings/sql-code-conventions#using-a-non-sargable-expression-in-a-where-clause)
+- See [Using a Non-SARGable Expression in a WHERE Clause](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-a-non-sargable-expression-in-a-where-clause)
 
 [Back to top](#top)
 
@@ -1984,7 +1984,6 @@ CREATE TABLE dbo.Person (
    ,LastName  VARCHAR(50) NULL
 );
 ```
-
 
 [Back to top](#top)
 
@@ -2284,7 +2283,7 @@ The deprecated syntax (which includes defining the join condition in the WHERE c
 
 The "old style" Microsoft/Sybase JOIN style for T-SQL, which uses the =* and *= syntax, has been deprecated and is no longer used. Queries that use this syntax will fail when the database engine level is 10 (SQL Server 2008) or later (compatibility level 100).
 
-- See [Not Specifying JOIN Type](#not-specifying-join-type)
+- See [Not Specifying JOIN Type](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-specifying-join-type)
 
 [Back to top](#top)
 

@@ -77,9 +77,7 @@ An email address column should be set to ``nvarchar(254)`` to leave 2 characters
 
 [There is a restriction in RFC 2821 on the length of an address in MAIL and RCPT commands of 254 characters. Since addresses that do not fit in those fields are not normally useful, the upper limit on address lengths should normally be considered to be 254.](https://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690#:~:text=there%20is%20a%20restriction%20in%20RFC%202821%20on%20the%20length%20of%20an%0A%20%20%20address%20in%20MAIL%20and%20RCPT%20commands%20of%20254%20characters.%20%20Since%20addresses%0A%20%20%20that%20do%20not%20fit%20in%20those%20fields%20are%20not%20normally%20useful%2C%20the%20upper%0A%20%20%20limit%20on%20address%20lengths%20should%20normally%20be%20considered%20to%20be%20254.)
 
-This was accepted by the IETF following [submitted erratum](https://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690). The original version of RFC 3696 described 320 as the maximum length, but John Klensin subsequently accepted an incorrect value, since a Path is defined as 
-
-```Path = "<" [ A-d-l ":" ] Mailbox ">"```
+This was accepted by the IETF following [submitted erratum](https://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690). The original version of RFC 3696 described 320 as the maximum length, but John Klensin subsequently accepted an incorrect value, since a Path is defined as ```Path = "<" [ A-d-l ":" ] Mailbox ">"```
 
 [Back to top](#top)
 

@@ -1399,7 +1399,7 @@ BEGIN CATCH
 END CATCH;
 ```
 
-- See [Not Using SET XACT_ABORT ON](/best-practices-and-potential-findings/sql-code-conventions#not-using-set-xact_abort-on)
+- See [Not Using SET XACT_ABORT ON](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-set-xact_abort-on)
 - See [Not Using BEGIN END](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-begin-end)
 - See [Not Using Semicolon THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-semicolon-throw)
 - See [Using RAISERROR Instead of THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-raiserror-instead-of-throw)

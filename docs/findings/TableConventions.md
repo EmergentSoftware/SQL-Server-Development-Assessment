@@ -124,7 +124,8 @@ CREATE TABLE dbo.ProductVariant (
 ```
 
 [Back to top](#top)
---
+
+---
 
 ## Incorrect Weak or Strong Table
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Weak+or+Strong+Table)
@@ -202,7 +203,7 @@ In most cases, columns with the name ????Id that are not the primary key should 
 
 You will not get JOIN Eliminations without a foreign key and a column that allows NULLs.
 
-See [Nullable Columns and JOIN Elimination](#nullable-columns-and-join-elimination) 
+- See [Nullable Columns and JOIN Elimination](#nullable-columns-and-join-elimination) 
 
 [Back to top](#top)
 
@@ -352,7 +353,7 @@ Using ``uniqueidentifier/guid`` as primary keys causes issues with SQL Server da
 
 A use case for when you can use ``uniqueidentifier/guid`` as primary keys, is when there are separate systems and merging rows would be difficult. The uniqueness of ``uniqueidentifier/guid`` simplifies the data movements.
 
-- See [uniqueidentifier in a Clustered Index for details](#uniqueidentifier-in-a-clustered-index)
+- See [uniqueidentifier in a Clustered Index](#uniqueidentifier-in-a-clustered-index)
 
 [Back to top](#top)
 

@@ -77,7 +77,7 @@ If utilizing schemas other than ```dbo```, prefix the schema name before the ```
 **Potential Finding:** <a name="using-natural-key"/>Using Natural Key<br/>
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Natural+Keys)
 
-- See [Unique Constraint or Unique Indexes Usage](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#unique-constraint-or-unique-indexes-usage)
+- See [Unique Constraint or Unique Indexes Usage](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/table-conventions#unique-constraint-or-unique-indexes-usage)
 
 [Back to top](#top)
 

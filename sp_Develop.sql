@@ -81,8 +81,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '0.12.2';
-        SET @VersionDate = '20220324';
+        SET @Version = '1.2.4';
+        SET @VersionDate = '20220408';
         SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/best-practices-and-potential-findings/';
         SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);
@@ -610,6 +610,46 @@ AS
 					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 1) = ''S''
 					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 2) <> ''SS''
 					        AND O.NAME NOT IN (''sysdiagrams'', ''database_firewall_rules'')
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
+
+		        /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 29
+		           ,@Priority      = 30
+		           ,@FindingGroup  = 'Table Conventions'
+		           ,@Finding       = 'Using Unique Constraint Instead of Unique Indexes'
+		           ,@URLAnchor     = 'table-conventions#using-unique-constraint-instead-of-unique-indexes';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+			
+			        SET @StringToExecute = N'			
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = O.object_id
+				           ,ObjectName    = O.name
+				           ,ObjectType    = O.type_desc
+				           ,Details       = N''Using Unique Constraint Instead of Unique Indexes''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+				        WHERE
+					        O.type IN (''UQ'')
                         OPTION (RECOMPILE);';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;

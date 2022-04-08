@@ -153,7 +153,7 @@ The ``sql_variant`` type is not your typical data type. It stores values from a 
 **Potential Finding:** <a name="using-user-defined-data-type"/>Using User-Defined Data Type<br/>
 **Check Id:** 10
 
-User-defined data types should be avoided whenever possible. They are an added processing overhead whose functionality could typically be accomplished more efficiently with simple data type variables, table variables, or temporary tables.
+User-defined data types should be avoided whenever possible. They are an added processing overhead whose functionality could typically be accomplished more efficiently with simple data type variables, table variables, temporary tables, or JSON.
 
 
 [Back to top](#top)

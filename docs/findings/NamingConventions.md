@@ -395,17 +395,17 @@ Bit columns should be given affirmative boolean names like ``IsDeletedFlag``, ``
 ## Column Naming
 **Check Id:** 14
 
-- Avoid repeating the table name except for:
-  - **Table Primary Key:** A table primary key should include the table name and Id (e.g. ``PersonId``) [See Using ID for Primary Key Column Name](#using-id-for-primary-key-column-name)
-  - **Common or Natural Words or Terms:** When you come across common or natural names like ``PatientNumber``, ``PurchaseOrderNumber`` or ``DriversLicenseNumber``, ``GLAccount``, ``ARAccount`` you will want to use them as they commonly are used.
-  - **Generic or Class Words:** When using generic names like "Name", "Description", "Number", "Code", "Type", "Status", "Amount", "Date", "Quantity", "Rate", … you should prefix the class word with a modifier like the table name if appropriate.
-    - Instead use ``AccountNumber``, ``AddressTypeName``, ``ProductDescription`` & ``StateCode``
-    - SELECT queries will need aliases when two tables use generic columns like ``Name``
 - Use singular, not plural
 - Choose a name to reflect precisely what is contained in the attribute
+- Avoid repeating the table name except for:
+  - **Table Primary Key:** A table primary key should include the table name and Id (e.g. ``PersonId``) [See Using ID for Primary Key Column Name](#using-id-for-primary-key-column-name)
+  - **Common or Natural Words or Terms:** When you come across common or natural names like ``PatientNumber``, ``PurchaseOrderNumber`` or ``DriversLicenseNumber``, ``GLAccount``, ``ARAccount``, ``Line1``, ``Line2``, ``FirstName``, ``LastName``, ``Title``, ``Suffix`` you will want to use them as they commonly are used.
+  - **Generic or Class Words:** When using generic names like ``Name``, ``Description``, ``Number``, ``Code``, ``Type``, ``Status``, ``Amount``, ``Date``, ``Quantity``, ``Rate``, ``Key``, ``Value`` … you should prefix the class word with a modifier like the table name if appropriate.
+    - Instead use ``AccountNumber``, ``AddressTypeName``, ``ProductDescription`` & ``StateCode``
+    - SELECT queries will need aliases when two tables use generic columns like ``Name``
 - Use abbreviations rarely in attribute names. If your organization has a TPS "thing" that is commonly used and referred to in general conversation as a TPS, you might use this abbreviation
   - **Pronounced abbreviations:** It is better to use a natural abbreviation like id instead of identifier
-- End the name with a suffix (class word) that denotes general usage. These suffixes are not data types that are used in Hungarian notations. There can be names where a suffix would not apply. Class words
+- Columns without common, or natural words, or terms, end the column name with a suffix (class word) that denotes general usage. These suffixes are not data types that are used in Hungarian notations. There can be names where a suffix would not apply.
   - Invoice**Id** is the identity of the invoice record
   - Part**Number** is an alternate key
   - Start**Date** is the date something started
@@ -413,10 +413,11 @@ Bit columns should be given affirmative boolean names like ``IsDeletedFlag``, ``
   - Group**Name** is the text string not dependent on the data type like ``varchar()`` or ``nvarchar()``
   - State**Code** indicates the short form of something
   - IsDeleted**Flag** indicates a status (See [Non-Affirmative Boolean Name Use](#non-affirmative-boolean-name-use)) for boolean column naming
-  - Unit**Price**
-  - RowUpdate**PersonId** is the person who last updated a record
-  - RowUpdate**Time** is the date and time something was modified
+  - Unit**Price** is the price of a product unit
+  - Website**URL** is the internet address
+  - RowModify**PersonId** is the person who last updated a record
   - RowCreate**PersonId** is the person who created a record
+  - RowModify**Time** is the date and time something was modified
   - RowCreate**Time** is the date and time something was created
   - RowVersion**Stamp** is the ``rowversion/timestamp`` (unique binary numbers) to increment for each insert or update
   - RowValidFrom**Time** is the period start for a system-versioned temporal tables

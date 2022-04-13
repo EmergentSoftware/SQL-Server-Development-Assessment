@@ -4,7 +4,7 @@
     "name": "Team Expanded"
   },
   "whitespace": {
-    "wrapLongLines": false
+    "wrapLinesLongerThan": 240
   },
   "lists": {
     "placeFirstItemOnNewLine": "always",

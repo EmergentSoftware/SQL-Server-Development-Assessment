@@ -8,6 +8,7 @@
   },
   "lists": {
     "placeFirstItemOnNewLine": "always",
+    "alignSubsequentItemsWithFirstItem": false,
     "alignAliases": true,
     "alignComments": true,
     "placeCommasBeforeItems": true,

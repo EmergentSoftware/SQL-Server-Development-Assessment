@@ -1317,7 +1317,6 @@ A use case for `SET XACT_ABORT OFF` is when debugging to trap an error.
 
 ---
 
---xxxxx
 ## Transaction Usage
 **Potential Finding:** <a name="not-using-transactions"/>Not Using Transactions<br/>
 **Potential Finding:** <a name="using-implicit-transactions"/>Using Implicit Transactions<br/>

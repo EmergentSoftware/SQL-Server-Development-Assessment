@@ -1,0 +1,6 @@
+{
+  "id": "2c1ab9f3-421d-4839-8edb-fb50237651da",
+  "prefix": "cmtblock",
+  "description": "ES: Comment with /* */ on a block.",
+  "body": "/* \r\n  $SELECTEDTEXT$ \r\n*/"
+}

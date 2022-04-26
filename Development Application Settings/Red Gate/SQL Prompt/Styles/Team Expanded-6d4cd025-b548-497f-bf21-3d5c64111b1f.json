@@ -23,7 +23,8 @@
   "casing": {
     "reservedKeywords": "uppercase",
     "builtInFunctions": "uppercase",
-    "builtInDataTypes": "lowercase"
+    "builtInDataTypes": "lowercase",
+    "useObjectDefinitionCase": true
   },
   "dml": {
     "addNewLineAfterDistinctAndTopClauses": true,
@@ -48,7 +49,7 @@
   },
   "controlFlow": {
     "indentBeginAndEndKeywords": true,
-    "collapseStatementsShorterThan": 120
+    "collapseStatementsShorterThan": 78
   },
   "cte": {
     "parenthesisStyle": "expandedSplit",
@@ -71,10 +72,11 @@
   },
   "insertStatements": {
     "columns": {
-      "parenthesisStyle": "expandedSplit"
+      "parenthesisStyle": "expandedSplit",
+      "indentContents": false
     },
     "values": {
-      "parenthesisStyle": "compactRightAligned",
+      "parenthesisStyle": "compactIndented",
       "indentContents": true,
       "placeSubsequentValuesOnNewLines": "ifLongerThanMaxLineLength"
     }

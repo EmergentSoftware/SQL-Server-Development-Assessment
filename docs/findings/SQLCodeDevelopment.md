@@ -1327,7 +1327,7 @@ Transactions allow for database operations to be [atomic](https://en.wikipedia.o
 If you are performing a funds transfer and updating multiple bank account tables with debiting one and crediting the other, they must all complete successfully or there will be an imbalance.
 
 
-#### Do not use ```SET IMPLICIT_TRANSACTIONS ON```
+### Do not use ```SET IMPLICIT_TRANSACTIONS ON```
 
 The default behavior of SQL Servers is ```IMPLICIT_TRANSACTIONS OFF``` that does not keep TSQL commands open waiting for a ```ROLLBACK TRANSACTION``` or ```COMMIT TRANSACTION``` command. When OFF, we say the transaction mode is autocommit.
 
@@ -1339,7 +1339,7 @@ When a connection is operating in implicit transaction mode (```IMPLICIT_TRANSAC
 - See [SET IMPLICIT_TRANSACTIONS ON Is One Hell of a Bad Idea](https://www.brentozar.com/archive/2018/02/set-implicit_transactions-one-hell-bad-idea)
 
 
-#### Here is a basic transaction pattern.
+### Here is a basic transaction pattern.
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON;
@@ -1365,7 +1365,7 @@ BEGIN CATCH
 END CATCH;
 ```
 
-#### Here is transaction pattern with a custom ```THROW``` error.
+### Here is transaction pattern with a custom ```THROW``` error.
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON;

@@ -1317,14 +1317,30 @@ A use case for `SET XACT_ABORT OFF` is when debugging to trap an error.
 
 ---
 
-## Not Using Transactions
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Transactions)
+--xxxxx
+## Transaction Usage
+**Potential Finding:** <a name="not-using-transactions"/>Not Using Transactions<br/>
+**Potential Finding:** <a name="using-implicit-transactions"/>Using Implicit Transactions<br/>
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Transaction+Usage)
 
 Transactions allow for database operations to be [atomic](https://en.wikipedia.org/wiki/Atomicity_(database_systems)). A group of related SQL commands that must all complete successfully or not at all and must be rolled back.
 
 If you are performing a funds transfer and updating multiple bank account tables with debiting one and crediting the other, they must all complete successfully or there will be an imbalance.
 
-Here is a basic transaction pattern.
+
+#### Do not use ```SET IMPLICIT_TRANSACTIONS ON```
+
+The default behavior of SQL Servers is ```IMPLICIT_TRANSACTIONS OFF``` that does not keep TSQL commands open waiting for a ```ROLLBACK TRANSACTION``` or ```COMMIT TRANSACTION``` command. When OFF, we say the transaction mode is autocommit.
+
+When ```IMPLICIT_TRANSACTIONS ON``` is used, it could appear that the command finished instantly, but there will be an exclusive lock on the row(s) until either a roll back or commit command is issued. This makes [IMPLICIT_TRANSACTIONS ON is not popular]( https://docs.microsoft.com/en-us/sql/t-sql/statements/set-implicit-transactions-transact-sql?view=sql-server-ver15#:~:text=IMPLICIT_TRANSACTIONS%20ON%20is%20not%20popular) as they can cause considerable blocking and locking.
+
+When a connection is operating in implicit transaction mode (```IMPLICIT_TRANSACTIONS ON```), the instance of the SQL Server Database Engine automatically starts a new transaction after the current transaction is committed or rolled back. You do nothing to delineate the start of a transaction; you only commit or roll back each transaction. Implicit transaction mode generates a continuous chain of transactions.
+
+- See [Transaction locking and row versioning guide](https://docs.microsoft.com/en-us/sql/relational-databases/sql-server-transaction-locking-and-row-versioning-guide) > [Implicit Transactions](https://docs.microsoft.com/en-us/sql/relational-databases/sql-server-transaction-locking-and-row-versioning-guide?view=sql-server-ver15#:~:text=and%20DB%2DLibrary.-,Implicit%20Transactions,-When%20a%20connection)
+- See [SET IMPLICIT_TRANSACTIONS ON Is One Hell of a Bad Idea](https://www.brentozar.com/archive/2018/02/set-implicit_transactions-one-hell-bad-idea)
+
+
+#### Here is a basic transaction pattern.
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON;
@@ -1350,7 +1366,7 @@ BEGIN CATCH
 END CATCH;
 ```
 
-Here is transaction pattern with a custom ```THROW``` error.
+#### Here is transaction pattern with a custom ```THROW``` error.
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON;

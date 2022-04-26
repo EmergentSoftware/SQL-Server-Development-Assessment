@@ -1,0 +1,6 @@
+{
+  "id": "7b5e5616-b404-41ee-baa8-b81d1316c2ac",
+  "prefix": "cmtline",
+  "description": "ES: Comment with /* */ on one line.",
+  "body": "/* $SELECTEDTEXT$ */"
+}

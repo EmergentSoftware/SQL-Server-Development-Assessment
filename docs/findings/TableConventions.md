@@ -280,6 +280,32 @@ There are better ways to performance tune than using the wizards.
 
 ---
 
+## Filter Columns Not In Index Definition
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Filter+Columns+Not+In+Index+Definition)
+
+Add the filtered columns in the ```INCLUDE()``` on your index so your queries do not need to perform a key lookup. By including the filtered columns, SQL Server generates statistics on the columns.
+
+**Instead Of:**
+
+```sql
+CREATE NONCLUSTERED INDEX Account_Greater_Than_Half_Million
+    ON dbo.Account (AccountName, AccountId)
+    WHERE Balance > 500000;
+```
+
+**Do This:**
+
+```sql
+CREATE NONCLUSTERED INDEX Account_Greater_Than_Half_Million
+    ON dbo.Account (AccountName, AccountId)
+    INCLUDE (Balance)
+    WHERE Balance > 500000;
+```
+
+[Back to top](#top)
+
+---
+
 ## Column Has a Different Collation Than Database
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/54)
 

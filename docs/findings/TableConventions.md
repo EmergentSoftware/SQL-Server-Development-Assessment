@@ -243,7 +243,17 @@ The only possible benefit of a unique constraint (unique key) has over a unique 
 ## More Than 5 Indexes
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/49)
 
-Your table might be over indexed.
+Your table might be over indexed. The more you have the less performant insert, update & deletes are. A general rule of thumb is 5 indexes on a table.
+
+A general rule is to aim for 5 indexes per table, with around 5 columns or less on each index. This is not a set-in-stone rule, but if you go beyond the general rule you should ensure your are only creating indexes that are required for the SQL Server query workload. If you have a read-only database, there will be no inserts, updates, or deletes to maintain on all those indexes.
+
+You or your DBA should implement an index tuning strategy like below.
+
+1. **Dedupe** - reduce overlapping indexes
+2. **Eliminate** - unused indexes
+3. **Add** - badly needed missing indexes
+4. **Tune** - indexes for specific queries
+5. **Heap** - usually need clustered indexes
 
 [Back to top](#top)
 

@@ -386,7 +386,7 @@ Acct, AP, AR, Hr, Rpt, Assoc, Desc
 ## Non-Affirmative Boolean Name Use
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/79)
 
-Bit columns should be given affirmative boolean names like ``IsDeletedFlag``, ``HasPermissionFlag``, or ``IsValidFlag`` so that the meaning of the data in the column is not ambiguous; negative boolean names are harder to read when checking values in T-SQL because of double-negatives (e.g. ``NOT IsNotDeleted``).
+Bit columns should be given affirmative boolean names like ``IsActive``, ``IsDeleted``, ``HasPermission``, or ``IsValid`` so that the meaning of the data in the column is not ambiguous; negative boolean names are harder to read when checking values in T-SQL because of double-negatives (e.g. ``NOT IsNotDeleted``).
 
 [Back to top](#top)
 
@@ -400,7 +400,7 @@ Bit columns should be given affirmative boolean names like ``IsDeletedFlag``, ``
 - Avoid repeating the table name except for:
   - **Table Primary Key:** A table primary key should include the table name and Id (e.g. ``PersonId``) [See Using ID for Primary Key Column Name](#using-id-for-primary-key-column-name)
   - **Common or Natural Words or Terms:** When you come across common or natural names like ``PatientNumber``, ``PurchaseOrderNumber`` or ``DriversLicenseNumber``, ``GLAccount``, ``ARAccount``, ``Line1``, ``Line2``, ``FirstName``, ``LastName``, ``Title``, ``Suffix`` you will want to use them as they commonly are used.
-  - **Generic or Class Words:** When using generic names like ``Name``, ``Description``, ``Number``, ``Code``, ``Type``, ``Status``, ``Amount``, ``Date``, ``Quantity``, ``Rate``, ``Key``, ``Value`` … you should prefix the class word with a modifier like the table name if appropriate.
+  - **Generic or Class Words:** When using generic names like ``Name``, ``Description``, ``Number``, ``Code``, ``Type``, ``Status``, ``Amount``, ``Date``, ``Quantity``, ``Rate``, ``Key``, ``Value``, ``Deleted``, ``Active``, ``Permission``, ``Primary``, ``Locked``, ``Default`` … you should prefix the class word with a modifier like the table name if appropriate.
     - Instead use ``AccountNumber``, ``AddressTypeName``, ``ProductDescription`` & ``StateCode``
     - SELECT queries will need aliases when two tables use generic columns like ``Name``
 - Use abbreviations rarely in attribute names. If your organization has a TPS "thing" that is commonly used and referred to in general conversation as a TPS, you might use this abbreviation
@@ -412,7 +412,14 @@ Bit columns should be given affirmative boolean names like ``IsDeletedFlag``, ``
   - Line**Amount** is a currency amount not dependent on the data type like ``decimal(19, 4)``
   - Group**Name** is the text string not dependent on the data type like ``varchar()`` or ``nvarchar()``
   - State**Code** indicates the short form of something
-  - IsDeleted**Flag** indicates a status (See [Non-Affirmative Boolean Name Use](#non-affirmative-boolean-name-use)) for boolean column naming
+  - Booleans - (See [Non-Affirmative Boolean Name Use](#non-affirmative-boolean-name-use)) for boolean column naming
+    - Is**Active** indicates a status
+    - Is**Deleted** indicates a soft delete status
+    - Is**Locked** indicates if a record is immutable
+    - Is**Default** indicates if a record is defaulted
+    - Is**Primary** indicates first in an order
+    - Is**Valid** indicated validity
+    - Has**Permission** indicated permissions
   - Unit**Price** is the price of a product unit
   - Website**URL** is the internet address
   - RowModify**PersonId** is the person who last updated a record

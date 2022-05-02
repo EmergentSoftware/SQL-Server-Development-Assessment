@@ -214,9 +214,9 @@ SELECT
    ,M.Id AS MakeId
 FROM
     Car              AS C
-    INNER JOIN Make  AS MK ON C.Id  = MK.MakeId
-    INNER JOIN Model AS MD ON MD.Id = C.ModelId
-    INNER JOIN Color AS CL ON MK.Id = C.ColorId;
+    INNER JOIN Make  AS MK ON C.Id  = MK.Id
+    INNER JOIN Model AS MD ON MD.Id = C.Id
+    INNER JOIN Color AS CL ON MK.Id = C.Id;
 
 /* now you can see MK.MakeId does not equal C.ColorId in the last table join */
 

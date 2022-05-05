@@ -2324,6 +2324,15 @@ Use ```INNER JOIN``` when rows will match in both tables. Rows will match in bot
 
 ---
 
+## Using INNER JOIN Instead of LEFT OUTER JOIN
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+INNER+JOIN+Instead+of+LEFT+OUTER+JOIN)
+
+Use ```LEFT OUTER JOIN``` when rows might not always match in both tables. Rows might not match in both tables if the foreign key column allows ```NULL```.
+
+[Back to top](#top)
+
+---
+
 ## View Usage
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/93)
 

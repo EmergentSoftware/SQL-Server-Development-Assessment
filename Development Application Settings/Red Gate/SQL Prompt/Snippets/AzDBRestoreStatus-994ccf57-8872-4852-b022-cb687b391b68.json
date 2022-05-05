@@ -1,0 +1,6 @@
+{
+  "id": "994ccf57-8872-4852-b022-cb687b391b68",
+  "prefix": "AzDBRestoreStatus",
+  "description": "ES: Azure Database Restore Status",
+  "body": "SELECT\r\n    DatabaseName     = major_resource_id\r\n   ,RestoreState     = state_desc\r\n   ,PercentComplete  = percent_complete\r\n   ,StartTime        = start_time AT TIME ZONE 'UTC' AT TIME ZONE 'Central Standard Time'\r\n   ,LastModifyTime   = last_modify_time AT TIME ZONE 'UTC' AT TIME ZONE 'Central Standard Time'\r\n   ,ErrorCode        = error_code\r\n   ,ErrorDescription = error_desc\r\n   ,ErrorSeverity    = error_severity\r\n   ,ErrorState       = error_state\r\nFROM\r\n    sys.dm_operation_status\r\nWHERE\r\n    operation = N'DATABASE RESTORE'\r\nORDER BY\r\n    start_time DESC;"
+}

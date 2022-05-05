@@ -4,11 +4,12 @@
     "name": "Team Expanded"
   },
   "whitespace": {
-    "wrapLinesLongerThan": 300
+    "wrapLongLines": false
   },
   "lists": {
     "placeFirstItemOnNewLine": "always",
     "alignSubsequentItemsWithFirstItem": false,
+    "alignItemsAcrossClauses": false,
     "alignAliases": true,
     "alignComments": true,
     "placeCommasBeforeItems": true,
@@ -42,6 +43,7 @@
     "parenthesisStyle": "expandedSplit",
     "indentParenthesesContents": true,
     "alignDataTypesAndConstraints": true,
+    "placeConstraintColumnsOnNewLines": "ifLongerOrMultipleColumns",
     "indentClauses": true,
     "placeFirstProcedureParameterOnNewLine": "always",
     "collapseShortStatements": true,
@@ -49,7 +51,7 @@
   },
   "controlFlow": {
     "indentBeginAndEndKeywords": true,
-    "collapseStatementsShorterThan": 78
+    "collapseStatementsShorterThan": 120
   },
   "cte": {
     "parenthesisStyle": "expandedSplit",
@@ -72,13 +74,12 @@
   },
   "insertStatements": {
     "columns": {
-      "parenthesisStyle": "expandedSplit",
-      "indentContents": false
+      "parenthesisStyle": "expandedSplit"
     },
     "values": {
-      "parenthesisStyle": "compactIndented",
+      "parenthesisStyle": "compactRightAligned",
       "indentContents": true,
-      "placeSubsequentValuesOnNewLines": "ifLongerThanMaxLineLength"
+      "placeSubsequentValuesOnNewLines": "always"
     }
   },
   "caseExpressions": {

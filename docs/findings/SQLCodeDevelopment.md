@@ -2337,9 +2337,13 @@ Use ```LEFT OUTER JOIN``` when rows might not always match in both tables. Rows 
 **Potential Finding:** <a name="backward-order-of-columns-in-join-clause"/>Backward Order of Columns in JOIN Clause<br/>
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Backward+Order+of+Columns+in+JOIN+Clause)
 
-In the example below, the StateProvince table is joined to the CountryRegion table. StateProvince -> CountryRegion. [Microsoft Docs](https://docs.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/inner-join-operation-microsoft-access-sql#:~:text=The%20following%20example%20shows%20how%20you%20could%20join%20the%20Categories%20and%20Products%20tables%20on%20the%20CategoryID%20field) shows this column order in their code samples.
+Emergent recommends the [Microsoft Docs](https://docs.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/inner-join-operation-microsoft-access-sql#:~:text=The%20following%20example%20shows%20how%20you%20could%20join%20the%20Categories%20and%20Products%20tables%20on%20the%20CategoryID%20field) column order in JOIN clauses for consistency noted in the "Do This" code below.
+
+It is always recommended to adapt the naming and coding conventions of inherited projects.
 
 **There is a setting for this in Redgate SQL Prompt:** Click the 'SQL Prompt' navigation menu > Click 'Join conditions' in the 'Suggestions' section > Check/tick the 'Swap order of columns in join clauses' checkbox in the 'Column order' section > Click the 'OK' button.
+
+In the example below, the StateProvince table is joined to the CountryRegion table. StateProvince -> CountryRegion. 
 
 ### Do This:
 

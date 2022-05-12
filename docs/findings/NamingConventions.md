@@ -204,7 +204,7 @@ Though ``MakeId`` conveys no more information about the field than Make.Id and i
 
 Naming a primary key column ``Id`` is also "bad" when you query from several tables you will need to rename the ``Id`` columns so you can distinguish them in result set.
 
-With different column names in joins masks errors.
+When you have the same column names in joins it will mask errors that would otherwise be more obvious.
 
 ```sql
 /* This has an error that is not obvious at first sight */

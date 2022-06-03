@@ -697,6 +697,35 @@ AS
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+
+			        SET @StringToExecute = N'			
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = C.object_id
+				           ,ObjectName    = T.name + ''.'' + C.name
+				           ,ObjectType    = ''COLUMN''
+				           ,Details       = N''When using generic names you should prefix the class word with a modifier like the table name if appropriate.''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables             AS T
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+				        WHERE
+					        C.name COLLATE SQL_Latin1_General_CP1_CI_AS IN (''name'', ''description'', ''comment'', ''code'', ''type'', ''status'', ''date'', ''time'', ''key'', ''value'', ''term'', ''class'', ''style'', ''segment'', ''default'', ''primary'', ''deleted'', ''active'', ''inactive'', ''permission'', ''locked'', ''number'', ''amount'', ''total'', ''quantity'', ''weight'', ''percent'', ''rate'', ''cost'', ''price'', ''balance'', ''average'', ''discount'', ''limit'', ''due'', ''fee'', ''fine'', ''stamp'', ''flag'', ''slug'', ''level'', ''url'', ''email'', ''address'', ''subject'', ''body'', ''alias'', ''state'', ''format'', ''group'')
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+
 		        END;
 
 		        /**********************************************************************************************************************/

@@ -339,11 +339,11 @@ AS
                     SELECT
                         *
                     FROM
-                        sys.all_objects            AS o
-                        INNER JOIN sys.all_columns AS c
-                            ON o.object_id = c.object_id
-                            AND o.name     = 'dm_hadr_availability_replica_states'
-                            AND c.name     = 'role_desc'
+                        sys.all_objects            AS O
+                        INNER JOIN sys.all_columns AS C
+                            ON O.object_id = C.object_id
+                            AND O.name     = 'dm_hadr_availability_replica_states'
+                            AND C.name     = 'role_desc'
                 )
                     BEGIN
 
@@ -404,12 +404,12 @@ AS
             SELECT
                 COUNT(*)
             FROM
-                #DatabaseList                   AS dl
-                LEFT OUTER JOIN #DatabaseIgnore AS i
-                    ON dl.DatabaseName = i.DatabaseName
+                #DatabaseList                   AS DL
+                LEFT OUTER JOIN #DatabaseIgnore AS I
+                    ON DL.DatabaseName = I.DatabaseName
             WHERE
-                COALESCE(dl.secondary_role_allow_connections_desc, 'OK') <> 'NO'
-            AND i.DatabaseName IS NULL
+                COALESCE(DL.secondary_role_allow_connections_desc, 'OK') <> 'NO'
+            AND I.DatabaseName IS NULL
         );
         SET @Message = N'Number of databases to examine: ' + CAST(@NumDatabases AS nvarchar(50));
         IF @Debug IN (1, 2)
@@ -529,14 +529,14 @@ AS
 
         DECLARE database_cursor CURSOR LOCAL FAST_FORWARD FOR
             SELECT
-                dl.DatabaseName
+                DL.DatabaseName
             FROM
-                #DatabaseList                   AS dl
-                LEFT OUTER JOIN #DatabaseIgnore AS i
-                    ON dl.DatabaseName = i.DatabaseName
+                #DatabaseList                   AS DL
+                LEFT OUTER JOIN #DatabaseIgnore AS I
+                    ON DL.DatabaseName = I.DatabaseName
             WHERE
-                COALESCE(dl.secondary_role_allow_connections_desc, 'OK') <> 'NO'
-            AND i.DatabaseName IS NULL
+                COALESCE(DL.secondary_role_allow_connections_desc, 'OK') <> 'NO'
+            AND I.DatabaseName IS NULL
             OPTION (RECOMPILE);
 
         OPEN database_cursor;
@@ -604,7 +604,7 @@ AS
 				           ,Details       = N''Table and view names should be singular''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        O.type IN (''U'', ''V'')
 					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 1) = ''S''
@@ -647,7 +647,7 @@ AS
 				           ,Details       = N''Using Unique Constraint Instead of Unique Indexes''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        O.type IN (''UQ'')
                         OPTION (RECOMPILE);';
@@ -687,8 +687,8 @@ AS
 				           ,Details       = N''Avoid repeating the table name except where it is natural to do so.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables             AS T
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id = T.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON T.object_id = C.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
 				        WHERE
 					        C.name COLLATE SQL_Latin1_General_CP1_CI_AS LIKE ''%'' + T.name COLLATE SQL_Latin1_General_CP1_CI_AS + ''%''
 					        AND C.name NOT IN (''InvoiceDate'', ''InvoiceNumber'', ''PartNumber'', ''CustomerNumber'', ''GroupName'', ''StateCode'', ''PhoneNumber'')
@@ -717,8 +717,8 @@ AS
 				           ,Details       = N''When using generic names you should prefix the class word with a modifier like the table name if appropriate.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables             AS T
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id = T.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON T.object_id = C.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
 				        WHERE
 					        C.name COLLATE SQL_Latin1_General_CP1_CI_AS IN (''name'', ''description'', ''comment'', ''code'', ''type'', ''status'', ''date'', ''time'', ''key'', ''value'', ''term'', ''class'', ''style'', ''segment'', ''default'', ''primary'', ''deleted'', ''active'', ''inactive'', ''permission'', ''locked'', ''number'', ''amount'', ''total'', ''quantity'', ''weight'', ''percent'', ''rate'', ''cost'', ''price'', ''balance'', ''average'', ''discount'', ''limit'', ''due'', ''fee'', ''fine'', ''stamp'', ''flag'', ''slug'', ''level'', ''url'', ''email'', ''address'', ''subject'', ''body'', ''alias'', ''state'', ''format'', ''group'')
                         OPTION (RECOMPILE);';
@@ -759,7 +759,7 @@ AS
 				           ,Details       = N''Never use a prefix such as tbl, sp, vw in names.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'')
 					        AND (
@@ -797,8 +797,8 @@ AS
 				           ,Details       = N''Never use a prefix such as fld, col, u_, c_, ... in column names.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T ON T.object_id = C.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T ON C.object_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
 				        WHERE
 					        LEFT(C.name COLLATE SQL_Latin1_General_CP1_CI_AS, 4) IN (''fld_'', ''col_'')
 					        OR LEFT(C.name COLLATE SQL_Latin1_General_CP1_CI_AS, 2) IN (''u_'', ''c_'')
@@ -831,7 +831,7 @@ AS
 				           ,Details       = N''Never use a prefix such as ud_, ud, ... in user-defined data type names.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.types                    AS T
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S  ON S.schema_id = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S  ON T.schema_id = S.schema_id
 				        WHERE
 					        T.is_user_defined = 1
 					        AND (
@@ -875,7 +875,7 @@ AS
 				           ,Details       = N''Special characters should not be used in names.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        O.type_desc NOT IN (''DEFAULT_CONSTRAINT'', ''FOREIGN_KEY_CONSTRAINT'', ''PRIMARY_KEY_CONSTRAINT'', ''INTERNAL_TABLE'', ''CHECK_CONSTRAINT'', ''UNIQUE_CONSTRAINT'', ''SQL_INLINE_TABLE_VALUED_FUNCTION'', ''TYPE_TABLE'', ''SEQUENCE_OBJECT'')
 					        AND O.name NOT IN (''__RefactorLog'', ''__MigrationLog'', ''__MigrationLogCurrent'', ''__SchemaSnapshot'', ''__SchemaSnapshotDateDefault'', ''fn_diagramobjects'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''database_firewall_rules'', ''sp_Develop'', ''sp_WhoIsActive'', ''__EFMigrationsHistory'')
@@ -928,8 +928,8 @@ AS
 							        CROSS JOIN (SELECT name FROM ' + QUOTENAME(@DatabaseName) + N'.sys.tables) AS T2
 						        GROUP BY
 							        T1.name + T2.name
-					        )          AS C ON C.DoubleName = T.name
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+					        )          AS C ON T.DoubleName = C.name
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
                         OPTION (RECOMPILE);';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -967,7 +967,7 @@ AS
 				           ,Details       = N''Including Numbers in Table Name.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
 				        WHERE
 					        T.name NOT IN (''__RefactorLog'', ''__MigrationLog'', ''__MigrationLogCurrent'', ''__SchemaSnapshot'', ''__SchemaSnapshotDateDefault'', ''fn_diagramobjects'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'')
 					        AND T.name LIKE ''%[0-9][0-9]%'' COLLATE Latin1_General_CI_AI /* contains more than one adjacent number */
@@ -1008,8 +1008,8 @@ AS
 				           ,Details       = N''Do not give a table the same name as one of its columns.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.columns            AS C
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON T.object_id = C.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON C.object_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
 				        WHERE
 					        C.name = T.name
                         OPTION (RECOMPILE);';
@@ -1051,10 +1051,10 @@ AS
 				           ,Details       = N''Using SQL Server and Azure SQL Data Warehouse reserved keywords makes code more difficult to read, can cause problems to code formatters, and can cause errors when writing code.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 					        INNER JOIN (
 						        SELECT ''ADD'' UNION SELECT ''EXTERNAL'' UNION SELECT ''PROCEDURE'' UNION SELECT ''ALL'' UNION SELECT ''FETCH'' UNION SELECT ''PUBLIC'' UNION SELECT ''ALTER'' UNION SELECT ''FILE'' UNION SELECT ''RAISERROR'' UNION SELECT ''AND'' UNION SELECT ''FILLFACTOR'' UNION SELECT ''READ'' UNION SELECT ''ANY'' UNION SELECT ''FOR'' UNION SELECT ''READTEXT'' UNION SELECT ''AS'' UNION SELECT ''FOREIGN'' UNION SELECT ''RECONFIGURE'' UNION SELECT ''ASC'' UNION SELECT ''FREETEXT'' UNION SELECT ''REFERENCES'' UNION SELECT ''AUTHORIZATION'' UNION SELECT ''FREETEXTTABLE'' UNION SELECT ''REPLICATION'' UNION SELECT ''BACKUP'' UNION SELECT ''FROM'' UNION SELECT ''RESTORE'' UNION SELECT ''BEGIN'' UNION SELECT ''FULL'' UNION SELECT ''RESTRICT'' UNION SELECT ''BETWEEN'' UNION SELECT ''FUNCTION'' UNION SELECT ''RETURN'' UNION SELECT ''BREAK'' UNION SELECT ''GOTO'' UNION SELECT ''REVERT'' UNION SELECT ''BROWSE'' UNION SELECT ''GRANT'' UNION SELECT ''REVOKE'' UNION SELECT ''BULK'' UNION SELECT ''GROUP'' UNION SELECT ''RIGHT'' UNION SELECT ''BY'' UNION SELECT ''HAVING'' UNION SELECT ''ROLLBACK'' UNION SELECT ''CASCADE'' UNION SELECT ''HOLDLOCK'' UNION SELECT ''ROWCOUNT'' UNION SELECT ''CASE'' UNION SELECT ''IDENTITY'' UNION SELECT ''ROWGUIDCOL'' UNION SELECT ''CHECK'' UNION SELECT ''IDENTITY_INSERT'' UNION SELECT ''RULE'' UNION SELECT ''CHECKPOINT'' UNION SELECT ''IDENTITYCOL'' UNION SELECT ''SAVE'' UNION SELECT ''CLOSE'' UNION SELECT ''IF'' UNION SELECT ''SCHEMA'' UNION SELECT ''CLUSTERED'' UNION SELECT ''IN'' UNION SELECT ''SECURITYAUDIT'' UNION SELECT ''COALESCE'' UNION SELECT ''INDEX'' UNION SELECT ''SELECT'' UNION SELECT ''COLLATE'' UNION SELECT ''INNER'' UNION SELECT ''SEMANTICKEYPHRASETABLE'' UNION SELECT ''COLUMN'' UNION SELECT ''INSERT'' UNION SELECT ''SEMANTICSIMILARITYDETAILSTABLE'' UNION SELECT ''COMMIT'' UNION SELECT ''INTERSECT'' UNION SELECT ''SEMANTICSIMILARITYTABLE'' UNION SELECT ''COMPUTE'' UNION SELECT ''INTO'' UNION SELECT ''SESSION_USER'' UNION SELECT ''CONSTRAINT'' UNION SELECT ''IS'' UNION SELECT ''SET'' UNION SELECT ''CONTAINS'' UNION SELECT ''JOIN'' UNION SELECT ''SETUSER'' UNION SELECT ''CONTAINSTABLE'' UNION SELECT ''KEY'' UNION SELECT ''SHUTDOWN'' UNION SELECT ''CONTINUE'' UNION SELECT ''KILL'' UNION SELECT ''SOME'' UNION SELECT ''CONVERT'' UNION SELECT ''LEFT'' UNION SELECT ''STATISTICS'' UNION SELECT ''CREATE'' UNION SELECT ''LIKE'' UNION SELECT ''SYSTEM_USER'' UNION SELECT ''CROSS'' UNION SELECT ''LINENO'' UNION SELECT ''TABLE'' UNION SELECT ''CURRENT'' UNION SELECT ''LOAD'' UNION SELECT ''TABLESAMPLE'' UNION SELECT ''CURRENT_DATE'' UNION SELECT ''MERGE'' UNION SELECT ''TEXTSIZE'' UNION SELECT ''CURRENT_TIME'' UNION SELECT ''NATIONAL'' UNION SELECT ''THEN'' UNION SELECT ''CURRENT_TIMESTAMP'' UNION SELECT ''NOCHECK'' UNION SELECT ''TO'' UNION SELECT ''CURRENT_USER'' UNION SELECT ''NONCLUSTERED'' UNION SELECT ''TOP'' UNION SELECT ''CURSOR'' UNION SELECT ''NOT'' UNION SELECT ''TRAN'' UNION SELECT ''DATABASE'' UNION SELECT ''NULL'' UNION SELECT ''TRANSACTION'' UNION SELECT ''DBCC'' UNION SELECT ''NULLIF'' UNION SELECT ''TRIGGER'' UNION SELECT ''DEALLOCATE'' UNION SELECT ''OF'' UNION SELECT ''TRUNCATE'' UNION SELECT ''DECLARE'' UNION SELECT ''OFF'' UNION SELECT ''TRY_CONVERT'' UNION SELECT ''DEFAULT'' UNION SELECT ''OFFSETS'' UNION SELECT ''TSEQUAL'' UNION SELECT ''DELETE'' UNION SELECT ''ON'' UNION SELECT ''UNION'' UNION SELECT ''DENY'' UNION SELECT ''OPEN'' UNION SELECT ''UNIQUE'' UNION SELECT ''DESC'' UNION SELECT ''OPENDATASOURCE'' UNION SELECT ''UNPIVOT'' UNION SELECT ''DISK'' UNION SELECT ''OPENQUERY'' UNION SELECT ''UPDATE'' UNION SELECT ''DISTINCT'' UNION SELECT ''OPENROWSET'' UNION SELECT ''UPDATETEXT'' UNION SELECT ''DISTRIBUTED'' UNION SELECT ''OPENXML'' UNION SELECT ''USE'' UNION SELECT ''DOUBLE'' UNION SELECT ''OPTION'' UNION SELECT ''USER'' UNION SELECT ''DROP'' UNION SELECT ''OR'' UNION SELECT ''VALUES'' UNION SELECT ''DUMP'' UNION SELECT ''ORDER'' UNION SELECT ''VARYING'' UNION SELECT ''ELSE'' UNION SELECT ''OUTER'' UNION SELECT ''VIEW'' UNION SELECT ''END'' UNION SELECT ''OVER'' UNION SELECT ''WAITFOR'' UNION SELECT ''ERRLVL'' UNION SELECT ''PERCENT'' UNION SELECT ''WHEN'' UNION SELECT ''ESCAPE'' UNION SELECT ''PIVOT'' UNION SELECT ''WHERE'' UNION SELECT ''EXCEPT'' UNION SELECT ''PLAN'' UNION SELECT ''WHILE'' UNION SELECT ''EXEC'' UNION SELECT ''PRECISION'' UNION SELECT ''WITH'' UNION SELECT ''EXECUTE'' UNION SELECT ''PRIMARY'' UNION SELECT ''WITHIN GROUP'' UNION SELECT ''EXISTS'' UNION SELECT ''PRINT'' UNION SELECT ''WRITETEXT'' UNION SELECT ''EXIT'' UNION SELECT ''PROC'' COLLATE SQL_Latin1_General_CP1_CI_AS
-					        ) AS reserved (word) ON reserved.word = O.name
+					        ) AS reserved (word) ON O.word = reserved.name
                         OPTION (RECOMPILE);';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1080,10 +1080,10 @@ AS
 				           ,Details       = N''Using ODBC reserved keywords makes code more difficult to read, can cause problems to code formatters, and can cause errors when writing code.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 					        INNER JOIN (
 						        SELECT ''ABSOLUTE'' UNION SELECT ''EXEC'' UNION SELECT ''OVERLAPS'' UNION SELECT ''ACTION'' UNION SELECT ''EXECUTE'' UNION SELECT ''PAD'' UNION SELECT ''ADA'' UNION SELECT ''EXISTS'' UNION SELECT ''PARTIAL'' UNION SELECT ''ADD'' UNION SELECT ''EXTERNAL'' UNION SELECT ''PASCAL'' UNION SELECT ''ALL'' UNION SELECT ''EXTRACT'' UNION SELECT ''POSITION'' UNION SELECT ''ALLOCATE'' UNION SELECT ''FALSE'' UNION SELECT ''PRECISION'' UNION SELECT ''ALTER'' UNION SELECT ''FETCH'' UNION SELECT ''PREPARE'' UNION SELECT ''AND'' UNION SELECT ''FIRST'' UNION SELECT ''PRESERVE'' UNION SELECT ''ANY'' UNION SELECT ''FLOAT'' UNION SELECT ''PRIMARY'' UNION SELECT ''ARE'' UNION SELECT ''FOR'' UNION SELECT ''PRIOR'' UNION SELECT ''AS'' UNION SELECT ''FOREIGN'' UNION SELECT ''PRIVILEGES'' UNION SELECT ''ASC'' UNION SELECT ''FORTRAN'' UNION SELECT ''PROCEDURE'' UNION SELECT ''ASSERTION'' UNION SELECT ''FOUND'' UNION SELECT ''PUBLIC'' UNION SELECT ''AT'' UNION SELECT ''FROM'' UNION SELECT ''READ'' UNION SELECT ''AUTHORIZATION'' UNION SELECT ''FULL'' UNION SELECT ''REAL'' UNION SELECT ''AVG'' UNION SELECT ''GET'' UNION SELECT ''REFERENCES'' UNION SELECT ''BEGIN'' UNION SELECT ''GLOBAL'' UNION SELECT ''RELATIVE'' UNION SELECT ''BETWEEN'' UNION SELECT ''GO'' UNION SELECT ''RESTRICT'' UNION SELECT ''BIT'' UNION SELECT ''GOTO'' UNION SELECT ''REVOKE'' UNION SELECT ''BIT_LENGTH'' UNION SELECT ''GRANT'' UNION SELECT ''RIGHT'' UNION SELECT ''BOTH'' UNION SELECT ''GROUP'' UNION SELECT ''ROLLBACK'' UNION SELECT ''BY'' UNION SELECT ''HAVING'' UNION SELECT ''ROWS'' UNION SELECT ''CASCADE'' UNION SELECT ''HOUR'' UNION SELECT ''SCHEMA'' UNION SELECT ''CASCADED'' UNION SELECT ''IDENTITY'' UNION SELECT ''SCROLL'' UNION SELECT ''CASE'' UNION SELECT ''IMMEDIATE'' UNION SELECT ''SECOND'' UNION SELECT ''CAST'' UNION SELECT ''IN'' UNION SELECT ''SECTION'' UNION SELECT ''CATALOG'' UNION SELECT ''INCLUDE'' UNION SELECT ''SELECT'' UNION SELECT ''CHAR'' UNION SELECT ''INDEX'' UNION SELECT ''SESSION'' UNION SELECT ''CHAR_LENGTH'' UNION SELECT ''INDICATOR'' UNION SELECT ''SESSION_USER'' UNION SELECT ''CHARACTER'' UNION SELECT ''INITIALLY'' UNION SELECT ''SET'' UNION SELECT ''CHARACTER_LENGTH'' UNION SELECT ''INNER'' UNION SELECT ''SIZE'' UNION SELECT ''CHECK'' UNION SELECT ''INPUT'' UNION SELECT ''SMALLINT'' UNION SELECT ''CLOSE'' UNION SELECT ''INSENSITIVE'' UNION SELECT ''SOME'' UNION SELECT ''COALESCE'' UNION SELECT ''INSERT'' UNION SELECT ''SPACE'' UNION SELECT ''COLLATE'' UNION SELECT ''INT'' UNION SELECT ''SQL'' UNION SELECT ''COLLATION'' UNION SELECT ''INTEGER'' UNION SELECT ''SQLCA'' UNION SELECT ''COLUMN'' UNION SELECT ''INTERSECT'' UNION SELECT ''SQLCODE'' UNION SELECT ''COMMIT'' UNION SELECT ''INTERVAL'' UNION SELECT ''SQLERROR'' UNION SELECT ''CONNECT'' UNION SELECT ''INTO'' UNION SELECT ''SQLSTATE'' UNION SELECT ''CONNECTION'' UNION SELECT ''IS'' UNION SELECT ''SQLWARNING'' UNION SELECT ''CONSTRAINT'' UNION SELECT ''ISOLATION'' UNION SELECT ''SUBSTRING'' UNION SELECT ''CONSTRAINTS'' UNION SELECT ''JOIN'' UNION SELECT ''SUM'' UNION SELECT ''CONTINUE'' UNION SELECT ''KEY'' UNION SELECT ''SYSTEM_USER'' UNION SELECT ''CONVERT'' UNION SELECT ''LANGUAGE'' UNION SELECT ''TABLE'' UNION SELECT ''CORRESPONDING'' UNION SELECT ''LAST'' UNION SELECT ''TEMPORARY'' UNION SELECT ''COUNT'' UNION SELECT ''LEADING'' UNION SELECT ''THEN'' UNION SELECT ''CREATE'' UNION SELECT ''LEFT'' UNION SELECT ''TIME'' UNION SELECT ''CROSS'' UNION SELECT ''LEVEL'' UNION SELECT ''TIMESTAMP'' UNION SELECT ''CURRENT'' UNION SELECT ''LIKE'' UNION SELECT ''TIMEZONE_HOUR'' UNION SELECT ''CURRENT_DATE'' UNION SELECT ''LOCAL'' UNION SELECT ''TIMEZONE_MINUTE'' UNION SELECT ''CURRENT_TIME'' UNION SELECT ''LOWER'' UNION SELECT ''TO'' UNION SELECT ''CURRENT_TIMESTAMP'' UNION SELECT ''MATCH'' UNION SELECT ''TRAILING'' UNION SELECT ''CURRENT_USER'' UNION SELECT ''MAX'' UNION SELECT ''TRANSACTION'' UNION SELECT ''CURSOR'' UNION SELECT ''MIN'' UNION SELECT ''TRANSLATE'' UNION SELECT ''DATE'' UNION SELECT ''MINUTE'' UNION SELECT ''TRANSLATION'' UNION SELECT ''DAY'' UNION SELECT ''MODULE'' UNION SELECT ''TRIM'' UNION SELECT ''DEALLOCATE'' UNION SELECT ''MONTH'' UNION SELECT ''TRUE'' UNION SELECT ''DEC'' UNION SELECT ''NAMES'' UNION SELECT ''UNION'' UNION SELECT ''DECIMAL'' UNION SELECT ''NATIONAL'' UNION SELECT ''UNIQUE'' UNION SELECT ''DECLARE'' UNION SELECT ''NATURAL'' UNION SELECT ''UNKNOWN'' UNION SELECT ''DEFAULT'' UNION SELECT ''NCHAR'' UNION SELECT ''UPDATE'' UNION SELECT ''DEFERRABLE'' UNION SELECT ''NEXT'' UNION SELECT ''UPPER'' UNION SELECT ''DEFERRED'' UNION SELECT ''NO'' UNION SELECT ''USAGE'' UNION SELECT ''DELETE'' UNION SELECT ''NONE'' UNION SELECT ''USER'' UNION SELECT ''DESC'' UNION SELECT ''NOT'' UNION SELECT ''USING'' UNION SELECT ''DESCRIBE'' UNION SELECT ''NULL'' UNION SELECT ''VALUE'' UNION SELECT ''DESCRIPTOR'' UNION SELECT ''NULLIF'' UNION SELECT ''VALUES'' UNION SELECT ''DIAGNOSTICS'' UNION SELECT ''NUMERIC'' UNION SELECT ''VARCHAR'' UNION SELECT ''DISCONNECT'' UNION SELECT ''OCTET_LENGTH'' UNION SELECT ''VARYING'' UNION SELECT ''DISTINCT'' UNION SELECT ''OF'' UNION SELECT ''VIEW'' UNION SELECT ''DOMAIN'' UNION SELECT ''ON'' UNION SELECT ''WHEN'' UNION SELECT ''DOUBLE'' UNION SELECT ''ONLY'' UNION SELECT ''WHENEVER'' UNION SELECT ''DROP'' UNION SELECT ''OPEN'' UNION SELECT ''WHERE'' UNION SELECT ''ELSE'' UNION SELECT ''OPTION'' UNION SELECT ''WITH'' UNION SELECT ''END'' UNION SELECT ''OR'' UNION SELECT ''WORK'' UNION SELECT ''END-EXEC'' UNION SELECT ''ORDER'' UNION SELECT ''WRITE'' UNION SELECT ''ESCAPE'' UNION SELECT ''OUTER'' UNION SELECT ''YEAR'' UNION SELECT ''EXCEPT'' UNION SELECT ''OUTPUT'' UNION SELECT ''ZONE'' UNION SELECT ''EXCEPTION'' COLLATE SQL_Latin1_General_CP1_CI_AS
-					        ) AS reserved (word) ON reserved.word = O.name
+					        ) AS reserved (word) ON O.word = reserved.name
                         OPTION (RECOMPILE);';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1109,10 +1109,10 @@ AS
 				           ,Details       = N''Using SQL Server Future reserved keywords makes code more difficult to read, can cause problems to code formatters, and can cause errors when writing code.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 					        INNER JOIN (
 						        SELECT ''ABSOLUTE'' UNION SELECT ''HOST'' UNION SELECT ''RELATIVE'' UNION SELECT ''ACTION'' UNION SELECT ''HOUR'' UNION SELECT ''RELEASE'' UNION SELECT ''ADMIN'' UNION SELECT ''IGNORE'' UNION SELECT ''RESULT'' UNION SELECT ''AFTER'' UNION SELECT ''IMMEDIATE'' UNION SELECT ''RETURNS'' UNION SELECT ''AGGREGATE'' UNION SELECT ''INDICATOR'' UNION SELECT ''ROLE'' UNION SELECT ''ALIAS'' UNION SELECT ''INITIALIZE'' UNION SELECT ''ROLLUP'' UNION SELECT ''ALLOCATE'' UNION SELECT ''INITIALLY'' UNION SELECT ''ROUTINE'' UNION SELECT ''ARE'' UNION SELECT ''INOUT'' UNION SELECT ''ROW'' UNION SELECT ''ARRAY'' UNION SELECT ''INPUT'' UNION SELECT ''ROWS'' UNION SELECT ''ASENSITIVE'' UNION SELECT ''INT'' UNION SELECT ''SAVEPOINT'' UNION SELECT ''ASSERTION'' UNION SELECT ''INTEGER'' UNION SELECT ''SCROLL'' UNION SELECT ''ASYMMETRIC'' UNION SELECT ''INTERSECTION'' UNION SELECT ''SCOPE'' UNION SELECT ''AT'' UNION SELECT ''INTERVAL'' UNION SELECT ''SEARCH'' UNION SELECT ''ATOMIC'' UNION SELECT ''ISOLATION'' UNION SELECT ''SECOND'' UNION SELECT ''BEFORE'' UNION SELECT ''ITERATE'' UNION SELECT ''SECTION'' UNION SELECT ''BINARY'' UNION SELECT ''LANGUAGE'' UNION SELECT ''SENSITIVE'' UNION SELECT ''BIT'' UNION SELECT ''LARGE'' UNION SELECT ''SEQUENCE'' UNION SELECT ''BLOB'' UNION SELECT ''LAST'' UNION SELECT ''SESSION'' UNION SELECT ''BOOLEAN'' UNION SELECT ''LATERAL'' UNION SELECT ''SETS'' UNION SELECT ''BOTH'' UNION SELECT ''LEADING'' UNION SELECT ''SIMILAR'' UNION SELECT ''BREADTH'' UNION SELECT ''LESS'' UNION SELECT ''SIZE'' UNION SELECT ''CALL'' UNION SELECT ''LEVEL'' UNION SELECT ''SMALLINT'' UNION SELECT ''CALLED'' UNION SELECT ''LIKE_REGEX'' UNION SELECT ''SPACE'' UNION SELECT ''CARDINALITY'' UNION SELECT ''LIMIT'' UNION SELECT ''SPECIFIC'' UNION SELECT ''CASCADED'' UNION SELECT ''LN'' UNION SELECT ''SPECIFICTYPE'' UNION SELECT ''CAST'' UNION SELECT ''LOCAL'' UNION SELECT ''SQL'' UNION SELECT ''CATALOG'' UNION SELECT ''LOCALTIME'' UNION SELECT ''SQLEXCEPTION'' UNION SELECT ''CHAR'' UNION SELECT ''LOCALTIMESTAMP'' UNION SELECT ''SQLSTATE'' UNION SELECT ''CHARACTER'' UNION SELECT ''LOCATOR'' UNION SELECT ''SQLWARNING'' UNION SELECT ''CLASS'' UNION SELECT ''MAP'' UNION SELECT ''START'' UNION SELECT ''CLOB'' UNION SELECT ''MATCH'' UNION SELECT ''STATE'' UNION SELECT ''COLLATION'' UNION SELECT ''MEMBER'' UNION SELECT ''STATEMENT'' UNION SELECT ''COLLECT'' UNION SELECT ''METHOD'' UNION SELECT ''STATIC'' UNION SELECT ''COMPLETION'' UNION SELECT ''MINUTE'' UNION SELECT ''STDDEV_POP'' UNION SELECT ''CONDITION'' UNION SELECT ''MOD'' UNION SELECT ''STDDEV_SAMP'' UNION SELECT ''CONNECT'' UNION SELECT ''MODIFIES'' UNION SELECT ''STRUCTURE'' UNION SELECT ''CONNECTION'' UNION SELECT ''MODIFY'' UNION SELECT ''SUBMULTISET'' UNION SELECT ''CONSTRAINTS'' UNION SELECT ''MODULE'' UNION SELECT ''SUBSTRING_REGEX'' UNION SELECT ''CONSTRUCTOR'' UNION SELECT ''MONTH'' UNION SELECT ''SYMMETRIC'' UNION SELECT ''CORR'' UNION SELECT ''MULTISET'' UNION SELECT ''SYSTEM'' UNION SELECT ''CORRESPONDING'' UNION SELECT ''NAMES'' UNION SELECT ''TEMPORARY'' UNION SELECT ''COVAR_POP'' UNION SELECT ''NATURAL'' UNION SELECT ''TERMINATE'' UNION SELECT ''COVAR_SAMP'' UNION SELECT ''NCHAR'' UNION SELECT ''THAN'' UNION SELECT ''CUBE'' UNION SELECT ''NCLOB'' UNION SELECT ''TIME'' UNION SELECT ''CUME_DIST'' UNION SELECT ''NEW'' UNION SELECT ''TIMESTAMP'' UNION SELECT ''CURRENT_CATALOG'' UNION SELECT ''NEXT'' UNION SELECT ''TIMEZONE_HOUR'' UNION SELECT ''CURRENT_DEFAULT_TRANSFORM_GROUP'' UNION SELECT ''NO'' UNION SELECT ''TIMEZONE_MINUTE'' UNION SELECT ''CURRENT_PATH'' UNION SELECT ''NONE'' UNION SELECT ''TRAILING'' UNION SELECT ''CURRENT_ROLE'' UNION SELECT ''NORMALIZE'' UNION SELECT ''TRANSLATE_REGEX'' UNION SELECT ''CURRENT_SCHEMA'' UNION SELECT ''NUMERIC'' UNION SELECT ''TRANSLATION'' UNION SELECT ''CURRENT_TRANSFORM_GROUP_FOR_TYPE'' UNION SELECT ''OBJECT'' UNION SELECT ''TREAT'' UNION SELECT ''CYCLE'' UNION SELECT ''OCCURRENCES_REGEX'' UNION SELECT ''TRUE'' UNION SELECT ''DATA'' UNION SELECT ''OLD'' UNION SELECT ''UESCAPE'' UNION SELECT ''DATE'' UNION SELECT ''ONLY'' UNION SELECT ''UNDER'' UNION SELECT ''DAY'' UNION SELECT ''OPERATION'' UNION SELECT ''UNKNOWN'' UNION SELECT ''DEC'' UNION SELECT ''ORDINALITY'' UNION SELECT ''UNNEST'' UNION SELECT ''DECIMAL'' UNION SELECT ''OUT'' UNION SELECT ''USAGE'' UNION SELECT ''DEFERRABLE'' UNION SELECT ''OVERLAY'' UNION SELECT ''USING'' UNION SELECT ''DEFERRED'' UNION SELECT ''OUTPUT'' UNION SELECT ''VALUE'' UNION SELECT ''DEPTH'' UNION SELECT ''PAD'' UNION SELECT ''VAR_POP'' UNION SELECT ''DEREF'' UNION SELECT ''PARAMETER'' UNION SELECT ''VAR_SAMP'' UNION SELECT ''DESCRIBE'' UNION SELECT ''PARAMETERS'' UNION SELECT ''VARCHAR'' UNION SELECT ''DESCRIPTOR'' UNION SELECT ''PARTIAL'' UNION SELECT ''VARIABLE'' UNION SELECT ''DESTROY'' UNION SELECT ''PARTITION'' UNION SELECT ''WHENEVER'' UNION SELECT ''DESTRUCTOR'' UNION SELECT ''PATH'' UNION SELECT ''WIDTH_BUCKET'' UNION SELECT ''DETERMINISTIC'' UNION SELECT ''POSTFIX'' UNION SELECT ''WITHOUT'' UNION SELECT ''DICTIONARY'' UNION SELECT ''PREFIX'' UNION SELECT ''WINDOW'' UNION SELECT ''DIAGNOSTICS'' UNION SELECT ''PREORDER'' UNION SELECT ''WITHIN'' UNION SELECT ''DISCONNECT'' UNION SELECT ''PREPARE'' UNION SELECT ''WORK'' UNION SELECT ''DOMAIN'' UNION SELECT ''PERCENT_RANK'' UNION SELECT ''WRITE'' UNION SELECT ''DYNAMIC'' UNION SELECT ''PERCENTILE_CONT'' UNION SELECT ''XMLAGG'' UNION SELECT ''EACH'' UNION SELECT ''PERCENTILE_DISC'' UNION SELECT ''XMLATTRIBUTES'' UNION SELECT ''ELEMENT'' UNION SELECT ''POSITION_REGEX'' UNION SELECT ''XMLBINARY'' UNION SELECT ''END-EXEC'' UNION SELECT ''PRESERVE'' UNION SELECT ''XMLCAST'' UNION SELECT ''EQUALS'' UNION SELECT ''PRIOR'' UNION SELECT ''XMLCOMMENT'' UNION SELECT ''EVERY'' UNION SELECT ''PRIVILEGES'' UNION SELECT ''XMLCONCAT'' UNION SELECT ''EXCEPTION'' UNION SELECT ''RANGE'' UNION SELECT ''XMLDOCUMENT'' UNION SELECT ''FALSE'' UNION SELECT ''READS'' UNION SELECT ''XMLELEMENT'' UNION SELECT ''FILTER'' UNION SELECT ''REAL'' UNION SELECT ''XMLEXISTS'' UNION SELECT ''FIRST'' UNION SELECT ''RECURSIVE'' UNION SELECT ''XMLFOREST'' UNION SELECT ''FLOAT'' UNION SELECT ''REF'' UNION SELECT ''XMLITERATE'' UNION SELECT ''FOUND'' UNION SELECT ''REFERENCING'' UNION SELECT ''XMLNAMESPACES'' UNION SELECT ''FREE'' UNION SELECT ''REGR_AVGX'' UNION SELECT ''XMLPARSE'' UNION SELECT ''FULLTEXTTABLE'' UNION SELECT ''REGR_AVGY'' UNION SELECT ''XMLPI'' UNION SELECT ''FUSION'' UNION SELECT ''REGR_COUNT'' UNION SELECT ''XMLQUERY'' UNION SELECT ''GENERAL'' UNION SELECT ''REGR_INTERCEPT'' UNION SELECT ''XMLSERIALIZE'' UNION SELECT ''GET'' UNION SELECT ''REGR_R2'' UNION SELECT ''XMLTABLE'' UNION SELECT ''GLOBAL'' UNION SELECT ''REGR_SLOPE'' UNION SELECT ''XMLTEXT'' UNION SELECT ''GO'' UNION SELECT ''REGR_SXX'' UNION SELECT ''XMLVALIDATE'' UNION SELECT ''GROUPING'' UNION SELECT ''REGR_SXY'' UNION SELECT ''YEAR'' UNION SELECT ''HOLD'' UNION SELECT ''REGR_SYY'' UNION SELECT ''ZONE'' COLLATE SQL_Latin1_General_CP1_CI_AS
-					        ) AS reserved (word) ON reserved.word = O.name
+					        ) AS reserved (word) ON O.word = reserved.name
                         OPTION (RECOMPILE);';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1151,8 +1151,8 @@ AS
 				           ,Details       = CAST(T.max_column_id_used AS NVARCHAR(11)) + N'' columns. You might be treating this table like a spreadsheet. You might need to redesign your table schema.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = T.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON T.object_id = O.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        T.max_column_id_used > 20
                         OPTION (RECOMPILE);';
@@ -1192,9 +1192,9 @@ AS
 				           ,Details       = N''Add a clustered index if this is not a staging table for a data warehouse.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T ON T.object_id = I.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = T.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T ON I.object_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON T.object_id = O.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        I.type = 0
 					        AND O.name NOT IN (''__SchemaSnapshot'')
@@ -1235,10 +1235,10 @@ AS
 				           ,Details       = N''Primary key column names should be [TableName] + "Id" (e.g. '' + T.name + N''Id)''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns AS IC ON I.object_id    = IC.object_id AND I.index_id = IC.index_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns       AS C ON IC.object_id    = C.object_id AND C.column_id = IC.column_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables        AS T ON T.object_id     = C.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S ON S.schema_id     = T.schema_id				
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns AS IC ON I.object_id  = IC.object_id AND I.index_id  = IC.index_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns       AS C  ON IC.object_id = C.object_id  AND IC.column_id = C.column_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables        AS T  ON C.object_id  = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S  ON T.schema_id  = S.schema_id
 				        WHERE
 					        I.is_primary_key  = 1
 					        AND C.name COLLATE SQL_Latin1_General_CP1_CI_AS = ''id''
@@ -1279,11 +1279,11 @@ AS
 				           ,Details       = N''Using UNIQUEIDENTIFIER/GUID as primary keys causes issues with SQL Server databases. Use an INT.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns AS IC ON I.object_id     = IC.object_id AND I.index_id = IC.index_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns       AS C  ON IC.object_id    = C.object_id AND C.column_id = IC.column_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.types         AS TP ON TP.user_type_id = C.user_type_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables        AS T  ON T.object_id     = C.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S  ON S.schema_id     = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns AS IC ON I.object_id     = IC.object_id   AND I.index_id   = IC.index_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns       AS C  ON IC.object_id    = C.object_id    AND IC.column_id = C.column_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.types         AS TP ON C.user_type_id = TP.user_type_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables        AS T  ON C.object_id     = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S  ON T.schema_id     = S.schema_id
 				        WHERE
 					        I.is_primary_key   = 1
 					        AND T.name NOT IN (''__RefactorLog'', ''__MigrationLog'', ''__MigrationLogCurrent'', ''__SchemaSnapshot'', ''__SchemaSnapshotDateDefault'', ''fn_diagramobjects'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'')
@@ -1325,12 +1325,12 @@ AS
 				           ,Details       = N''UNIQUEIDENTIFIER/GUID columns should not be in a clustered index''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns      AS IC
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON T.object_id     = IC.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id     = T.schema_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id     = IC.object_id
-												           AND C.column_id = IC.column_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I ON I.object_id     = IC.object_id
-												           AND I.index_id  = IC.index_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON IC.object_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id  = S.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON IC.object_id = C.object_id
+												           AND IC.column_id = C.column_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I ON IC.object_id = I.object_id
+												           AND IC.index_id  = I.index_id
 				        WHERE
 					        T.name NOT IN (''__RefactorLog'', ''__MigrationLog'', ''__MigrationLogCurrent'', ''__SchemaSnapshot'', ''__SchemaSnapshotDateDefault'', ''fn_diagramobjects'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'')
 					        AND C.system_type_id = 36
@@ -1372,11 +1372,11 @@ AS
 				           ,Details       = N''Each foreign key in your table should be included in an index.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.foreign_keys                   AS FK
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas             AS S   ON S.schema_id                   = FK.schema_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables              AS T   ON T.object_id                   = FK.parent_object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.foreign_key_columns AS FKC ON FK.object_id                  = FKC.constraint_object_id
-					        LEFT OUTER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns  AS IC  ON IC.object_id                  = FKC.parent_object_id
-																			             AND IC.column_id             = FKC.parent_column_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas             AS S   ON FK.schema_id  = S.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables              AS T   ON FK.object_id  = T.parent_object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.foreign_key_columns AS FKC ON FK.object_id  = FKC.constraint_object_id
+					        LEFT OUTER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns  AS IC  ON FKC.object_id = IC.parent_object_id
+																			             AND FKC.column_id            = IC.parent_column_id
 																			             AND FKC.constraint_column_id = IC.key_ordinal
 				        WHERE					
 					        IC.object_id IS NULL
@@ -1417,7 +1417,7 @@ AS
 				           ,Details       = N''Every table should have some column (or set of columns) that uniquely identifies one and only one row.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T					
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S ON S.schema_id = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S ON T.schema_id = S.schema_id
 					        LEFT OUTER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.indexes  AS I ON T.object_id = I.object_id AND I.is_primary_key = 1
 				        WHERE
 				            T.name NOT IN (''__RefactorLog'', ''__MigrationLog'', ''__MigrationLogCurrent'', ''__SchemaSnapshot'', ''__SchemaSnapshotDateDefault'', ''fn_diagramobjects'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'')
@@ -1460,7 +1460,7 @@ AS
 				           ,Details       = N''User-defined data types should be avoided whenever possible.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.types                    AS T
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S  ON S.schema_id = T.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas       AS S  ON T.schema_id = S.schema_id
 				        WHERE
 					        T.is_user_defined = 1
                         OPTION (RECOMPILE);';
@@ -1501,8 +1501,8 @@ AS
 				           ,Details       = N''Your scalar function is not inlineable. You should make the function inlineable or inline the code manually.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.sql_modules AS SM
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = SM.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON SM.object_id = O.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id  = S.schema_id
 				        WHERE
 					        O.type               = ''FN''
 					        AND SM.is_inlineable = 0
@@ -1544,7 +1544,7 @@ AS
 				           ,Details       = N''You should inline your scalar function in SQL query. If your query requires scalar functions your should ensure they are being inlined.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        O.type = ''FN''
                             AND O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'')
@@ -1588,9 +1588,9 @@ AS
 				           ,Details       = N''Do not use the "SELECT *" in production code unless you have a good reason. Using "*" in math equations is OK.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.sql_modules        AS SM
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = SM.object_id
-					        LEFT OUTER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T ON T.object_id = O.parent_object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON SM.object_id = O.object_id
+					        LEFT OUTER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T ON O.object_id = T.parent_object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        SM.definition LIKE ''%SELECT%*%'' COLLATE SQL_Latin1_General_CP1_CI_AS
 					        AND SM.definition NOT LIKE ''%IF%EXISTS%(%SELECT%*%'' COLLATE SQL_Latin1_General_CP1_CI_AS
@@ -1634,8 +1634,8 @@ AS
 				           ,Details       = N''Use two-part instead three-part names for tables. You should use "'' + S.name + ''.TableName" instead of "' + @DatabaseName + N'.'' + S.name + ''.TableName" in the FROM clause.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.sql_modules        AS SM
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = SM.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON SM.object_id = O.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        PATINDEX(''%FROM%'' + ''' + @DatabaseName + N''' + ''.%.%'' COLLATE SQL_Latin1_General_CP1_CI_AS, SM.definition COLLATE SQL_Latin1_General_CP1_CI_AS) > 0
                         OPTION (RECOMPILE);';
@@ -1676,8 +1676,8 @@ AS
 				           ,Details       = N''Unless you need to return messages that give you the row count of each statement, you should SET NOCOUNT ON;.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables                 AS T
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas     AS S  ON S.schema_id  = T.schema_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.triggers    AS TR ON TR.parent_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas     AS S  ON T.schema_id  = S.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.triggers    AS TR ON T.parent_id  = TR.object_id
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.sql_modules AS M  ON TR.object_id = M.object_id
 				        WHERE
 					        (M.definition NOT LIKE ''%SET NOCOUNT ON%'' COLLATE SQL_Latin1_General_CP1_CI_AS
@@ -1707,8 +1707,8 @@ AS
 				           ,Details       = N''Unless you need to return messages that give you the row count of each statement, you should SET NOCOUNT ON;.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.sql_modules        AS SM
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = SM.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON SM.object_id = O.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        O.type IN (''P'')
                             AND O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'')
@@ -1751,8 +1751,8 @@ AS
 				           ,Details       = N''NOLOCK does not mean your query does not take out a lock, it does not obey locks.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.sql_modules        AS SM
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON O.object_id = SM.object_id
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON SM.object_id = O.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
 					        O.name NOT IN (''sp_Develop'', ''sp_WhoIsActive'')
 					        AND (
@@ -1818,8 +1818,8 @@ AS
                                                    END
                         FROM
                             ' + QUOTENAME(@DatabaseName) + N'.sys.columns            AS C
-                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON T.object_id = C.object_id
-                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = T.schema_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON C.object_id = T.object_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
                         WHERE (
                             C.name LIKE ''%password%''
                             AND C.name NOT LIKE ''%date%''
@@ -1897,7 +1897,7 @@ AS
                                             ,IsProcessedFlag = 1
                                         FROM
                                             ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C
-                                            INNER JOIN #TableList   AS TL ON TL.object_id = C.object_id
+                                            INNER JOIN #TableList   AS TL ON C.object_id = TR.object_id
                                         WHERE
                                             C.encryption_type IS NOT NULL
                                         OPTION (RECOMPILE);'
@@ -2023,9 +2023,9 @@ AS
 				           ,Details       = N''This column uses the '' + UPPER(T.name) + N'' data type, which has limited precision and can lead to roundoff errors. Consider using DECIMAL(19, 4) instead.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
-					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON S.schema_id = O.schema_id
-                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON C.object_id = O.object_id
-                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.types   AS T on T.user_type_id = C.user_type_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON S.object_id = C.object_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.types   AS T on C.user_type_id = T.user_type_id
 				        WHERE
 					        T.name IN (''money'', ''smallmoney'')
                         OPTION (RECOMPILE);';

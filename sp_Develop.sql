@@ -36,7 +36,7 @@ AS
         **
         ** All other copyrights for sp_Develop are held by Emergent Software, LLC as described below.
         ** 
-        ** Copyright (c) 2020 Emergent Software, LLC
+        ** Copyright (c) 2022 Emergent Software, LLC
         ** 
         ** Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
         ** documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
@@ -81,8 +81,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '1.2.4';
-        SET @VersionDate = '20220408';
+        SET @Version = '1.3.0';
+        SET @VersionDate = '20220606';
         SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/best-practices-and-potential-findings/';
         SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);
@@ -761,11 +761,13 @@ AS
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
 				        WHERE
-					        O.name NOT IN (''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_Develop'', ''sp_WhoIsActive'')
+                            O.name COLLATE SQL_Latin1_General_CP1_CI_AS NOT IN (''sp_Develop'', ''spCRUDGen'', ''sp_alterdiagram'', ''sp_creatediagram'', ''sp_dropdiagram'', ''sp_helpdiagramdefinition'', ''sp_helpdiagrams'', ''sp_renamediagram'', ''sp_upgraddiagrams'', ''fn_diagramobjects'', ''sp_WhoIsActive'', ''sp_HumanEvents'', ''sp_BlitzWho'', ''sp_BlitzCache'', ''sp_BlitzFirst'', ''sp_BlitzIndex'', ''sp_BlitzInMemoryOLTP'', ''sp_BlitzLock'', ''sp_BlitzQueryStore'', ''sp_PressureDetector'', ''sp_QuickieStore'')
 					        AND (
-							        LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 4) IN (''tab_'')
-							        OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 3) IN (''tbl'', ''sp_'', ''xp_'', ''dt_'', ''fn_'', ''tr_'', ''usp'', ''usr'')
-							        OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 2) IN (''tb'', ''t_'', ''vw'', ''fn'')
+		                            LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 6) IN (''covix_'', ''ncldx_'', ''clidx_'')
+                                    OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 5) IN (''pknc_'', ''ncak_'', ''clix_'', ''_dta_'')
+                                    OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 4) IN (''tab_'', ''pkc_'', ''idx_'', ''cak_'', ''unq_'', ''chk_'', ''ftx_'', ''gis_'', ''usp_'', ''trg_'')
+			                        OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 3) IN (''tbl'', ''sp_'', ''xp_'', ''dt_'', ''fn_'', ''tr_'', ''usp'', ''usr'', ''uc_'', ''nk_'', ''ak_'', ''nc_'', ''ix_'', ''ux_'', ''uk_'', ''fk_'', ''uq_'', ''df_'')
+			                        OR LEFT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 2) IN (''tb'', ''t_'', ''vw'', ''fn'', ''p_'', ''f_'')
 							        OR O.name LIKE ''[v][A-Z]%'' COLLATE Latin1_General_BIN
 							        OR O.name LIKE ''[t][A-Z]%'' COLLATE Latin1_General_BIN
 							        OR O.name LIKE ''[s][p][A-Z]%'' COLLATE Latin1_General_BIN

@@ -481,7 +481,7 @@ AS
 
             RAISERROR(@Message, @ErrorSeverity, @ErrorState);
 
-            WHILE @@trancount > 0
+            WHILE @@TRANCOUNT > 0
             ROLLBACK;
 
             RETURN;
@@ -2123,10 +2123,23 @@ AS
             END;
         ELSE IF @OutputType <> 'NONE'
             BEGIN
-            --xxxxxxxxxxx
-            SELECT
-                    Priority = F.Priority
-                   --,Priority = CASE WHEN F.Priority = 10 THEN 'Low' ELSE 'Unknown' END /*Critical, High, Medium, and Low */
+                SELECT
+                    Priority       = CASE WHEN F.Priority = 1
+                                              THEN 'Critical'
+                                         WHEN F.Priority = 5
+                                             THEN 'High'
+                                         WHEN F.Priority = 10
+                                             THEN 'High'
+                                         WHEN F.Priority = 20
+                                             THEN 'Medium'
+                                         WHEN F.Priority = 30
+                                             THEN 'Low'
+                                         WHEN F.Priority = 40
+                                             THEN 'Low'
+                                         WHEN F.Priority = 50
+                                             THEN 'Low'
+                                         ELSE 'Unknown'
+                                     END /*Critical, High, Medium, and Low */
                    ,F.DatabaseName
                    ,F.SchemaName
                    ,F.ObjectName
@@ -2135,8 +2148,9 @@ AS
                    ,F.Finding
                    ,F.Details
                    ,F.URL
-                   ,SkipCheckTSQL = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS nvarchar(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS nvarchar(50)) + ');', @URLSkipChecks)
+                   ,SkipCheckTSQL  = ISNULL('INSERT INTO ' + @SkipCheckSchema + '.' + @SkipCheckTable + ' (ServerName, DatabaseName, SchemaName, ObjectName, CheckId) VALUES (N''' + CAST(SERVERPROPERTY('ServerName') AS nvarchar(128)) + ''', N''' + F.DatabaseName + ''', N''' + F.SchemaName + ''', N''' + F.ObjectName + ''', ' + CAST(F.CheckId AS nvarchar(50)) + ');', @URLSkipChecks)
                    ,F.CheckId
+                   ,PriorityNumber = F.Priority
                 FROM
                     #Finding AS F
                 WHERE

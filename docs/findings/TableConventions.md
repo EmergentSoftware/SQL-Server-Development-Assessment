@@ -220,7 +220,7 @@ You should always explicitly define ``NULL`` or ``NOT NULL`` for columns when cr
 
 ## Unique Constraint or Unique Indexes Usage
 **Potential Finding:** <a name="using-unique-constraint-instead-of-unique-indexes"/>Using Unique Constraint Instead of Unique Indexes<br/>
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Primary+Keys)
+**Check Id:** 30
 
 Create unique indexes instead of unique constraints (unique key). Doing so removes a dependency of a unique key to the unique index that is created automatically and tightly coupled.
 

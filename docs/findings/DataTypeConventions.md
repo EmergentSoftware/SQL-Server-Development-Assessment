@@ -93,6 +93,8 @@ RFC 2616, "Hypertext Transfer Protocol -- HTTP/1.1," does not specify any requir
 
 The Internet Explorer browser has the shortest allowed URL max length in the address bar at 2083 characters. 
 
+- See [URL or URI Naming](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#url-or-uri-naming)
+
 #### Use Case Exception
 If your application requires larger than 2083 characters, ensure the users are not utilizing IE and increase the nvarchar length.
 

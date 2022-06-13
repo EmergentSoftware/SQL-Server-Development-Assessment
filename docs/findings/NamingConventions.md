@@ -421,7 +421,8 @@ Bit columns should be given affirmative boolean names like ``IsActive``, ``IsDel
     - Is**Valid** indicated validity
     - Has**Permission** indicated permissions
   - Unit**Price** is the price of a product unit
-  - Website**URL** is the internet address
+  - Website**URL** is the internet address 
+    - See [URL or URI Naming](#url-or-uri-naming)
   - RowModify**PersonId** is the person who last updated a record
   - RowCreate**PersonId** is the person who created a record
   - RowModify**Time** is the date and time something was modified
@@ -430,10 +431,21 @@ Bit columns should be given affirmative boolean names like ``IsActive``, ``IsDel
   - RowValidFrom**Time** is the period start for a system-versioned temporal tables
   - RowValidTo**Time** is the period end for a system-versioned temporal tables
 
+[Back to top](#top)
+
+---
+
+## URL or URI Naming
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=URL+or+URI+Naming)
+
+In 99% of everyday cases, you should use URL instead of URI because both are technically true but URL is more specific. The difference between a URI and a URL is that a URI can be just a name by itself (`emergentsoftware.net`), or a name with a protocol (`https://emergentsoftware.net, ftp://emergentsoftware.net, mailto://hello@emergentsoftware.net, file://emergentsoftware/~user/file.csv`) that tells you how to reach it—which is a URL.
+
+- See [The Difference Between a URL, URI, and a URN](https://danielmiessler.com/study/difference-between-uri-url)
 
 [Back to top](#top)
 
 ---
+
 <br>
 <br>
 <br>

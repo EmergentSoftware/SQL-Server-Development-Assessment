@@ -2160,11 +2160,16 @@ You can skip including the Author, Created On & Modified On details when you use
 ---
 
 ## Not Using Table Schema
+**Potential Finding:** <a name="not-using-table-schema"/>Not Using Table Schema<br/>
+**Potential Finding:** <a name="not-using-schema"/>Not Using Schema<br/>
+
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/89)
 
-Prefix all table name with the table schema (in most cases "dbo."). This results in a performance gain as the optimizer does not have to perform a lookup on execution as well as minimizing ambiguities in your T-SQL.
+Prefix all database objects like table names and stored procedures with the schema (in most cases "dbo."). This results in a performance gain as the optimizer does not have to perform a lookup on execution as well as minimizing ambiguities in your T-SQL.
 
-By including the table schema, we avoid certain bugs, minimize the time the engine spends searching for the procedure, and help ensure that cached query plans for the procedures get reused.
+By including the schema, we avoid certain bugs, minimize the time the engine spends searching for the procedure, and help ensure that cached query plans for the procedures get reused.
+
+Not including the schema on a stored procedure will lead to compile locks. See [Additional Scenarios that lead to compile locks (1. Stored Procedure is executed without Fully Qualified Name)](https://docs.microsoft.com/en-us/troubleshoot/sql/performance/troubleshoot-blocking-caused-compile-locks#additional-scenarios-that-lead-to-compile-locks:~:text=Stored%20Procedure%20is%20executed%20without%20Fully%20Qualified%20Name)
 
 [Back to top](#top)
 

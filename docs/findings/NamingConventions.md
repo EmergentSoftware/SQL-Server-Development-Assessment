@@ -285,6 +285,8 @@ If writing code for a data integration and the source is plural keep the staging
 
 Never use a descriptive prefix such as tbl_. This 'reverse-Hungarian' notation has never been a standard for SQL and clashes with SQL Server's naming conventions. Some system procedures and functions were given prefixes ``sp_``, ``fn_``, ``xp_`` or ``dt_`` to signify that they were "special" and should be searched for in the master database first. 
 
+- See [Additional Scenarios that lead to compile locks (2. Stored procedure is prefixed with sp_)](https://docs.microsoft.com/en-us/troubleshoot/sql/performance/troubleshoot-blocking-caused-compile-locks#additional-scenarios-that-lead-to-compile-locks:~:text=Stored%20procedure%20is%20prefixed%20with%20sp_)
+
 The use of the tbl_prefix for a table, often called "tibbling", came from databases imported from Access when SQL Server was first introduced. Unfortunately, this was an access convention inherited from Visual Basic, a loosely typed language.
 
 SQL Server is a strongly typed language. There is never a doubt what type of object something is in SQL Server if you know its name, schema and database, because its type is there in sys.objects: Also it is obvious from the usage. Columns can be easily identified as such and character columns would have to be checked for length in the Object Browser anyway or Intellisense tool-tip hover in SQL Server Management Studio.

@@ -210,10 +210,19 @@ You will not get JOIN Eliminations without a foreign key and a column that allow
 
 ---
 
-## NULL or NOT NULL option is not specified in CREATE or DECLARE TABLE
+## NULL or NOT NULL Option is not Specified in CREATE or DECLARE TABLE
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=NULL+or+NOT+NULL+option+is+not+specified+in+CREATE+or+DECLARE+TABLE)
 
 You should always explicitly define ``NULL`` or ``NOT NULL`` for columns when creating or declaring a table. The default of allowing NULLs can be changed with the database setting ``ANSI_NULL_DFLT_ON``.
+
+[Back to top](#top)
+
+---
+
+## ASC or DESC is Not Specified
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=ASC+or+DESC+is+Not+Specified)
+
+You should always explicitly define ascending (``ASC``) or descending (``DESC``). This allows others who review or edit the code to not know that ``ASC`` is the default sort order.
 
 [Back to top](#top)
 

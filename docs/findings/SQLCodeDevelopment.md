@@ -122,10 +122,7 @@ WHERE
 
 IF @@ROWCOUNT = 0
     BEGIN
-        INSERT 
-            dbo.Person (FirstName, LastName) 
-        VALUES
-            ('Kevin', 'Martin');
+        INSERT dbo.Person (FirstName, LastName) VALUES ('Kevin', 'Martin');
     END;
 
 COMMIT TRANSACTION;
@@ -155,12 +152,7 @@ WHERE
 
 IF @@ROWCOUNT = 0
     BEGIN
-        UPDATE
-            dbo.Person
-        SET
-            FirstName = 'Kevin'
-        WHERE
-            LastName = 'Martin';
+        UPDATE dbo.Person SET FirstName = 'Kevin' WHERE LastName = 'Martin';
     END;
 
 COMMIT TRANSACTION;
@@ -199,7 +191,7 @@ CREATE TABLE #Update (FirstName varchar(50) NOT NULL, LastName varchar(50) NOT N
 INSERT INTO #Update (FirstName, LastName)
 VALUES
      ('Kevin', 'Martin')
-    ,('Jean-Luc', 'Picard');
+   , ('Jean-Luc', 'Picard');
 
 UPDATE
     P WITH (UPDLOCK, SERIALIZABLE)
@@ -207,7 +199,8 @@ SET
     P.FirstName = U.FirstName
 FROM
     dbo.Person         AS P
-    INNER JOIN #Update AS U ON P.LastName = U.LastName;
+    INNER JOIN #Update AS U
+        ON P.LastName = U.LastName;
 
 INSERT dbo.Person (FirstName, LastName)
 SELECT
@@ -277,13 +270,13 @@ SET NOCOUNT, XACT_ABORT ON;
 BEGIN TRANSACTION;
 
 IF EXISTS (SELECT * FROM dbo.Person WITH (UPDLOCK, SERIALIZABLE) WHERE PersonId = @PersonId)
-BEGIN
-    UPDATE dbo.Person SET FirstName = @FirstName WHERE PersonId = @PersonId;
-END;
+    BEGIN
+        UPDATE dbo.Person SET FirstName = @FirstName WHERE PersonId = @PersonId;
+    END;
 ELSE
-BEGIN
-    INSERT dbo.Person (PersonId, FirstName) VALUES (@PersonId, @FirstName);
-END;
+    BEGIN
+        INSERT dbo.Person (PersonId, FirstName) VALUES (@PersonId, @FirstName);
+    END;
 
 COMMIT TRANSACTION;
 ```
@@ -342,19 +335,19 @@ It is likely a bad idea to use any cursor other than one that is read-only and f
 
 ```sql
 DECLARE
-    @MyId          INT
+    @MyId          int
    ,@MyName        nvarchar(50)
    ,@MyDescription nvarchar(MAX);
 
 DECLARE MyCursor CURSOR LOCAL FAST_FORWARD FOR
-SELECT
-    MT.MyId
-   ,MT.MyName
-   ,MT.MyDescription
-FROM
-    dbo.MyTable AS MT
-WHERE
-    MT.DoProcess = 1;
+    SELECT
+        MT.MyId
+       ,MT.MyName
+       ,MT.MyDescription
+    FROM
+        dbo.MyTable AS MT
+    WHERE
+        MT.DoProcess = 1;
 
 OPEN MyCursor;
 
@@ -367,7 +360,7 @@ INTO
 WHILE @@FETCH_STATUS = 0
     BEGIN
         --Do something or a series of things for each record
-        DECLARE @Result INT;
+        DECLARE @Result int;
         EXEC @Result = dbo.SomeStoredProcedure @MyId = @MyId;
 
         FETCH NEXT FROM MyCursor
@@ -580,17 +573,38 @@ CREATE PROCEDURE dbo.SearchHistory
    ,@TransactionType char(1) = NULL
 AS
     BEGIN
+        SET NOCOUNT, XACT_ABORT ON;
+
         SELECT
             TH.ProductId
         FROM
             dbo.TransactionHistory AS TH
         WHERE
-            (TH.ProductId            = @ProductId OR @ProductId IS NULL)
-            AND (TH.ReferenceOrderId = @OrderId OR @OrderId IS NULL)
-            AND (TH.TransactionType  = @TransactionType OR @TransactionType IS NULL)
-            AND (TH.Quantity         = ISNULL(@childFilter, m.Child));
+            (TH.ProductId        = @ProductId OR @ProductId IS NULL)
+        AND (TH.ReferenceOrderId = @OrderId OR @OrderId IS NULL)
+        AND (TH.TransactionType  = @TransactionType OR @TransactionType IS NULL)
+        AND (TH.Quantity         = ISNULL(@childFilter, m.Child));
     END;
-GO
+```
+
+
+### IF Branches are not a Viable Fix
+The problem is that we already have a query plan when we hit the `IF @CreationDate IS NULL` segment of TSQL.
+
+```sql
+CREATE OR ALTER PROCEDURE dbo.PersonSearch (@CreationDate datetime2(7) = NULL)
+AS
+    BEGIN
+        SET NOCOUNT, XACT_ABORT ON;
+
+        IF @CreationDate IS NULL
+            BEGIN
+                SET @CreationDate = '20080101';
+            END;
+
+        SELECT FirstName, LastName FROM dbo.Person WHERE CreationDate = @CreationDate;
+
+    END;
 ```
 
 For simple to moderately complex queries add `OPTION (RECOMPILE)`.
@@ -602,18 +616,19 @@ CREATE PROCEDURE dbo.SearchHistory
    ,@TransactionType char(1) = NULL
 AS
     BEGIN
+        SET NOCOUNT, XACT_ABORT ON;
+
         SELECT
             TH.ProductId
         FROM
             dbo.TransactionHistory AS TH
         WHERE
-            (TH.ProductId            = @ProductId OR @ProductId IS NULL)
-            AND (TH.ReferenceOrderId = @OrderId OR @OrderId IS NULL)
-            AND (TH.TransactionType  = @TransactionType OR @TransactionType IS NULL)
-            AND (TH.Quantity         = ISNULL(@childFilter, m.Child))
+            (TH.ProductId        = @ProductId OR @ProductId IS NULL)
+        AND (TH.ReferenceOrderId = @OrderId OR @OrderId IS NULL)
+        AND (TH.TransactionType  = @TransactionType OR @TransactionType IS NULL)
+        AND (TH.Quantity         = ISNULL(@childFilter, m.Child))
         OPTION (RECOMPILE)/* <-- Added this */;
     END;
-GO
 ```
 
 - See [Dynamic Search Conditions in T‑SQL](http://www.sommarskog.se/dyn-search-2008.html) by Erland Sommarskog

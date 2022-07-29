@@ -34,8 +34,27 @@ Source control lets you see who made what changes, when, and why. Automate SQL c
 
 Most importantly, you work from a single source of truth, greatly reducing the risk of downtime at deployment.
 
+Your choices are [Redgate SQL Source Control](https://www.red-gate.com/products/sql-development/sql-source-control/) or a SSDT ([SQL Server Data Tools](https://docs.microsoft.com/en-us/sql/ssdt/download-sql-server-data-tools-ssdt)) database project backed by DevOps or Github depending on the client requirments.
 
-[Redgate SQL Source Control](https://www.red-gate.com/products/sql-development/sql-source-control/) is our tool of choice.
+The database project source control should be kept separate from application code. Database and reporting team members might/should not need access to the app source code. The data and business intelligence development team might have their own changes (performance tuning, data warehouse, reporting) in a "dev" branch, but their version is not ready for production yet.
+
+[Back to top](#top)
+
+---
+
+## Using ORM Instead of Stored Procedures
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+ORM+Instead+of+Stored+Procedures)
+
+
+Put data access code (T-SQL) in the database and not in the application/ORM layer.
+
+Utilizing an ORM or application generated database commands has downsides. ORM or app generated SQL code that sticks with basic CRUD (Create, Read, Update, Delete) are not too bad but they do not generate resonable queries for reporting or beyond the basic CRUD commands.
+
+The benefit using stored procedures is with query performance tuning. Eventually the queries will outgrow the ORMs ability to generate optimal queries. You end up attempt to rewrite software code to force the ORM to produce more performant SQL code.
+
+With stored procedures there is a lot more options to tune a query. You can split up complex SQL code so the SQL Server engine can generate better execution plans. use different hints, trace flages and isolation levels, etc.
+
+The free opensource [sp_CRUDGen](https://github.com/kevinmartintech/sp_CRUDGen) can be utilized to create 11 different stored procedures from basic your Create, Read, Update, Delete, Upsert stored procedures to extremely advanced safe dynamic Search stored procedures otherwise known as optional parameters, kitchen sink, Swiss army knife, catch-all queries. The generated stored procedure code utilizes the SQL Server community best practices.
 
 [Back to top](#top)
 

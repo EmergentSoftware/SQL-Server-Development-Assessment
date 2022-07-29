@@ -34,8 +34,9 @@ Source control lets you see who made what changes, when, and why. Automate SQL c
 
 Most importantly, you work from a single source of truth, greatly reducing the risk of downtime at deployment.
 
+Your choices are [Redgate SQL Source Control](https://www.red-gate.com/products/sql-development/sql-source-control/) or a SSDT ([SQL Server Data Tools](https://docs.microsoft.com/en-us/sql/ssdt/download-sql-server-data-tools-ssdt)) database project backed by DevOps or Github depending on the client requirments.
 
-[Redgate SQL Source Control](https://www.red-gate.com/products/sql-development/sql-source-control/) is our tool of choice.
+The database project source control should be kept separate from application code. Database and reporting team members might/should not need access to the app source code. The data and business intelligence development team might have their own changes (performance tuning, data warehouse, reporting) in a "dev" branch, but their version is not ready for production yet.
 
 [Back to top](#top)
 

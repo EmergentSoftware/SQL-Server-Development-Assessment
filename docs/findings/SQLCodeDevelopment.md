@@ -1927,6 +1927,10 @@ Only use `NOLOCK` when the application stakeholders understand the problems and 
 
 Use aliases for your table names in most multi-table T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g., "Phone" becomes "P" and "PhoneType" becomes "PT".
 
+Ensure you use ``AS`` between the table name and the alias like ``[TABLE-Name] AS [ALIAS]``. ``AS`` should be used to make it clear that something is being given a new name and easier to spot. This rule also applies for column aliases if the column aliases is not listed first.
+
+Do not use table aliases like S1, S2, S3. Make your aliases meaningful.
+
 ```sql
 SELECT
     P.PhoneId

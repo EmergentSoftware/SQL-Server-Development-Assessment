@@ -422,6 +422,7 @@ Bit columns should be given affirmative boolean names like ``IsActive``, ``IsDel
     - Is**Primary** indicates first in an order
     - Is**Valid** indicated validity
     - Has**Permission** indicated permissions
+    - Can**Export** indicates permission to export
   - Unit**Price** is the price of a product unit
   - Website**URL** is the internet address 
     - See [URL or URI Naming](#url-or-uri-naming)

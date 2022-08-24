@@ -1,0 +1,6 @@
+{
+  "id": "f309d072-0ad3-40cf-bcf9-b136a61b148b",
+  "prefix": "fk",
+  "description": "ES: Create ALTER statement for untrusted FK",
+  "body": "SELECT\r\n    'ALTER TABLE ' + QUOTENAME(S.name) + '.' + QUOTENAME(T.name) + ' WITH CHECK CHECK CONSTRAINT ' + FK.name + ';'\r\nFROM\r\n    sys.foreign_keys       AS FK\r\n    INNER JOIN sys.tables  AS T\r\n        ON FK.parent_object_id = T.object_id\r\n    INNER JOIN sys.schemas AS S\r\n        ON T.schema_id         = S.schema_id\r\nWHERE\r\n    FK.is_not_trusted = 1\r\nORDER BY\r\n    S.name\r\n   ,T.name;"
+}

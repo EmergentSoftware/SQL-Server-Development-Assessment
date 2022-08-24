@@ -355,7 +355,7 @@ Review indexes diagnosed with low fill factor. Check how much they’re written 
 ## Untrusted Foreign Key
 **Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/59)
 
-SQL Server is not going to use untrusted constraints to compile a better execution plan.
+SQL Server is not going to consider using untrusted constraints to compile a better execution plan.
 
 You might have disabled a constraint instead of dropping and recreating it for bulk loading data. This is fine, as long as your remember to enable it correctly.
 
@@ -365,6 +365,25 @@ GO
 ```
 
 The `CHECK CHECK` syntax is correct. The 1st `CHECK` is the end of `WITH CHECK` statement. The 2nd `CHECK` is the start of the `CHECK CONSTRAINT` clause to enable the constraint
+
+To find untrusted foreign keys in your database run the script below to identify and create an ``ALTER`` statement to correct the issue. In Redgate SQL Prompt the snippet code is ``fk``. If you receive an error with the generated ``ALTER`` statement it means past constraint violations have been being suppressed by ``WITH NOCHECK``. You will have to figure out how to fix the rows that do not comply with the constraint.
+
+```
+SELECT
+    'ALTER TABLE ' + QUOTENAME(S.name) + '.' + QUOTENAME(T.name) + ' WITH CHECK CHECK CONSTRAINT ' + FK.name + ';'
+FROM
+    sys.foreign_keys       AS FK
+    INNER JOIN sys.tables  AS T
+        ON FK.parent_object_id = T.object_id
+    INNER JOIN sys.schemas AS S
+        ON T.schema_id         = S.schema_id
+WHERE
+    FK.is_not_trusted = 1
+ORDER BY
+    S.name
+   ,T.name;
+```
+
 
 [Back to top](#top)
 

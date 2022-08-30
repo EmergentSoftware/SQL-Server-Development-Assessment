@@ -28,28 +28,6 @@ CREATE TABLE dbo.DevelopCheckToSkip (
 GO
 ```
 
-## Checks to Skip
-
-The CheckId column refers checks found in the [Findings](findings) section. You can also scroll to the right in the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Development-Assessment/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
-
-You can also copy the TSQL script in the 'SkipCheckTSQL' column found in the 'Results' tab to `INSERT` that record into your skip check table.
-
-Refer to the example checks below and each comment for its use.
-
-```sql
-INSERT INTO
-    dbo.DevelopCheckToSkip (ServerName, DatabaseName, SchemaName, ObjectName, CheckId)
-VALUES
-     (N'SQL2008', NULL, NULL, NULL, NULL)                             /* Skips all checks, for every database, on the SQL2008 SQL Server */
-    ,(N'SQL2012', N'AdventureWorks2012', NULL, NULL, NULL)            /* Skips all checks, in the AdventureWorks2012 database, on the SQL2012 SQL Server */
-    ,(N'SQL2017', N'AdventureWorks2017', N'dbo', N'fn_TPSTotal', NULL)/* Skips all checks, for the object named dbo.fn_TPSTotal, in the AdventureWorks2017 database, on the SQL2017 SQL Server */
-    ,(N'SQL2019', N'Northwind', N'dbo', N'Order Details', 5)          /* Skips CheckId 5 (Including Special Characters in Name), for the object named dbo.[Order Details], in the Northwind database, on the SQL2019 SQL Server*/
-    ,(NULL, N'AdventureWorks2017', NULL, NULL, NULL)                  /* Skips all checks, in the AdventureWorks2017 database, on every SQL Server */
-    ,(NULL, NULL, N'DBA', NULL, NULL)                                 /* Skips all checks, in the DBA schema, on every SQL Server, in every database, for every object */
-    ,(NULL, NULL, N'dbo', N'vPhone', NULL)                            /* Skips all checks, for the object named dbo.vPhone, in every database, on every SQL Server */
-    ,(NULL, NULL, N'dbo', N'CustOrderHist', 19);                      /* Skips CheckId 19 (Not Using SET NOCOUNT ON in Stored Procedure or Trigger), for the object named dbo.CustOrderHist, in every database, on every SQL Server */
-```
-
 ## How to Execute the Skip Checks
 
 ```sql
@@ -68,6 +46,30 @@ EXEC dbo.sp_Develop
    ,@SkipCheckSchema = N'dbo'
    ,@SkipCheckTable = N'DevelopCheckToSkip';
 ```
+
+## Checks to Skip
+
+The CheckId column refers checks found in the [Findings](findings) section. You can also scroll to the right in the [sp_Develop](https://raw.githubusercontent.com/EmergentSoftware/SQL-Server-Development-Assessment/master/sp_Develop.sql) 'Results' tab and look at the 'CheckId' column to see the number of the one you want to skip. 
+
+You can also copy the ``INSERT`` SQL statement in the 'SkipCheckTSQL' column found in the 'Results' tab to `INSERT` that record into your skip check table. You need to have a value for the parameters @SkipCheckSchema & @SkipCheckTable for the ``INSERT`` statement to be displayed. Otherwise a website URL is displayed directing you to here.
+
+Refer to the example checks below and each comment for its use.
+
+```sql
+INSERT INTO
+    dbo.DevelopCheckToSkip (ServerName, DatabaseName, SchemaName, ObjectName, CheckId)
+VALUES
+     (N'SQL2008', NULL, NULL, NULL, NULL)                             /* Skips all checks, for every database, on the SQL2008 SQL Server */
+    ,(N'SQL2012', N'AdventureWorks2012', NULL, NULL, NULL)            /* Skips all checks, in the AdventureWorks2012 database, on the SQL2012 SQL Server */
+    ,(N'SQL2017', N'AdventureWorks2017', N'dbo', N'fn_TPSTotal', NULL)/* Skips all checks, for the object named dbo.fn_TPSTotal, in the AdventureWorks2017 database, on the SQL2017 SQL Server */
+    ,(N'SQL2019', N'Northwind', N'dbo', N'Order Details', 5)          /* Skips CheckId 5 (Including Special Characters in Name), for the object named dbo.[Order Details], in the Northwind database, on the SQL2019 SQL Server*/
+    ,(NULL, N'AdventureWorks2017', NULL, NULL, NULL)                  /* Skips all checks, in the AdventureWorks2017 database, on every SQL Server */
+    ,(NULL, NULL, N'DBA', NULL, NULL)                                 /* Skips all checks, in the DBA schema, on every SQL Server, in every database, for every object */
+    ,(NULL, NULL, N'dbo', N'vPhone', NULL)                            /* Skips all checks, for the object named dbo.vPhone, in every database, on every SQL Server */
+    ,(NULL, NULL, N'dbo', N'CustOrderHist', 19);                      /* Skips CheckId 19 (Not Using SET NOCOUNT ON in Stored Procedure or Trigger), for the object named dbo.CustOrderHist, in every database, on every SQL Server */
+```
+
+
 
 [Tell me about the test database](test-database-install){: .btn .btn-purple }
 [View on GitHub](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment){: .btn }

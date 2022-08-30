@@ -14,6 +14,7 @@ ALTER PROCEDURE dbo.sp_Develop
    ,@SkipCheckTable    nvarchar(128) = NULL
    ,@OutputType        varchar(20)   = 'TABLE'
    ,@ShowSummary       bit           = 0
+   ,@PriorityOrHigher  varchar(8)    = NULL /* Critical, High, Medium, Low, or NULL */
    ,@Debug             int           = 0
    ,@Version           varchar(30)   = NULL OUTPUT
    ,@VersionDate       datetime      = NULL OUTPUT
@@ -81,8 +82,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '1.3.0';
-        SET @VersionDate = '20220606';
+        SET @Version = '1.4.0';
+        SET @VersionDate = '20220830';
         SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/best-practices-and-potential-findings/';
         SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);
@@ -572,11 +573,10 @@ AS
                 **  ██████ ██   ██ ███████  ██████ ██   ██ ███████     ███████    ██    ██   ██ ██   ██    ██  
 		        **********************************************************************************************************************/
 		        -- SQL Prompt formatting off
-
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 1
-		           ,@Priority      = 20
+		           ,@Priority      = 10
 		           ,@FindingGroup  = 'Naming Conventions'
 		           ,@Finding       = 'Using Plural in Names'
 		           ,@URLAnchor     = 'naming-conventions#using-plural-in-name';
@@ -601,7 +601,7 @@ AS
 				           ,Object_Id     = O.object_id
 				           ,ObjectName    = O.name
 				           ,ObjectType    = O.type_desc
-				           ,Details       = N''Table and view names should be singular''
+				           ,Details       = N''Table and view names should be singular. NOTE: This could be a false-positive for names that do end with S.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON O.schema_id = S.schema_id
@@ -609,6 +609,13 @@ AS
 					        O.type IN (''U'', ''V'')
 					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 1) = ''S''
 					        AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 2) <> ''SS''
+                            AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 4) NOT IN (''news'', ''plus'', ''thus'', ''goes'', ''bars'', ''axis'', ''bias'', ''iris'', ''kris'', ''nous'', ''osis'', ''itis'', ''tics'', ''opus'')
+                            AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 5) NOT IN (''means'', ''shoes'', ''focus'', ''basis'', ''virus'', ''bonus'', ''specs'', ''acres'', ''atlas'', ''corps'', ''lotus'', ''oasis'', ''wages'', ''twins'', ''alias'', ''minus'', ''flies'', ''genus'', ''maths'', ''locus'', ''penis'', ''nexus'', ''fries'', ''fetus'', ''sinus'', ''kudos'', ''lupus'', ''elves'', ''lexis'', ''virus'', ''ethos'', ''gauss'', ''feces'', ''mucus'', ''trics'', ''eaves'')
+                            AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 6) NOT IN (''status'', ''series'', ''campus'', ''comics'', ''tennis'', ''census'', ''leaves'', ''crisis'', ''basics'', ''canvas'', ''thesis'', ''radius'', ''stylus'', ''chorus'', ''genius'', ''circus'', ''corpus'', ''organs'', ''citrus'', ''debris'', ''exodus'', ''cosmos'', ''cactus'', ''nerves'', ''crises'', ''annals'', ''caucus'', ''theses'', ''fungus'', ''scrubs'', ''praxis'', ''rabies'', ''discus'', ''madras'', ''mantis'', ''hiatus'', ''cirrus'', ''shears'', ''egress'', ''pelvis'', ''cleats'', ''nimbus'', ''testis'', ''pharos'', ''plexus'', ''thymus'', ''sepsis'', ''civics'', ''haggis'', ''slacks'', ''walrus'', ''bowels'', ''adonis'', ''crocus'', ''gallus'', ''hubris'', ''litmus'', ''duress'', ''pathos'', ''chives'', ''ruckus'', ''stasis'', ''throes'', ''hooves'', ''tarsus'', ''hummus'', ''callus'', ''missus'', ''oodles'', ''animus'', ''vitals'', ''khakis'', ''soleus'', ''dermis'', ''precis'', ''thrips'', ''tallis'', ''fracas'', ''estrus'', ''reales'', ''typhus'', ''fundus'', ''clevis'', ''sulcus'', ''coleus'', ''rumpus'', ''boreas'', ''coitus'', ''chinos'', ''nomics'', ''rectus'')
+                            AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 7) NOT IN (''species'', ''clothes'', ''siemens'', ''glasses'', ''grounds'', ''collins'', ''genesis'', ''surplus'', ''chassis'', ''indices'', ''shelves'', ''nucleus'', ''incubus'', ''goggles'', ''innings'', ''manners'', ''thieves'', ''heavens'', ''marquis'', ''summons'', ''octopus'', ''nemesis'', ''arrears'', ''omnibus'', ''phonics'', ''stratus'', ''tropics'', ''impetus'', ''modulus'', ''bellows'', ''alumnus'', ''tetanus'', ''withers'', ''funnies'', ''trellis'', ''papyrus'', ''follies'', ''dwarves'', ''cumulus'', ''thermos'', ''cyclops'', ''forceps'', ''chamois'', ''laurels'', ''gallows'', ''greaves'', ''isthmus'', ''helices'', ''scabies'', ''ascites'', ''sheaves'', ''annulus'', ''triceps'', ''challis'', ''arbutus'', ''kinesis'', ''rickets'', ''rooibos'', ''innards'', ''humerus'', ''phallus'', ''rhombus'', ''calamus'', ''autobus'', ''varices'', ''tigress'')
+                            AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 8) NOT IN (''analysis'', ''diabetes'', ''emphasis'', ''overseas'', ''premises'', ''precious'', ''synopsis'', ''proceeds'', ''quarters'', ''finances'', ''asbestos'', ''potatoes'', ''syllabus'', ''calculus'', ''trousers'', ''cannabis'', ''matrices'', ''upstairs'', ''scissors'', ''stimulus'', ''vertices'', ''dialysis'', ''emeritus'', ''nautilus'', ''aerobics'', ''bacillus'', ''pancreas'', ''checkers'', ''terminus'', ''auspices'', ''shingles'', ''avionics'', ''hibiscus'', ''confines'', ''syphilis'', ''colossus'', ''buttocks'', ''knuckles'', ''sundries'', ''synopses'', ''dominoes'', ''knickers'', ''platypus'', ''platypus'', ''tinnitus'', ''clematis'', ''synapses'', ''whiskers'', ''shambles'', ''eugenics'', ''vortices'', ''exegesis'', ''ellipsis'', ''durables'', ''emphases'', ''couscous'', ''ellipses'', ''thalamus'', ''meniscus'', ''acanthus'', ''leotards'', ''entrails'', ''polemics'', ''fatigues'', ''cryonics'', ''caduceus'', ''thrombus'', ''pruritus'', ''nuptials'', ''bronchus'', ''subgenus'')
+                            AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 9) NOT IN (''religious'', ''amenities'', ''consensus'', ''thesaurus'', ''conscious'', ''apparatus'', ''backwards'', ''billiards'', ''psoriasis'', ''asparagus'', ''paralysis'', ''esophagus'', ''pertussis'', ''acropolis'', ''chrysalis'', ''narcissus'', ''ephemeris'', ''syntheses'', ''catharsis'', ''mnemonics'', ''verdigris'', ''sartorius'', ''ambergris'', ''nucleolus'', ''gladiolus'')
+                            AND RIGHT(O.name COLLATE SQL_Latin1_General_CP1_CI_AS, 10) NOT IN (''sunglasses'', ''binoculars'', ''gymnastics'', ''prospectus'', ''phosphorus'', ''appendices'', ''metropolis'', ''aesthetics'', ''hypotheses'', ''downstairs'', ''geophysics'', ''rendezvous'', ''mosquitoes'', ''eucalyptus'', ''hydraulics'', ''proteomics'', ''hydrolysis'', ''metastasis'', ''cretaceous'', ''spectacles'', ''metastases'', ''kinematics'', ''eurythmics'', ''portcullis'', ''rhinoceros'', ''underpants'', ''biogenesis'', ''prostheses'', ''pneumatics'', ''astragalus'', ''urinalysis'', ''ballistics'', ''chemotaxis'', ''acrobatics'', ''glycolysis'', ''strabismus'', ''hemostasis'', ''dialectics'', ''catechesis'', ''laryngitis'')
 					        AND O.NAME NOT IN (''sysdiagrams'', ''database_firewall_rules'')
                         OPTION (RECOMPILE);';
 
@@ -750,7 +757,7 @@ AS
 				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
 				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
 				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
-				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+                           ,Priority      = CASE WHEN O.type_desc COLLATE SQL_Latin1_General_CP1_CI_AS LIKE ''%constraint%'' THEN 30 ELSE ' + CAST(@Priority AS NVARCHAR(MAX)) + N' END
 				           ,Schema_Id     = S.schema_id
 				           ,SchemaName    = S.name
 				           ,Object_Id     = O.object_id
@@ -1997,7 +2004,7 @@ AS
                 /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 28
-		           ,@Priority      = 1
+		           ,@Priority      = 5
 		           ,@FindingGroup  = 'Data Type Conventions'
 		           ,@Finding       = 'Using MONEY data type'
 		           ,@URLAnchor     = 'data-type-conventions#using-money-data-type';
@@ -2193,6 +2200,16 @@ AS
                     AND SC.ObjectName IS NULL
                     AND SC.CheckId IS NULL
                 )
+                --AND F.Priority <= 10
+                AND F.Priority <= CASE WHEN @PriorityOrHigher IS NULL THEN 2147483647 ELSE
+                        CASE @PriorityOrHigher
+                        WHEN 'Critical' THEN 1
+                        WHEN 'High' THEN 10
+                        WHEN 'Medium' THEN 20
+                        WHEN 'Low' THEN 50
+                        ELSE 2147483647
+                        END
+                END
                 ORDER BY
                     F.DatabaseName
                    ,F.SchemaName

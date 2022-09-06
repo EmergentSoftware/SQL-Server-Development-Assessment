@@ -27,7 +27,7 @@ These checks are for configurations to the SQL Server.
 
 ## Use Code Retry Logic to Handle Transient Errors
 **Potential Finding:** <a name="not-using-code-retry-logic-for-transient-errors"/>Not Using Code Retry Logic for Transient Errors<br/>
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/181)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Use+Code+Retry+Logic+to+Handle+Transient+Errors)
 
 It is best practice to implement client code to mitigate connection errors and transient errors that your client application encounters when communicating with a SQL Server (On-premises SQL Server, Azure SQL Database, Azure SQL Managed Instance and Azure Synapse Analytics).
 
@@ -47,7 +47,7 @@ Ensure you are using the failover group name or availability group listener name
 
 ## Do Not Grant an Application User the db_owner Role
 **Potential Finding:** <a name="application-user-granted-db_owner-role"/>Application User Granted db_owner Role<br/>
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/175)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleDo+Not+Grant+an+Application+User+the+db_owner+Role)
 
 You will want to give an account or process only those privileges which are essential to perform its intended function. Start your development with the app user account only a member of the db_reader, db_writer and db_executor roles.
 
@@ -91,7 +91,7 @@ Visual Studio database projects should be setup with the 7 query execution SET d
 
 ## The Application User should be a Contained User
 **Potential Finding:** <a name="application-user-is-not-a-contained-user"/>Application User is not a Contained User<br/>
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/176)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleThe+Application+User+should+be+a+Contained+User)
 
 Users that only access one database should generally be created as contained users which means they don't have a SQL Server "login" and are not found as users in the master database. This makes the database portable by not requiring a link to a SQL Server Login. A database with contained users can be restored to your development SQL Server or a migration event needs to occur in production to a different SQL Server.
 
@@ -103,7 +103,7 @@ Users that only access one database should generally be created as contained use
 
 ## All Database Objects Should be Owned by dbo
 **Potential Finding:** <a name="object-not-owned-by-dbo"/>Object Not Owned by dbo<br/>
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/29)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleAll+Database+Objects+Should+be+Owned+by+dbo)
 
 It simplifies object management with dbo owning all the database objects. You will need to transfer ownership of objects before an account can be deleted.
 
@@ -113,7 +113,7 @@ It simplifies object management with dbo owning all the database objects. You wi
 
 ## The Database Compatibility Level Should Match the SQL Server Version
 **Potential Finding:** <a name="database-compatibility-level-is-lower-than-the-sql-server"/>Database Compatibility Level is Lower Than the SQL Server<br/>
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/38)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleThe+Database+Compatibility+Level+Should+Match+the+SQL+Server+Version)
 
 The database compatibility level lower than the SQL Server it is running on.
 

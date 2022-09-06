@@ -169,7 +169,7 @@ A use case exception for using the proper weak or strong type is for security pu
 ---
 
 ## Nullable Columns with No Non-Null Records
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/192)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Nullable+Columns+with+No+Non-Null+Records)
 
 If the row data in the table does not contain any ```NULL``` values you should assess setting the column to not 'Allow Nulls'.
 
@@ -198,7 +198,7 @@ This execution plan shows ```JOIN``` elimination has not occurred. While there i
 
 ## Column Named ????Id But No Foreign Key Exists
 **Potential Finding:** <a name="column-named-id-but-no-fk-exists"/>Column Named ????Id But No FK Exists<br/>
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/43)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Column+Named+????Id+But+No+Foreign+Key+Exists)
 
 In most cases, columns with the name ????Id that are not the primary key should have a foreign key relationship to another table.
 
@@ -251,7 +251,7 @@ The only possible benefit of a unique constraint (unique key) has over a unique 
 ---
 
 ## More Than 5 Indexes
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/49)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=More+Than+5+Indexes)
 
 Your table might be over indexed. The more you have the less performant insert, update & deletes are. A general rule of thumb is 5 indexes on a table.
 
@@ -270,7 +270,7 @@ You or your DBA should implement an index tuning strategy like below.
 ---
 
 ## Less than 2 Indexes
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/50)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Less+than+2+Indexes)
 
 Your table might be under indexed.
 
@@ -279,7 +279,7 @@ Your table might be under indexed.
 ---
 
 ## Disabled Index
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/51)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Disabled+Index)
 
 An index rebuild or reorganization will enabled disabled indexes. It is now best practices to delete instead of disable if not needed.
 
@@ -288,7 +288,7 @@ An index rebuild or reorganization will enabled disabled indexes. It is now best
 ---
 
 ## Leftover Fake Index
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/53)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Leftover+Fake+Index)
 
 The Index Tuning Wizard and Database Tuning Advisor create fake indexes, then getting a new execution plan for a query. These fake indexes stay behind sometimes.
 
@@ -327,7 +327,7 @@ CREATE NONCLUSTERED INDEX Account_Greater_Than_Half_Million
 ---
 
 ## Column Has a Different Collation Than Database
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/54)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Column+Has+a+Different+Collation+Than+Database)
 
 This could cause issues if the code is not aware of different collations and does include features to work with them correctly.
 
@@ -336,7 +336,7 @@ This could cause issues if the code is not aware of different collations and doe
 ---
 
 ## Low Index Fill-Factor
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/55)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Low+Index+Fill-Factor)
 
 The default fill factor is (100 or 0) for SQL Server. This check is alerting you to a fill factor of 80% or lower.
 
@@ -353,7 +353,7 @@ Review indexes diagnosed with low fill factor. Check how much they’re written 
 ---
 
 ## Untrusted Foreign Key
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/59)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Untrusted+Foreign+Key)
 
 SQL Server is not going to consider using untrusted constraints to compile a better execution plan.
 

@@ -26,7 +26,7 @@ T-SQL code must execute properly and performant. It must be readable, well laid 
 ---
 
 ## Not Using Source Control
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/161)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Source+Control)
 
 Your database objects (tables, views, stored procedures, functions, triggers, users, roles, schemas, static data, ...) should be in a version control system. 
 
@@ -61,7 +61,7 @@ The free opensource [sp_CRUDGen](https://github.com/kevinmartintech/sp_CRUDGen) 
 ---
 
 ## Data Warehouse Date & Time Key Pattern
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/155)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Data+Warehouse+Date+and+Time+Key+Pattern)
 
 This data warehouse date & time key pattern can be used with the [Date-Time-Number-Dimensions](https://github.com/EmergentSoftware/Date-Time-Number-Dimensions) tables. The grain of the time dimension records is in seconds.
 
@@ -107,7 +107,7 @@ SELECT
 ---
 
 ## UPSERT Pattern
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/151)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=UPSERT+Pattern)
 
 Locating the row to confirm it exists is doing the work twice.
 
@@ -306,7 +306,7 @@ COMMIT TRANSACTION;
 
 
 ## Using ORDER BY
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/39)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+ORDER+BY)
 
 SQL Server is the second most expensive sorting system, remind the developer they can sort in the application layer
 
@@ -322,7 +322,7 @@ SQL Server is the second most expensive sorting system, remind the developer the
 ---
 
 ## Not Parameterized Queries
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/190)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Parameterized+Queries)
 
 Queries should be parameterized so SQL Server can reuse the execution plan. You application code is either hardcoding the query values in the WHERE clause or you are using some sort of dynamic T-SQL and not doing it correctly.
 
@@ -334,7 +334,7 @@ A temporary fix is to for parameterization until you can refactor the code and i
 
 
 ## Cursors
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/25)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Cursors)
 
 
 ### Overview
@@ -398,7 +398,7 @@ DEALLOCATE MyCursor;
 ---
 
 ## Using WHILE Loop
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/27)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+WHILE+Loop)
 
 `WHILE` loop is really a type of cursor. Although a `WHILE` loop can be useful for several inherently procedural tasks, you can usually find a better relational way of achieving the same results. The database engine is heavily optimized to perform set-based operations rapidly.
 
@@ -452,7 +452,7 @@ WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
 ---
 
 ## Temporary Tables and Table Variables
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/28)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Temporary+Tables+and+Table+Variables)
 
 Use Temporary Tables and not Table Variables.
 
@@ -480,7 +480,7 @@ DECLARE @DoNotUseMe table (
 ---
 
 ## Using Hints
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/31)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Hints)
 
 Because the SQL Server Query Optimizer typically selects the best execution plan for a query, we recommend that [hints](https://docs.microsoft.com/en-us/sql/t-sql/queries/hints-transact-sql-table) be used only as a last resort by experienced developers and database administrators.
 
@@ -575,7 +575,7 @@ SQL injection is an attack in which malicious code is inserted into strings that
 ---
 
 ## Using Dynamic Search Conditions
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/179)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Dynamic+Search+Conditions)
 
 aka. Catch-All Query or Kitchen Sink Query
 
@@ -659,7 +659,7 @@ Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate the
 ---
 
 ## Using Brackets
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/32)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Brackets)
 
 You might be using square brackets [] unnecessarily for object names. If object names are valid and not reserved words, there is no need to use square brackets. Use them only for invalid names.
 
@@ -777,7 +777,7 @@ SELECT
 ---
 
 ## Using '== NULL' or '<> NULL' to Filter a Nullable Column
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/33)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+==+NULL+or+<>+NULL+to+Filter+a+Nullable+Column)
 
 To determine whether an expression is `NULL`, use `IS NULL` or `IS NOT NULL` instead of comparison operators (such as `=` or `<>`). Comparison operators return UNKNOWN when either or both arguments are `NULL`.
 
@@ -786,7 +786,7 @@ To determine whether an expression is `NULL`, use `IS NULL` or `IS NOT NULL` ins
 ---
 
 ## Using the NOT IN Predicate in the WHERE Clause
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/34)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+the+NOT+IN+Predicate+in+the+WHERE+Clause)
 
 Use `EXISTS` instead of `IN`. 
 
@@ -831,7 +831,7 @@ WHERE
 ---
 
 ## No Separate Environments
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/162)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=No+Separate+Environments)
 
 You should have a Development, Testing & Production environment.
 
@@ -870,7 +870,7 @@ See:
 ---
 
 ## Not Using Semicolon to Terminate Statements
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/35)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Semicolon+to+Terminate+Statements)
 
 Although the semicolon isn't required for most statements prior to SQL Server 2016, it will be required in a future version. If you do not include them now database migration in the future will need to add them. Terminating semicolon are required by the ANSI SQL Standard.
 
@@ -916,7 +916,7 @@ END CATCH; /* <-- semicolon goes at the end here */
 ---
 
 ## Using a Non-SARGable Expression in a WHERE Clause
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/36)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+a+Non-SARGable+Expression+in+a+WHERE+Clause)
 
 Search ARGument..able. Avoid having a column or variable used within an expression or used as a function parameter. Columns are best used its self on one side of the operator. You will get a table scan instead of a index seek which will hurt performance.
 
@@ -963,7 +963,7 @@ END
 ---
 
 ## Using Missing Indexes Recommendations
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/166)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Missing+Indexes+Recommendations)
 
 The SQL Server Missing Indexes recommendations feature has limitations and even recommends you create indexes that already exist. It is not meant for you fine tune and only provides sometimes adequate recommendations.
 
@@ -990,7 +990,7 @@ The missing index feature has the following limitations:
 ---
 
 ## Mixing Data Types in JOIN or WHERE Clauses
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/37)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Mixing+Data+Types+in+JOIN+or+WHERE+Clauses)
 
 Mixing data types cause implicit conversion and they are bad for performance. Implicit conversions ruin SARGability, makes index unusable and utilize more CPU resource than required.
 
@@ -1003,7 +1003,7 @@ In the `WHERE` clause below you will notice the "!" mark on the SELECT indicatin
 ---
 
 ## Using RAISERROR Instead of THROW
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/37)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+RAISERROR+Instead+of+THROW)
 
 [New applications should use THROW instead of RAISERROR](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?redirectedfrom=MSDN#:~:text=New%20applications%20should%20use%20THROW%20instead.)
 
@@ -1074,7 +1074,7 @@ END CATCH;
 
 <a name="stored-procedures-not-using-begin-end"></a>
 ## Not Using BEGIN END
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/41)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+BEGIN+END)
 
 The `BEGIN...END` control-of-flow statement block is optional for stored procedures and IF statements but is required for multi-line user-defined functions. It is best to avoid confusion and be consistent and specific.
 
@@ -1135,7 +1135,7 @@ GO
 ---
 
 ## SET ANSI_NULLS OFF
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/52)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=SET+ANSI_NULLS+OFF)
 
 You should be using SET ANSI_NULLS ON; unless you have a good reason not to.
 
@@ -1144,7 +1144,7 @@ You should be using SET ANSI_NULLS ON; unless you have a good reason not to.
 ---
 
 ## Using Types of Variable Length That Are Size 1 or 2
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/63)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Types+of+Variable+Length+That+Are+Size+1+or+2)
 
 If the length of the type will be very small (size 1 or 2) and consistent, declare them as a type of fixed length, such as `char`, `nchar`, and `binary`.
 
@@ -1155,7 +1155,7 @@ When you use data types of variable length such as `varchar`, `nvarchar`, and `v
 ---
 
 ## Data Type Without Length
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/64)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Data+Type+Without+Length)
 
 Always specify lengths for a data type.
 
@@ -1175,7 +1175,7 @@ Always specify lengths for a data type.
 ---
 
 ## COALESCE vs ISNULL
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/66)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=COALESCE+vs+ISNULL)
 
 The ``ISNULL`` function and the ``COALESCE`` expression have a similar purpose but can behave differently.
 
@@ -1192,7 +1192,7 @@ Source: [Microsoft Docs: Comparing COALESCE and ISNULL](https://docs.microsoft.c
 ---
 
 ## Using ISNUMERIC
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/68)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+ISNUMERIC)
 
 Avoid using the `ISNUMERIC()` function, because it can often lead to data type conversion errors. If you’re working on SQL Server 2012 or later, it’s much better to use the `TRY_CONVERT()` or `TRY_CAST()` function instead. On earlier SQL Server versions, the only way to avoid it is by using LIKE expressions.
 
@@ -1201,7 +1201,7 @@ Avoid using the `ISNUMERIC()` function, because it can often lead to data type c
 ---
 
 ## Using SELECT DISTINCT
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/69)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+SELECT+DISTINCT)
 
 So, while DISTINCT and GROUP BY are identical in a lot of scenarios, there is one case where the GROUP BY approach leads to better performance (at the cost of less clear declarative intent in the query itself).
 
@@ -1212,7 +1212,7 @@ You also might be using SELECT DISTINCT to mask a JOIN problem. It’s much bett
 ---
 
 ## Not Using SSIS
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/164)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+SSIS)
 
 Use SSIS (SQL Server Integration Service) to move data around. You can use stored procedures and SQL Server Agent Jobs instead of SSIS to ETL data, but it will make it difficult to orchestrate tasks between different environments. 
 
@@ -1227,7 +1227,7 @@ When it comes time to migrate to Azure you can lift and shift you SSIS packages 
 
 
 ## IN/NOT VS EXISTS/NOT EXISTS
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/70)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=IN+NOT+VS+EXISTS+NOT+EXISTS)
 
 Use EXISTS or NOT EXISTS if referencing a subquery, and IN/NOT IN when using a list of literal values.
 
@@ -1236,7 +1236,7 @@ Use EXISTS or NOT EXISTS if referencing a subquery, and IN/NOT IN when using a l
 ---
 
 ## Using Keyword Abbreviation
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/71)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Keyword+Abbreviation)
 
 Use the full name like in DATEDIFF(**YEAR**, StartDate, EndDate) vs DATEDIFF(**YY**, StartDate, EndDate).
 
@@ -1245,7 +1245,7 @@ Use the full name like in DATEDIFF(**YEAR**, StartDate, EndDate) vs DATEDIFF(**Y
 ---
 
 ## Using Percent at the Start of LIKE Predicate
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/95)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Percent+at+the+Start+of+LIKE+Predicate)
 
 You will not get an index seek using the percent wildcard (%) first in your search predicate.
 
@@ -1265,7 +1265,7 @@ WHERE
 ---
 
 ## Using Unfinished Notes
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/96)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Unfinished+Notes)
 
 You might still have some work to do. One of the codetags below was found.
 
@@ -1313,7 +1313,7 @@ You might still have some work to do. One of the codetags below was found.
 ---
 
 ## Missing Index on WHERE Clause
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/97)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Missing+Index+on+WHERE+Clause)
 
 Check WHERE clauses for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) number of records.
 
@@ -1322,7 +1322,7 @@ Check WHERE clauses for columns that are not included in an index. Might also wa
 ---
 
 ## Missing Index on IN Columns
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/98)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Missing+Index+on+IN+Columns)
 
 Check IN() predicates for columns that are not included in an index. Might also want to exclude check for tables with small (5k or less) number of records.
 
@@ -1331,7 +1331,7 @@ Check IN() predicates for columns that are not included in an index. Might also 
 ---
 
 ## Converting Dates to String to Compare
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/99)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Converting+Dates+to+String+to+Compare)
 
 Don't convert dates to strings to compare. Dates should be stored with the pattern YYYY-MM-DD. Not all are and string comparisons can provide the wrong results.
 
@@ -1340,7 +1340,7 @@ Don't convert dates to strings to compare. Dates should be stored with the patte
 ---
 
 ## Not Using SET XACT_ABORT ON
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/112)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+SET+XACT_ABORT+ON)
 
 - When `SET XACT_ABORT ON`, if a T-SQL statement raises a run-time error, the entire transaction is terminated and rolled back.
 - When `SET XACT_ABORT OFF`, in some cases only the T-SQL statement that raised the error is rolled back and the transaction continues processing. Depending upon the severity of the error, the entire transaction may be rolled back even when SET XACT_ABORT is OFF. OFF is the default setting in a T-SQL statement, while ON is the default setting in a trigger.
@@ -1923,7 +1923,7 @@ Only use `NOLOCK` when the application stakeholders understand the problems and 
 ---
 
 ## Not Using Table Alias
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/85)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Table+Alias)
 
 Use aliases for your table names in most multi-table T-SQL statements; a useful convention is to make the alias out of the first or first two letters of each capitalized table name, e.g., "Phone" becomes "P" and "PhoneType" becomes "PT".
 
@@ -1947,7 +1947,7 @@ FROM
 ---
 
 ## Not Using Column List For INSERT
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/86)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Column+List+For+INSERT)
 
 Always use a column list in your INSERT statements. This helps in avoiding problems when the table structure changes (like adding or dropping a column). 
 
@@ -1966,7 +1966,7 @@ SELECT
 ---
 
 ## Not Using SQL Formatting
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/87)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+SQL+Formatting)
 
 SQL code statements should be arranged in an easy-to-read manner. When statements are written all on one line or not broken into smaller easy-to-read chunks, it is hard to decipher.
 
@@ -1981,7 +1981,7 @@ Use one of the two RedGate SQL Prompt formatting styles "[Team Collapsed](https:
 ---
 
 ## Not Using UPPERCASE for Keywords
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/113)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+UPPERCASE+for+Keywords)
 
 Keywords like `SELECT`, `FROM`, `GROUP BY` should be in UPPERCASE. 
 
@@ -2043,7 +2043,7 @@ CREATE TABLE dbo.Person (
 ---
 
 ## Set Option Cause Recompile
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/103)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Set+Option+Cause+Recompile)
 
 Setting options in batches, stored procedures, and triggers cause recompilation. They should be compiled just once and have their plans reused for subsequent calls. The query will be more performant and use less memory.
 
@@ -2052,7 +2052,7 @@ Setting options in batches, stored procedures, and triggers cause recompilation.
 ---
 
 ## Using Column Number in ORDER BY
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/102)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Column+Number+in+ORDER+BY)
 
 Use the column name in your ORDER BY instead of the column number. The use of constants in the ORDER BY is deprecated for future removal. It makes it difficult to understand the code at a glance and leads to issue when alter the order of the columns in the SELECT.
 
@@ -2173,7 +2173,7 @@ SELECT * FROM dbo.Person WHERE FirstName = 'Kevin' /* This line is a comment */ 
 
 
 ## Not Using Code Comments
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/88)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Code+Comments)
 
 Important code blocks within stored procedures and functions should be commented. Brief functionality descriptions should be included where important or complicated processing is taking place.
 
@@ -2200,8 +2200,7 @@ You can skip including the Author, Created On & Modified On details when you use
 ## Not Using Table Schema
 **Potential Finding:** <a name="not-using-table-schema"/>Not Using Table Schema<br/>
 **Potential Finding:** <a name="not-using-schema"/>Not Using Schema<br/>
-
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/89)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Table+Schema)
 
 Prefix all database objects like table names and stored procedures with the schema (in most cases "dbo."). This results in a performance gain as the optimizer does not have to perform a lookup on execution as well as minimizing ambiguities in your T-SQL.
 
@@ -2251,7 +2250,7 @@ It is common to need a database to operate under different names.
 ---
 
 ## Using @@IDENTITY Instead of SCOPE_IDENTITY
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/90)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+@@IDENTITY+Instead+of+SCOPE_IDENTITY)
 
 The generation of an identity value is not transactional, so in some circumstances, `@@IDENTITY` returns the wrong value and not the value from the row you just inserted. This is especially true when using triggers that insert data, depending on when the triggers fire. The `SCOPE_IDENTITY` function is safer because it always relates to the current batch (within the same scope). Also consider using the `IDENT_CURRENT` function, which returns the last identity value regardless of session or scope. The OUTPUT clause is a better and safer way of capturing identity values.
 
@@ -2335,7 +2334,7 @@ The ```!=``` symbol for not equal is not part of the SQL language. It is underst
 ---
 
 ## Using Old Sybase JOIN Syntax
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/92)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Old+Sybase+JOIN+Syntax)
 
 The deprecated syntax (which includes defining the join condition in the WHERE clause) is not standard SQL and is more difficult to inspect and maintain. Parts of this syntax are completely unsupported in SQL Server 2012 or higher.
 
@@ -2414,7 +2413,7 @@ FROM
 ---
 
 ## View Usage
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/93)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=View+Usage)
 
 Ask yourself what you are gaining by creating a view.
 
@@ -2434,7 +2433,7 @@ A view can be helpful with the use cases below and should be no less performant,
 ---
 
 ## Invalid Objects
-**Check Id:** [None yet, click here to view the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/94)
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Invalid+Objects)
 
 This check found objects that were deleted, renamed. Use can also run "Find Invalid Objects" with RedGate SQL Prompt in SQL Server Management Studio.
 

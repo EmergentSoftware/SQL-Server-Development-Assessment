@@ -15,6 +15,7 @@ ALTER PROCEDURE dbo.sp_Develop
    ,@OutputType        varchar(20)   = 'TABLE'
    ,@ShowSummary       bit           = 0
    ,@PriorityOrHigher  varchar(8)    = NULL /* Critical, High, Medium, Low, or NULL */
+   ,@RunCheckIds       varchar(MAX)  = NULL /* Pass a comma delimited list of CheckIds like 1,2,3 if you only need a limited number of checks to run */
    ,@Debug             int           = 0
    ,@Version           varchar(30)   = NULL OUTPUT
    ,@VersionDate       datetime      = NULL OUTPUT
@@ -24,6 +25,10 @@ AS
     BEGIN
         SET NOCOUNT ON;
         SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
+
+
+
 
         /**********************************************************************************************************************
         ** MIT License
@@ -82,8 +87,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '1.4.0';
-        SET @VersionDate = '20220830';
+        SET @Version = '1.5.0';
+        SET @VersionDate = '20220907';
         SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/best-practices-and-potential-findings/';
         SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);
@@ -169,17 +174,62 @@ AS
         CREATE CLUSTERED INDEX CheckId_DatabaseName ON #SkipCheck (CheckId, DatabaseName);
 
         /**********************************************************************************************************************
-        ** Skip Checks
+        ** Skip Checks or Run Checks
         **********************************************************************************************************************/
-        IF (@SkipCheckTable IS NOT NULL AND RTRIM(LTRIM(@SkipCheckTable)) <> '')
-        AND (@SkipCheckSchema IS NOT NULL AND RTRIM(LTRIM(@SkipCheckSchema)) <> '')
-        AND (@SkipCheckDatabase IS NOT NULL AND RTRIM(LTRIM(@SkipCheckDatabase)) <> '')
+        /* If there is a value then skip all other checks except what is passed in */
+        IF @RunCheckIds IS NOT NULL
             BEGIN
 
-                IF @Debug IN (1, 2)
-                    RAISERROR('Inserting SkipChecks', 0, 1) WITH NOWAIT;
+                /* Create temporary table to store the RunCheckIds rows */
+                IF OBJECT_ID('tempdb..#RunCheckIds') IS NOT NULL
+                    BEGIN
+                        DROP TABLE #RunCheckIds;
+                    END;
+                CREATE TABLE #RunCheckIds (CheckId int NOT NULL);
 
-                SET @StringToExecute = N'
+                INSERT INTO #RunCheckIds (CheckId)
+                SELECT
+                    CheckId = CheckIds.value('.', 'BIGINT')
+                FROM (
+                    SELECT
+                        CheckId = CAST('<Items><item>' + REPLACE(@RunCheckIds, ',', '</item><item>') + '</item></Items> ' AS xml)
+                )                                             AS CheckIdsXML
+                     CROSS APPLY CheckId.nodes('/Items/item') AS C(CheckIds);
+
+                /* Create temporary table to store the PossibleCheckIds */
+                IF OBJECT_ID('tempdb..#PossibleCheckIds') IS NOT NULL
+                    BEGIN
+                        DROP TABLE #PossibleCheckIds;
+                    END;
+                CREATE TABLE #PossibleCheckIds (CheckId int NOT NULL);
+
+                INSERT INTO #PossibleCheckIds (CheckId)
+                SELECT TOP (10000)
+                    CheckId = ROW_NUMBER() OVER (ORDER BY O1.object_id)
+                FROM
+                    sys.objects            AS O1
+                    CROSS JOIN sys.objects AS O2;
+
+                INSERT INTO #SkipCheck (ServerName, DatabaseName, SchemaName, ObjectName, CheckId)
+                SELECT NULL, NULL, NULL, NULL, CheckId FROM #PossibleCheckIds
+                EXCEPT
+                SELECT NULL, NULL, NULL, NULL, CheckId FROM #RunCheckIds
+                ORDER BY
+                    CheckId ASC;
+
+            END;
+        ELSE
+            BEGIN
+
+                IF (@SkipCheckTable IS NOT NULL AND RTRIM(LTRIM(@SkipCheckTable)) <> '')
+                AND (@SkipCheckSchema IS NOT NULL AND RTRIM(LTRIM(@SkipCheckSchema)) <> '')
+                AND (@SkipCheckDatabase IS NOT NULL AND RTRIM(LTRIM(@SkipCheckDatabase)) <> '')
+                    BEGIN
+
+                        IF @Debug IN (1, 2)
+                            RAISERROR('Inserting SkipChecks', 0, 1) WITH NOWAIT;
+
+                        SET @StringToExecute = N'
 				INSERT INTO
                     #SkipCheck(ServerName, DatabaseName, SchemaName, ObjectName, CheckId)
                 SELECT
@@ -188,14 +238,14 @@ AS
                    ,SK.SchemaName
                    ,SK.ObjectName
                    ,SK.CheckId
-                FROM ';
+                FROM '  ;
 
-                IF LTRIM(RTRIM(@SkipCheckServer)) <> ''
-                    BEGIN
-                        SET @StringToExecute = @StringToExecute + QUOTENAME(@SkipCheckServer) + N'.';
-                    END;
+                        IF LTRIM(RTRIM(@SkipCheckServer)) <> ''
+                            BEGIN
+                                SET @StringToExecute = @StringToExecute + QUOTENAME(@SkipCheckServer) + N'.';
+                            END;
 
-                SET @StringToExecute = @StringToExecute + QUOTENAME(@SkipCheckDatabase) + N'.' + QUOTENAME(@SkipCheckSchema) + N'.' + QUOTENAME(@SkipCheckTable) + N' AS SK
+                        SET @StringToExecute = @StringToExecute + QUOTENAME(@SkipCheckDatabase) + N'.' + QUOTENAME(@SkipCheckSchema) + N'.' + QUOTENAME(@SkipCheckTable) + N' AS SK
                 WHERE
                     SK.ServerName IS NULL
                     OR SK.ServerName = SERVERPROPERTY(''ServerName'')
@@ -207,30 +257,49 @@ AS
                    ,SK.CheckId
                 OPTION (RECOMPILE);';
 
-                EXEC sys.sp_executesql @stmt = @StringToExecute;
-                IF @Debug = 2
-                AND @StringToExecute IS NOT NULL
-                    PRINT @StringToExecute;
+                        EXEC sys.sp_executesql @stmt = @StringToExecute;
+                        IF @Debug = 2
+                        AND @StringToExecute IS NOT NULL
+                            PRINT @StringToExecute;
 
-                /* Check if we should be running checks on this server, exit out if not. */
-                IF EXISTS (
-                    SELECT
-                        *
-                    FROM
-                        #SkipCheck AS SC
-                    WHERE
-                        SC.ServerName = SERVERPROPERTY('ServerName')
-                    AND SC.DatabaseName IS NULL
-                    AND SC.ObjectName IS NULL
-                )
-                    BEGIN
+                        /* Check if we should be running checks on this server, exit out if not. */
+                        IF EXISTS (
+                            SELECT
+                                *
+                            FROM
+                                #SkipCheck AS SC
+                            WHERE
+                                SC.ServerName = SERVERPROPERTY('ServerName')
+                            AND SC.DatabaseName IS NULL
+                            AND SC.ObjectName IS NULL
+                        )
+                            BEGIN
+                                IF @Debug IN (1, 2)
+                                    RAISERROR('The SQL Server is marked to be skipped', 0, 1) WITH NOWAIT;
+                                RETURN;
+                            END;
+
                         IF @Debug IN (1, 2)
-                            RAISERROR('The SQL Server is marked to be skipped', 0, 1) WITH NOWAIT;
-                        RETURN;
+                            RAISERROR('The SQL Server is not marked to be skipped', 0, 1) WITH NOWAIT;
                     END;
 
-                IF @Debug IN (1, 2)
-                    RAISERROR('The SQL Server is not marked to be skipped', 0, 1) WITH NOWAIT;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             END;
 
@@ -1207,6 +1276,51 @@ AS
 				        WHERE
 					        I.type = 0
 					        AND O.name NOT IN (''__SchemaSnapshot'')
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
+
+                /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 30
+		           ,@Priority      = 1
+		           ,@FindingGroup  = 'Table Conventions'
+		           ,@Finding       = 'System Versioned Temporal Tables are not Compressed'
+		           ,@URLAnchor     = 'table-conventions#System-Versioned-Temporal-Tables-are-not-Compressed';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+			
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = O.object_id
+				           ,ObjectName    = O.name
+				           ,ObjectType    = O.type_desc
+				           ,Details       = N''By default, the history table is PAGE compressed, this one is not.''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.partitions AS P
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I ON I.object_id = P.object_id AND I.index_id = P.index_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.objects AS O ON I.object_id = O.object_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON O.object_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
+				        WHERE
+					        T.temporal_type    = 1 /* HISTORY_TABLE */
+					    AND I.type             <> 5 /* CLUSTERED */
+                        AND P.data_compression <> 2 /* Not Page compressed, which is the default for system-versioned temporal tables */
                         OPTION (RECOMPILE);';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -2201,15 +2315,20 @@ AS
                     AND SC.CheckId IS NULL
                 )
                 --AND F.Priority <= 10
-                AND F.Priority <= CASE WHEN @PriorityOrHigher IS NULL THEN 2147483647 ELSE
-                        CASE @PriorityOrHigher
-                        WHEN 'Critical' THEN 1
-                        WHEN 'High' THEN 10
-                        WHEN 'Medium' THEN 20
-                        WHEN 'Low' THEN 50
-                        ELSE 2147483647
-                        END
-                END
+                AND F.Priority <= CASE WHEN @PriorityOrHigher IS NULL
+                                           THEN 2147483647
+                                      ELSE CASE @PriorityOrHigher
+                                               WHEN 'Critical'
+                                                   THEN 1
+                                               WHEN 'High'
+                                                   THEN 10
+                                               WHEN 'Medium'
+                                                   THEN 20
+                                               WHEN 'Low'
+                                                   THEN 50
+                                               ELSE 2147483647
+                                           END
+                                  END
                 ORDER BY
                     F.DatabaseName
                    ,F.SchemaName

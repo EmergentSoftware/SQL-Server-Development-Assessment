@@ -198,7 +198,7 @@ This execution plan shows ```JOIN``` elimination has not occurred. While there i
 
 ## Column Named ????Id But No Foreign Key Exists
 **Potential Finding:** <a name="column-named-id-but-no-fk-exists"/>Column Named ????Id But No FK Exists<br/>
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Column+Named+????Id+But+No+Foreign+Key+Exists)
+**Check Id:** 31
 
 In most cases, columns with the name ????Id that are not the primary key should have a foreign key relationship to another table.
 

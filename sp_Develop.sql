@@ -1310,7 +1310,7 @@ AS
 				           ,Object_Id     = O.object_id
 				           ,ObjectName    = O.name
 				           ,ObjectType    = O.type_desc
-				           ,Details       = N''By default, the history table is PAGE compressed, this one is not.''
+				           ,Details       = N''By default, the history table is PAGE compressed, this one is not. Visit the URL column for a script to correct this issue.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.partitions AS P
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I ON I.object_id = P.object_id AND I.index_id = P.index_id
@@ -1321,6 +1321,71 @@ AS
 					        T.temporal_type    = 1 /* HISTORY_TABLE */
 					    AND I.type             <> 5 /* CLUSTERED */
                         AND P.data_compression <> 2 /* Not Page compressed, which is the default for system-versioned temporal tables */
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
+
+--xxxxxxxxxxxxxxxxxxxxxx
+                /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 31
+		           ,@Priority      = 10
+		           ,@FindingGroup  = 'Table Conventions'
+		           ,@Finding       = 'Column Named ????Id But No Foreign Key Exists'
+		           ,@URLAnchor     = 'table-conventions#column-named-id-but-no-foreign-key-exists';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+			
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = C.object_id
+				           ,ObjectName    = T.name + ''.'' + C.name
+				           ,ObjectType    = ''COLUMN''
+				           ,Details       = N''In most cases, columns with the name ????Id that are not the primary key should have a foreign key relationship to another table.''
+                        FROM
+                            ' + QUOTENAME(@DatabaseName) + N'.sys.tables             AS T
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
+                            INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns AS C ON T.object_id = C.object_id
+                        WHERE
+                            T.type          = ''U''
+                        AND T.temporal_type <> 1
+                        AND C.name LIKE ''%id''
+                        AND NOT EXISTS (
+                            SELECT
+                                *
+                            FROM
+                                ' + QUOTENAME(@DatabaseName) + N'.sys.tables                   AS T2
+                                INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.indexes       AS I2  ON T2.object_id  = I2.object_id AND I2.is_primary_key = 1
+                                INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns AS IC2 ON IC2.object_id = I2.object_id AND IC2.index_id      = I2.index_id
+                                INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.columns       AS C2  ON I2.object_id  = C2.object_id AND C2.column_id      = IC2.column_id
+                            WHERE
+                                C2.object_id = C.object_id
+                            AND C2.column_id = C.column_id
+                        )
+                        AND NOT EXISTS (
+                            SELECT
+                                *
+                            FROM
+                                ' + QUOTENAME(@DatabaseName) + N'.sys.foreign_key_columns AS FKC
+                            WHERE
+                                FKC.parent_object_id = C.object_id
+                            AND FKC.parent_column_id = C.column_id
+                        )
                         OPTION (RECOMPILE);';
 
 			        EXEC sys.sp_executesql @stmt = @StringToExecute;
@@ -1501,7 +1566,7 @@ AS
 					        LEFT OUTER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.index_columns  AS IC  ON FKC.parent_object_id = IC.object_id
 																			             AND IC.column_id   = FKC.parent_column_id
 																			             AND IC.key_ordinal = FKC.constraint_column_id
-				        WHERE					
+				        WHERE
 					        IC.object_id IS NULL
                         OPTION (RECOMPILE);';
 

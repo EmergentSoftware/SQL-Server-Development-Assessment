@@ -251,7 +251,7 @@ The only possible benefit of a unique constraint (unique key) has over a unique 
 ---
 
 ## More Than 5 Indexes
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=More+Than+5+Indexes)
+**Check Id:** 32
 
 Your table might be over indexed. The more you have the less performant insert, update & deletes are. A general rule of thumb is 5 indexes on a table.
 
@@ -270,16 +270,16 @@ You or your DBA should implement an index tuning strategy like below.
 ---
 
 ## Less than 2 Indexes
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Less+than+2+Indexes)
+**Check Id:** 33
 
-Your table might be under indexed.
+Your table might be under indexed. Would an index on any other column make your queries go faster?
 
 [Back to top](#top)
 
 ---
 
 ## Disabled Index
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Disabled+Index)
+**Check Id:** 34
 
 An index rebuild or reorganization will enabled disabled indexes. It is now best practices to delete instead of disable if not needed.
 
@@ -288,7 +288,7 @@ An index rebuild or reorganization will enabled disabled indexes. It is now best
 ---
 
 ## Leftover Fake Index
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Leftover+Fake+Index)
+**Check Id:** 35
 
 The Index Tuning Wizard and Database Tuning Advisor create fake indexes, then getting a new execution plan for a query. These fake indexes stay behind sometimes.
 

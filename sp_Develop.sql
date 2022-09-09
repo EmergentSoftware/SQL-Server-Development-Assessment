@@ -1386,6 +1386,104 @@ AS
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
 		        END;
 
+                /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 32
+		           ,@Priority      = 30
+		           ,@FindingGroup  = 'Table Conventions'
+		           ,@Finding       = 'More Than 5 Indexes'
+		           ,@URLAnchor     = 'table-conventions#more-than-5-indexes';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = T.object_id
+				           ,ObjectName    = T.name
+				           ,ObjectType    = ''USER_TABLE''
+				           ,Details       = N''Your table might be over indexed. The more you have the less performant insert, update & deletes are. A general rule of thumb is 5 indexes on a table.''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables             AS T
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I ON T.object_id = I.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
+				        WHERE
+					        T.type = ''U''
+					    AND I.type <> 0
+                        GROUP BY
+                            S.schema_id
+                           ,S.name
+                           ,T.object_id
+                           ,T.name
+                        HAVING
+                            COUNT(*) > 5
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
+
+                /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 33
+		           ,@Priority      = 30
+		           ,@FindingGroup  = 'Table Conventions'
+		           ,@Finding       = 'Less than 2 Indexes'
+		           ,@URLAnchor     = 'table-conventions#less-than-2-indexes';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = T.object_id
+				           ,ObjectName    = T.name
+				           ,ObjectType    = ''USER_TABLE''
+				           ,Details       = N''Your table might be under indexed. Would an index on any other column make your queries go faster?''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables             AS T
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.indexes AS I ON T.object_id = I.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
+				        WHERE
+					        T.type = ''U''
+					    AND I.type <> 0
+                        GROUP BY
+                            S.schema_id
+                           ,S.name
+                           ,T.object_id
+                           ,T.name
+                        HAVING
+                            COUNT(*) < 2
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
+
 		        /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 7

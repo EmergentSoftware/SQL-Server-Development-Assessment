@@ -288,7 +288,7 @@ An index rebuild or reorganization will enabled disabled indexes. It is now best
 ---
 
 ## Leftover Fake Index
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Leftover+Fake+Index)
+**Check Id:** 35
 
 The Index Tuning Wizard and Database Tuning Advisor create fake indexes, then getting a new execution plan for a query. These fake indexes stay behind sometimes.
 

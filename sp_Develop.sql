@@ -25,11 +25,6 @@ AS
     BEGIN
         SET NOCOUNT ON;
         SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-
-
-
-
-
         /**********************************************************************************************************************
         ** MIT License
         ** 
@@ -87,8 +82,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '1.5.0';
-        SET @VersionDate = '20220907';
+        SET @Version = '1.6.0';
+        SET @VersionDate = '20220908';
         SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/best-practices-and-potential-findings/';
         SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);
@@ -1327,7 +1322,6 @@ AS
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
 		        END;
 
---xxxxxxxxxxxxxxxxxxxxxx
                 /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 31

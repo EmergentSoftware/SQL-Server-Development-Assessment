@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!---->
 <NamedFilter version="1" type="SQLCompareFilter">
   <!--This filter can be loaded using the SQL Compare UI or used with a SQL Compare command line session using the /filter switch-->
@@ -108,7 +108,7 @@
       </ServiceBinding>
       <StoredProcedure version="1">
         <Include>False</Include>
-        <Expression>(@NAME = 'InvalidObjectList')</Expression>
+        <Expression>(@NAME = 'InvalidObjectList') OR (@NAME = 'sp_Develop')</Expression>
       </StoredProcedure>
       <SymmetricKey version="1">
         <Include>True</Include>
@@ -138,6 +138,18 @@
         <Include>True</Include>
         <Expression>TRUE</Expression>
       </XmlSchemaCollection>
+      <ExternalFileFormat version="1">
+        <Include>True</Include>
+        <Expression>TRUE</Expression>
+      </ExternalFileFormat>
+      <ExternalDataSource version="1">
+        <Include>True</Include>
+        <Expression>TRUE</Expression>
+      </ExternalDataSource>
+      <ExternalTable version="1">
+        <Include>True</Include>
+        <Expression>TRUE</Expression>
+      </ExternalTable>
     </Filters>
   </Filter>
 </NamedFilter>

@@ -198,7 +198,7 @@ This execution plan shows ```JOIN``` elimination has not occurred. While there i
 
 ## Column Named ????Id But No Foreign Key Exists
 **Potential Finding:** <a name="column-named-id-but-no-fk-exists"/>Column Named ????Id But No FK Exists<br/>
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Column+Named+????Id+But+No+Foreign+Key+Exists)
+**Check Id:** 31
 
 In most cases, columns with the name ????Id that are not the primary key should have a foreign key relationship to another table.
 
@@ -485,6 +485,43 @@ You should always normalize the database schema unless you have a really good re
 
 A normalize table design like addresses and phone numbers in separate tables allows for extensibility when the requirements today might only call for a single phone number or address. You can utilize a ``UNIQUE`` constraint/index to ensure only a single row can exist but allows for flexibility in the future. You will already have the Phone table so you will not have to create a new table and migrate the data and drop the ``UNIQUE`` constraint/index.
 
+
+[Back to top](#top)
+
+---
+
+## System Versioned Temporal Tables are not Compressed
+**Check Id:** 30
+
+By default, the history table is PAGE compressed for System Versioned Temporal Tables.
+
+The SQL script below will check for the issue and provide an ALTER TSQL statement to apply page compression. Do not forget to change ONLINE to ON OR OFF.
+
+```sql
+SELECT
+    SchemaName      = S.name
+   ,TableName       = T.name
+   ,DataCompression = P.data_compression_desc
+   ,[ALTER TSQL]    = N'ALTER INDEX ' + CAST(QUOTENAME(I.name) AS nvarchar(128)) + N' ON ' + CAST(QUOTENAME(S.name) AS nvarchar(128)) + N'.' + CAST(QUOTENAME(T.name) AS nvarchar(128)) + N' REBUILD PARTITION = ALL WITH (STATISTICS_NORECOMPUTE = OFF, ONLINE = ?, DATA_COMPRESSION = PAGE);'
+FROM
+    sys.partitions         AS P
+    INNER JOIN sys.indexes AS I
+        ON I.object_id = P.object_id
+        AND I.index_id = P.index_id
+    INNER JOIN sys.objects AS O
+        ON I.object_id = O.object_id
+    INNER JOIN sys.tables  AS T
+        ON O.object_id = T.object_id
+    INNER JOIN sys.schemas AS S
+        ON T.schema_id = S.schema_id
+WHERE
+    T.temporal_type    = 1 /* HISTORY_TABLE */
+AND I.type             <> 5 /* CLUSTERED */
+AND P.data_compression <> 2 /* Not Page compressed, which is the default for system-versioned temporal tables */
+ORDER BY
+    S.name
+   ,T.name;
+```
 
 [Back to top](#top)
 

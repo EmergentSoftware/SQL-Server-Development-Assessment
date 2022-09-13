@@ -327,7 +327,7 @@ CREATE NONCLUSTERED INDEX Account_Greater_Than_Half_Million
 ---
 
 ## Column Has a Different Collation Than Database
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Column+Has+a+Different+Collation+Than+Database)
+**Check Id:** 36
 
 This could cause issues if the code is not aware of different collations and does include features to work with them correctly.
 

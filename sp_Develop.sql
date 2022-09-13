@@ -1636,9 +1636,9 @@ AS
 				           ,Schema_Id     = S.schema_id
 				           ,SchemaName    = S.name
 				           ,Object_Id     = T.object_id
-				           ,ObjectName    = C.name
+				           ,ObjectName    = T.name + ''.'' + C.name
 				           ,ObjectType    = ''USER_TABLE''
-				           ,Details       = N''The foreign key ['' + DB_NAME() + ''].['' + S.name + ''].['' + T.name + ''].['' + C.name + ''] is not trusted - meaning, it was disabled, data was changed, and then the constraint was enabled again. Simply enabling the constraint is not enough for the optimizer to use this constraint - we have to alter the table using the WITH CHECK CHECK CONSTRAINT parameter.''
+				           ,Details       = N''The foreign key is not trusted - meaning, it was disabled, data was changed, and then the constraint was enabled again. Simply enabling the constraint is not enough for the optimizer to use this constraint - we have to alter the table using the WITH CHECK CHECK CONSTRAINT parameter.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.foreign_keys       AS C
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON C.parent_object_id = T.object_id
@@ -1678,9 +1678,9 @@ AS
 				           ,Schema_Id     = S.schema_id
 				           ,SchemaName    = S.name
 				           ,Object_Id     = T.object_id
-				           ,ObjectName    = C.name
+				           ,ObjectName    = T.name + ''.'' + C.name                           
 				           ,ObjectType    = ''USER_TABLE''
-				           ,Details       = N''The check constraint ['' + DB_NAME() + ''].['' + S.name + ''].['' + T.name + ''].['' + C.name + ''] is not trusted - meaning, it was disabled, data was changed, and then the constraint was enabled again. Simply enabling the constraint is not enough for the optimizer to use this constraint - we have to alter the table using the WITH CHECK CHECK CONSTRAINT parameter.''
+				           ,Details       = N''The check constraint is not trusted - meaning, it was disabled, data was changed, and then the constraint was enabled again. Simply enabling the constraint is not enough for the optimizer to use this constraint - we have to alter the table using the WITH CHECK CHECK CONSTRAINT parameter.''
 				        FROM
 					        ' + QUOTENAME(@DatabaseName) + N'.sys.check_constraints  AS C
 					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON C.parent_object_id = T.object_id

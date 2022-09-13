@@ -1568,6 +1568,49 @@ AS
 			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
 		        END;
 
+
+                /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 37
+		           ,@Priority      = 30
+		           ,@FindingGroup  = 'Table Conventions'
+		           ,@Finding       = 'Low Index Fill-Factor'
+		           ,@URLAnchor     = 'table-conventions#low-index-fill-factor';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = T.object_id
+				           ,ObjectName    = I.name
+				           ,ObjectType    = ''USER_TABLE''
+				           ,Details       = N''Best practice is to ONLY use a low fill factor (80% or lower) on indexes where you know you need it. Setting a low fill factor on too many indexes will hurt your performance.''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.indexes            AS I
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON I.object_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
+				        WHERE
+					        I.fill_factor < 80
+					    AND I.fill_factor <> 0
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
+
                 /**********************************************************************************************************************/
 		        SELECT
 			        @CheckId       = 36

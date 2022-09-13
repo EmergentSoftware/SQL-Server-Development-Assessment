@@ -336,7 +336,7 @@ This could cause issues if the code is not aware of different collations and doe
 ---
 
 ## Low Index Fill-Factor
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Low+Index+Fill-Factor)
+**Check Id:** 37
 
 The default fill factor is (100 or 0) for SQL Server. This check is alerting you to a fill factor of 80% or lower.
 

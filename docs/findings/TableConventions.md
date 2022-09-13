@@ -352,10 +352,12 @@ Review indexes diagnosed with low fill factor. Check how much they’re written 
 
 ---
 
-## Untrusted Foreign Key
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Untrusted+Foreign+Key)
+## Untrusted Foreign Key or Check Constraints
+**Potential Finding:** <a name="untrusted-foreign-key"/>Untrusted Foreign Key<br/>
+**Potential Finding:** <a name="untrusted-check-constraints"/>Untrusted Check Constraints<br/>
+**Check Id:** 38 & 39
 
-SQL Server is not going to consider using untrusted constraints to compile a better execution plan.
+SQL Server is not going to consider using untrusted constraints to compile a better execution plan. This can have a huge performance impact on your database queries.
 
 You might have disabled a constraint instead of dropping and recreating it for bulk loading data. This is fine, as long as your remember to enable it correctly.
 
@@ -368,11 +370,15 @@ GO
 
 The `CHECK CHECK` syntax is correct. The 1st `CHECK` is the end of `WITH CHECK` statement. The 2nd `CHECK` is the start of the `CHECK CONSTRAINT` clause to enable the constraint
 
-To find untrusted foreign keys in your database run the script below to identify and create an ``ALTER`` statement to correct the issue. In Redgate SQL Prompt the snippet code is ``fk``. If you receive an error with the generated ``ALTER`` statement it means past constraint violations have been being suppressed by ``WITH NOCHECK``. You will have to figure out how to fix the rows that do not comply with the constraint.
+To find untrusted foreign keys and check constraints in your database run the script below to identify and create an ``ALTER`` statement to correct the issue. In Redgate SQL Prompt the snippet code is ``fk``. If you receive an error with the generated ``ALTER`` statement it means past constraint violations have been being suppressed by ``WITH NOCHECK``. You will have to figure out how to fix the rows that do not comply with the constraint.
 
 ```
 SELECT
-    'ALTER TABLE ' + QUOTENAME(S.name) + '.' + QUOTENAME(T.name) + ' WITH CHECK CHECK CONSTRAINT ' + FK.name + ';'
+    SchemaName = S.name
+   ,TableName  = T.name
+   ,ObjectName = FK.name
+   ,ObjectType = 'FOREIGN KEY'
+   ,FixSQL     = 'ALTER TABLE ' + QUOTENAME(S.name) + '.' + QUOTENAME(T.name) + ' WITH CHECK CHECK CONSTRAINT ' + FK.name + ';'
 FROM
     sys.foreign_keys       AS FK
     INNER JOIN sys.tables  AS T
@@ -380,10 +386,31 @@ FROM
     INNER JOIN sys.schemas AS S
         ON T.schema_id         = S.schema_id
 WHERE
-    FK.is_not_trusted = 1
+    FK.is_not_trusted         = 1
+AND FK.is_not_for_replication = 0
+
+UNION ALL
+
+SELECT
+    SchemaName = S.name
+   ,TableName  = T.name
+   ,ObjectName = CC.name
+   ,ObjectType = 'CHECK CONSTRAINT'
+   ,FixSQL     = 'ALTER TABLE ' + QUOTENAME(S.name) + '.' + QUOTENAME(T.name) + ' WITH CHECK CHECK CONSTRAINT ' + CC.name + ';'
+FROM
+    sys.check_constraints  AS CC
+    INNER JOIN sys.tables  AS T
+        ON CC.parent_object_id = T.object_id
+    INNER JOIN sys.schemas AS S
+        ON T.schema_id         = S.schema_id
+WHERE
+    CC.is_not_trusted         = 1
+AND CC.is_not_for_replication = 0
+AND CC.is_disabled            = 0
 ORDER BY
-    S.name
-   ,T.name;
+    SchemaName
+   ,TableName
+   ,ObjectName;
 ```
 
 

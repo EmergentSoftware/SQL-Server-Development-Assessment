@@ -1697,6 +1697,89 @@ AS
 
                 /**********************************************************************************************************************/
 		        SELECT
+			        @CheckId       = 40
+		           ,@Priority      = 10
+		           ,@FindingGroup  = 'Table Conventions'
+		           ,@Finding       = 'Disabled Check Constraint'
+		           ,@URLAnchor     = 'table-conventions#disabled-check-constraint';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = T.object_id
+				           ,ObjectName    = T.name + ''.'' + C.name
+				           ,ObjectType    = ''USER_TABLE''
+				           ,Details       = N''You should check to see if it was on purpose that you have a disabled check constraint.''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.check_constraints  AS C
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.tables  AS T ON C.parent_object_id = T.object_id
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id         = S.schema_id
+				        WHERE
+					        C.is_disabled = 1
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
+
+                /**********************************************************************************************************************/
+		        SELECT
+			        @CheckId       = 41
+		           ,@Priority      = 50
+		           ,@FindingGroup  = 'Table Conventions'
+		           ,@Finding       = 'Unrelated to Any Other Table'
+		           ,@URLAnchor     = 'table-conventions#unrelated-to-any-other-table';
+		        /**********************************************************************************************************************/
+		        IF NOT EXISTS (SELECT 1 FROM #SkipCheck AS SC WHERE SC.CheckId = @CheckId AND SC.ObjectName IS NULL)
+		        BEGIN
+			        IF @Debug IN (1, 2) RAISERROR(N'Running CheckId [%d]', 0, 1, @CheckId) WITH NOWAIT;
+
+			        SET @StringToExecute = N'
+				        INSERT INTO
+					        #Finding (CheckId, Database_Id, DatabaseName, FindingGroup, Finding, URL, Priority, Schema_Id, SchemaName, Object_Id, ObjectName, ObjectType, Details)
+				        SELECT
+					        CheckId       = ' + CAST(@CheckId AS NVARCHAR(MAX)) + N'
+				           ,Database_Id   = ' + CAST(@DatabaseId AS NVARCHAR(MAX)) + N'
+				           ,DatabaseName  = ''' + CAST(@DatabaseName AS NVARCHAR(MAX)) + N'''
+				           ,FindingGroup  = ''' + CAST(@FindingGroup AS NVARCHAR(MAX)) + N'''
+				           ,Finding       = ''' + CAST(@Finding AS NVARCHAR(MAX)) + N'''
+				           ,URL           = ''' + CAST(@URLBase + @URLAnchor AS NVARCHAR(MAX)) + N'''
+				           ,Priority      = ' + CAST(@Priority AS NVARCHAR(MAX)) + N'
+				           ,Schema_Id     = S.schema_id
+				           ,SchemaName    = S.name
+				           ,Object_Id     = T.object_id
+				           ,ObjectName    = T.name
+				           ,ObjectType    = ''USER_TABLE''
+				           ,Details       = N''This is just a sanity check to let you know there is a table that does not have any foreign keys. This can be ok, but it is normally unlikely seeing you are using a relational database. 😉''
+				        FROM
+					        ' + QUOTENAME(@DatabaseName) + N'.sys.tables AS T
+					        INNER JOIN ' + QUOTENAME(@DatabaseName) + N'.sys.schemas AS S ON T.schema_id = S.schema_id
+				        WHERE
+					        OBJECTPROPERTYEX(T.object_id, ''TableHasForeignKey'') = 0
+                        AND OBJECTPROPERTYEX(T.object_id, ''TableHasForeignRef'') = 0
+                        AND T.temporal_type <> 1
+                        OPTION (RECOMPILE);';
+
+			        EXEC sys.sp_executesql @stmt = @StringToExecute;
+			        IF @Debug = 2 AND @StringToExecute IS NOT NULL PRINT @StringToExecute;
+		        END;
+
+                /**********************************************************************************************************************/
+		        SELECT
 			        @CheckId       = 36
 		           ,@Priority      = 10
 		           ,@FindingGroup  = 'Table Conventions'

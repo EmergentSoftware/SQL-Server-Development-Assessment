@@ -210,6 +210,41 @@ You will not get JOIN Eliminations without a foreign key and a column that allow
 
 ---
 
+## Using Cascading Actions on Foreign Key
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Cascading+Actions+on+Foreign+Key)
+
+Use a stored procedure or SQL command in your software code to delete data in multiple related tables instead of `ON DELETE CASCADE` on the foreign key.
+
+Foreign keys with cascading actions like `ON DELETE CASCADE` or `ON UPDATE ?` perform slowly due to SQL Server taking out serializable locks (RANGEX-X) to guarantee referential integrity so that it can trust the foreign keys.
+
+You may also receive the error message below when you utilize `ON DELETE CASCADE`.
+
+```Msg 1785, Level 16, State 0, Line 190
+Introducing FOREIGN KEY constraint [ForeignKeyName] on table [TableName] may cause cycles or multiple cascade paths.
+Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+Msg 1750, Level 16, State 1, Line 190
+Could not create constraint or index. See previous errors.
+```
+
+<!---
+SELECT
+    TableName   = OBJECT_NAME(F.parent_object_id)
+   ,ColumnName  = COL_NAME(FC.parent_object_id, FC.parent_column_id)
+   ,[On Delete] = F.delete_referential_action_desc
+FROM
+    sys.foreign_keys                   AS F
+    INNER JOIN sys.foreign_key_columns AS FC
+        ON F.object_id = FC.constraint_object_id
+    INNER JOIN sys.tables              AS T
+        ON T.object_id = FC.referenced_object_id
+WHERE
+    F.delete_referential_action_desc = N'CASCADE';
+-->
+
+[Back to top](#top)
+
+---
+
 ## NULL or NOT NULL Option is not Specified in CREATE or DECLARE TABLE
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=NULL+or+NOT+NULL+option+is+not+specified+in+CREATE+or+DECLARE+TABLE)
 
@@ -234,9 +269,9 @@ You should always explicitly define ascending (``ASC``) or descending (``DESC``)
 
 Create unique indexes instead of unique constraints (unique key). Doing so removes a dependency of a unique key to the unique index that is created automatically and tightly coupled.
 
-**Instead of:** ```CONSTRAINT AddressType_AddressTypeName_Unique UNIQUE (AddressTypeName)```
+**Instead of:** ```CONSTRAINT AddressType_AddressTypeName_Unique UNIQUE (AddressTypeName ASC)```
 
-**Use:** ```INDEX AddressType_AddressTypeName UNIQUE NONCLUSTERED (AddressTypeName)```
+**Use:** ```INDEX AddressType_AddressTypeName UNIQUE NONCLUSTERED (AddressTypeName ASC)```
 
 In some table design cases you might need to create uniqueness for one or more columns. This could be for a natural [composite] key or to ensure a person can only have one phone number and phone type combination.
 
@@ -413,6 +448,23 @@ ORDER BY
    ,ObjectName;
 ```
 
+[Back to top](#top)
+
+---
+
+## Disabled Check Constraint
+**Check Id:** 40
+
+You should check to see if it was on purpose that you have a disabled check constraint.
+
+[Back to top](#top)
+
+---
+
+## Unrelated to Any Other Table
+**Check Id:** 41
+
+This is just a sanity check to let you know there is a table that does not have any foreign keys. This can be ok, but it is normally unlikely seeing you are using a relational database. 😉
 
 [Back to top](#top)
 

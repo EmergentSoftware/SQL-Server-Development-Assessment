@@ -426,13 +426,13 @@ Bit columns should be given affirmative boolean names like ``IsActive``, ``IsDel
   - Unit**Price** is the price of a product unit
   - Website**URL** is the internet address 
     - See [URL or URI Naming](#url-or-uri-naming)
-  - RowModify**PersonId** is the person who last updated a record
-  - RowCreate**PersonId** is the person who created a record
-  - RowModify**Time** is the date and time something was modified
-  - RowCreate**Time** is the date and time something was created
-  - RowVersion**Stamp** is the ``rowversion/timestamp`` (unique binary numbers) to increment for each insert or update
-  - RowValidFrom**Time** is the period start for a system-versioned temporal tables
-  - RowValidTo**Time** is the period end for a system-versioned temporal tables
+  - Modify**PersonId** is the person who last updated a record
+  - Create**PersonId** is the person who created a record
+  - Modify**Time** is the date and time something was modified
+  - Create**Time** is the date and time something was created
+  - Version**Stamp** is the ``rowversion/timestamp`` (unique binary numbers) to increment for each insert or update
+  - ValidFrom**Time** is the period start for a system-versioned temporal tables
+  - ValidTo**Time** is the period end for a system-versioned temporal tables
 
 [Back to top](#top)
 

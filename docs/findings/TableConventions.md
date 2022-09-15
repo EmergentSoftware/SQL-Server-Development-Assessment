@@ -226,21 +226,6 @@ Msg 1750, Level 16, State 1, Line 190
 Could not create constraint or index. See previous errors.
 ```
 
-<!--
-SELECT
-    TableName   = OBJECT_NAME(F.parent_object_id)
-   ,ColumnName  = COL_NAME(FC.parent_object_id, FC.parent_column_id)
-   ,[On Delete] = F.delete_referential_action_desc
-FROM
-    sys.foreign_keys                   AS F
-    INNER JOIN sys.foreign_key_columns AS FC
-        ON F.object_id = FC.constraint_object_id
-    INNER JOIN sys.tables              AS T
-        ON T.object_id = FC.referenced_object_id
-WHERE
-    F.delete_referential_action_desc = N'CASCADE';
--->
-
 [Back to top](#top)
 
 ---

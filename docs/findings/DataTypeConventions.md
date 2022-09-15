@@ -37,33 +37,6 @@ There are two situations where this is going to hurt performance. When you have 
 - Missing index requests will not be logged in the DMV
 - Extra CPU cycles are going to be required for the conversion
 
-<!--
-;WITH ProblemColumns
-  AS (
-      SELECT
-          C.name
-      FROM
-          sys.columns           AS C
-          INNER JOIN sys.tables AS T ON T.object_id = C.object_id
-      GROUP BY
-          C.name
-      HAVING
-          COUNT(DISTINCT C.user_type_id) > 1
-  )
-SELECT
-    Schema_Id  = S.schema_id
-   ,SchemaName = S.name
-   ,Object_Id  = C.object_id
-   ,ObjectName = T.name + '.' + C.name
-   ,ObjectType = 'COLUMN'
-   ,Details    = N'You have a mismatch of data types for columns named the same'
-FROM
-    ProblemColumns         AS PC
-    INNER JOIN sys.columns AS C ON PC.name     = C.name
-    INNER JOIN sys.tables  AS T ON T.object_id = C.object_id
-    INNER JOIN sys.schemas AS S ON S.schema_id = T.schema_id;
--->
-
 [Back to top](#top)
 
 ---

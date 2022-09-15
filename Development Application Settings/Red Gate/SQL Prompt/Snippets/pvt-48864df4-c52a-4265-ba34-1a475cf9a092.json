@@ -1,0 +1,6 @@
+{
+  "id": "48864df4-c52a-4265-ba34-1a475cf9a092",
+  "prefix": "pvt",
+  "description": "ES: Pivot a query when there are too many columns to scroll sideways through.",
+  "body": "DECLARE @stmt nvarchar(MAX) = N'SELECT\r\n    P.[key] as ColumnName,\r\n    P.value as ColumnValue\r\nFROM\r\n    (' +\r\nN'\r\n$SELECTEDTEXT$\r\n'\r\n+ N' FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER, INCLUDE_NULL_VALUES) AS SQL(JSON)\r\nCROSS APPLY \r\n    OPENJSON(SQL.JSON) AS P;';\r\nEXECUTE sys.sp_executesql @stmt = @stmt;"
+}

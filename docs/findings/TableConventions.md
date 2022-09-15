@@ -210,6 +210,41 @@ You will not get JOIN Eliminations without a foreign key and a column that allow
 
 ---
 
+## Using Cascading Actions on Foreign Key
+**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Cascading+Actions+on+Foreign+Key)
+
+Use a stored procedure or SQL command in your software code to delete data in multiple related tables instead of `ON DELETE CASCADE` on the foreign key.
+
+Foreign keys with cascading actions like `ON DELETE CASCADE` or `ON UPDATE ?` perform slowly due to SQL Server taking out serializable locks (RANGEX-X) to guarantee referential integrity so that it can trust the foreign keys.
+
+You may also receive the error message below when you utilize `ON DELETE CASCADE`.
+
+```Msg 1785, Level 16, State 0, Line 190
+Introducing FOREIGN KEY constraint [ForeignKeyName] on table [TableName] may cause cycles or multiple cascade paths.
+Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+Msg 1750, Level 16, State 1, Line 190
+Could not create constraint or index. See previous errors.
+```
+
+<!---
+SELECT
+    TableName   = OBJECT_NAME(F.parent_object_id)
+   ,ColumnName  = COL_NAME(FC.parent_object_id, FC.parent_column_id)
+   ,[On Delete] = F.delete_referential_action_desc
+FROM
+    sys.foreign_keys                   AS F
+    INNER JOIN sys.foreign_key_columns AS FC
+        ON F.object_id = FC.constraint_object_id
+    INNER JOIN sys.tables              AS T
+        ON T.object_id = FC.referenced_object_id
+WHERE
+    F.delete_referential_action_desc = N'CASCADE';
+-->
+
+[Back to top](#top)
+
+---
+
 ## NULL or NOT NULL Option is not Specified in CREATE or DECLARE TABLE
 **Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=NULL+or+NOT+NULL+option+is+not+specified+in+CREATE+or+DECLARE+TABLE)
 
@@ -234,9 +269,9 @@ You should always explicitly define ascending (``ASC``) or descending (``DESC``)
 
 Create unique indexes instead of unique constraints (unique key). Doing so removes a dependency of a unique key to the unique index that is created automatically and tightly coupled.
 
-**Instead of:** ```CONSTRAINT AddressType_AddressTypeName_Unique UNIQUE (AddressTypeName)```
+**Instead of:** ```CONSTRAINT AddressType_AddressTypeName_Unique UNIQUE (AddressTypeName ASC)```
 
-**Use:** ```INDEX AddressType_AddressTypeName UNIQUE NONCLUSTERED (AddressTypeName)```
+**Use:** ```INDEX AddressType_AddressTypeName UNIQUE NONCLUSTERED (AddressTypeName ASC)```
 
 In some table design cases you might need to create uniqueness for one or more columns. This could be for a natural [composite] key or to ensure a person can only have one phone number and phone type combination.
 
@@ -327,7 +362,7 @@ CREATE NONCLUSTERED INDEX Account_Greater_Than_Half_Million
 ---
 
 ## Column Has a Different Collation Than Database
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Column+Has+a+Different+Collation+Than+Database)
+**Check Id:** 36
 
 This could cause issues if the code is not aware of different collations and does include features to work with them correctly.
 
@@ -336,7 +371,7 @@ This could cause issues if the code is not aware of different collations and doe
 ---
 
 ## Low Index Fill-Factor
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Low+Index+Fill-Factor)
+**Check Id:** 37
 
 The default fill factor is (100 or 0) for SQL Server. This check is alerting you to a fill factor of 80% or lower.
 
@@ -352,10 +387,12 @@ Review indexes diagnosed with low fill factor. Check how much they’re written 
 
 ---
 
-## Untrusted Foreign Key
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Untrusted+Foreign+Key)
+## Untrusted Foreign Key or Check Constraints
+**Potential Finding:** <a name="untrusted-foreign-key"/>Untrusted Foreign Key<br/>
+**Potential Finding:** <a name="untrusted-check-constraints"/>Untrusted Check Constraints<br/>
+**Check Id:** 38 & 39
 
-SQL Server is not going to consider using untrusted constraints to compile a better execution plan.
+SQL Server is not going to consider using untrusted constraints to compile a better execution plan. This can have a huge performance impact on your database queries.
 
 You might have disabled a constraint instead of dropping and recreating it for bulk loading data. This is fine, as long as your remember to enable it correctly.
 
@@ -368,11 +405,15 @@ GO
 
 The `CHECK CHECK` syntax is correct. The 1st `CHECK` is the end of `WITH CHECK` statement. The 2nd `CHECK` is the start of the `CHECK CONSTRAINT` clause to enable the constraint
 
-To find untrusted foreign keys in your database run the script below to identify and create an ``ALTER`` statement to correct the issue. In Redgate SQL Prompt the snippet code is ``fk``. If you receive an error with the generated ``ALTER`` statement it means past constraint violations have been being suppressed by ``WITH NOCHECK``. You will have to figure out how to fix the rows that do not comply with the constraint.
+To find untrusted foreign keys and check constraints in your database run the script below to identify and create an ``ALTER`` statement to correct the issue. In Redgate SQL Prompt the snippet code is ``fk``. If you receive an error with the generated ``ALTER`` statement it means past constraint violations have been being suppressed by ``WITH NOCHECK``. You will have to figure out how to fix the rows that do not comply with the constraint.
 
 ```
 SELECT
-    'ALTER TABLE ' + QUOTENAME(S.name) + '.' + QUOTENAME(T.name) + ' WITH CHECK CHECK CONSTRAINT ' + FK.name + ';'
+    SchemaName = S.name
+   ,TableName  = T.name
+   ,ObjectName = FK.name
+   ,ObjectType = 'FOREIGN KEY'
+   ,FixSQL     = 'ALTER TABLE ' + QUOTENAME(S.name) + '.' + QUOTENAME(T.name) + ' WITH CHECK CHECK CONSTRAINT ' + FK.name + ';'
 FROM
     sys.foreign_keys       AS FK
     INNER JOIN sys.tables  AS T
@@ -380,12 +421,50 @@ FROM
     INNER JOIN sys.schemas AS S
         ON T.schema_id         = S.schema_id
 WHERE
-    FK.is_not_trusted = 1
+    FK.is_not_trusted         = 1
+AND FK.is_not_for_replication = 0
+
+UNION ALL
+
+SELECT
+    SchemaName = S.name
+   ,TableName  = T.name
+   ,ObjectName = CC.name
+   ,ObjectType = 'CHECK CONSTRAINT'
+   ,FixSQL     = 'ALTER TABLE ' + QUOTENAME(S.name) + '.' + QUOTENAME(T.name) + ' WITH CHECK CHECK CONSTRAINT ' + CC.name + ';'
+FROM
+    sys.check_constraints  AS CC
+    INNER JOIN sys.tables  AS T
+        ON CC.parent_object_id = T.object_id
+    INNER JOIN sys.schemas AS S
+        ON T.schema_id         = S.schema_id
+WHERE
+    CC.is_not_trusted         = 1
+AND CC.is_not_for_replication = 0
+AND CC.is_disabled            = 0
 ORDER BY
-    S.name
-   ,T.name;
+    SchemaName
+   ,TableName
+   ,ObjectName;
 ```
 
+[Back to top](#top)
+
+---
+
+## Disabled Check Constraint
+**Check Id:** 40
+
+You should check to see if it was on purpose that you have a disabled check constraint.
+
+[Back to top](#top)
+
+---
+
+## Unrelated to Any Other Table
+**Check Id:** 41
+
+This is just a sanity check to let you know there is a table that does not have any foreign keys. This can be ok, but it is normally unlikely seeing you are using a relational database. 😉
 
 [Back to top](#top)
 

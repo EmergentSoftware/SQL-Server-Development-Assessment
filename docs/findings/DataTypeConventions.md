@@ -37,7 +37,7 @@ There are two situations where this is going to hurt performance. When you have 
 - Missing index requests will not be logged in the DMV
 - Extra CPU cycles are going to be required for the conversion
 
-<!---
+<!--
 ;WITH ProblemColumns
   AS (
       SELECT

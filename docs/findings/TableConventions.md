@@ -226,7 +226,7 @@ Msg 1750, Level 16, State 1, Line 190
 Could not create constraint or index. See previous errors.
 ```
 
-<!---
+<!--
 SELECT
     TableName   = OBJECT_NAME(F.parent_object_id)
    ,ColumnName  = COL_NAME(FC.parent_object_id, FC.parent_column_id)

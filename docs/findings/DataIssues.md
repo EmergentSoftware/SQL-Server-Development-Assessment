@@ -40,7 +40,7 @@ While placeholder rows do not violate database normalization rules, it is not co
 ---
 ## Data Should be Encrypted if Compliance Dictates
 **Potential Finding:** <a name="unencrypted-data"/>Unencrypted Data<br/>
-**Check Id:** 28
+**Check Id:** 27
 
 The table column returned for this check might have unencrypted data that you might want to have encrypted for best practices or industry specific compliance. You will need to determine if the data needs to be protected at rest, in transit or both.
 

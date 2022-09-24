@@ -6,35 +6,6 @@ nav_order: 1
 layout: default
 ---
 
-        <script type="text/javascript">
-            function copyToClip(finding, checkId) {
-                
-                //var urlFull = new URL(window.location.href);
-                var urlFull = new URL("https://emergentsoftware.github.io/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#41");
-                var urlProtocol = urlFull.protocol
-                var urlHostname = urlFull.hostname
-                var urlPathname = urlFull.pathname
-                var url = urlProtocol + "://" + urlHostname + "/" + urlPathname + "#" + checkId;
-
-                // alert("urlFull: " + urlFull);
-                // alert("urlProtocol: " + urlProtocol);
-                // alert("urlHostname: " + urlHostname);
-                // alert("urlPathname: " + urlPathname);
-                // alert("url: " + url)
-
-                
-            function listener(e) {
-                e.clipboardData.setData("text/html", "<a href=" + url + ">" + finding + "</a>");
-                e.clipboardData.setData("text/plain", finding + ": " + url);
-                e.preventDefault();
-            }
-            document.addEventListener("copy", listener);
-            document.execCommand("copy");
-            document.removeEventListener("copy", listener);
-            };
-        
-            </script>
-
 # Naming Conventions
 {: .no_toc }
 The purpose of naming and style convention allows you and others to identify the type and purpose of database objects. Our goal is to create legible, concise and consistent names for our database objects.
@@ -53,10 +24,6 @@ The purpose of naming and style convention allows you and others to identify the
 [Back to top](#top)
 
 ---
-<a href="#" onClick="alert('Hello World!')">Test Link</a>
-<br>
-<button onclick="copyToClip('Improper Named Foreign Key Relationship', 41)">Copy Test</button>
-<br>
 <a name="41"/><a name="naming-foreign-key-relationships"/><a name="naming-foreign-key-relationships"/><a name="improper-named-foreign-key-relationship"/>
 ## Improper Named Foreign Key Relationship
 **Check Id:** 41 [Not implemented yet. click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Improper+Named+Foreign+Key+Relationship)

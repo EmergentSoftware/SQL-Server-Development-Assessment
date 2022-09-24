@@ -24,6 +24,9 @@ The purpose of naming and style convention allows you and others to identify the
 [Back to top](#top)
 
 ---
+<a href="#" onClick="alert('Hello World!')">Test Link</a>
+<br>
+<br>
 <a name="41"/><a name="naming-foreign-key-relationships"/><a name="naming-foreign-key-relationships"/><a name="improper-named-foreign-key-relationship"/>
 ## Improper Named Foreign Key Relationship
 **Check Id:** 41 [Not implemented yet. click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Improper+Named+Foreign+Key+Relationship)

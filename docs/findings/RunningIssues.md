@@ -25,6 +25,8 @@ These are some issues you might run into when running [sp_Develop](https://raw.g
 
 ---
 
+<a name="26"/>
+
 ## Some Checks Skipped
 **Check Id:** 26
 
@@ -35,6 +37,7 @@ We skipped some checks that are not currently possible, relevant, or practical f
 
 ---
 
+<a name="16"/>
 
 ## sp_Develop is Over 6 Months Old
 **Check Id:** 16
@@ -46,6 +49,8 @@ There most likely been some new checks and fixes performed within the last 6 mon
 
 ---
 
+<a name="17"/>
+
 ## Ran on a Non-Readable Availability Group Secondary Databases
 **Check Id:** 17
 
@@ -56,6 +61,8 @@ You are running this on an AG secondary, and some of your databases are configur
 
 ---
  
+<a name="18"/>
+
 ## Ran Against 50+ Databases Without @BringThePain = 1
 **Check Id:** 18
 

@@ -26,6 +26,7 @@ The purpose of naming and style convention allows you and others to identify the
 ---
 
 <a name="41"/><a name="naming-foreign-key-relationships"/><a name="naming-foreign-key-relationships"/>
+
 ## Improper Named Foreign Key Relationship
 **Check Id:** 41 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Improper+Named+Foreign+Key+Relationship)
 
@@ -52,7 +53,8 @@ If utilizing schemas other than ```dbo```, prefix the schema name before the [TA
 
 ---
 
-<a name="42"/><a name="42"/><a name="42"/><a name=""/>
+<a name="42"/>
+
 ## Improper Named Primary Key
 **Check Id:** 42 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Improper+Named+Foreign+Key+Relationship)
 
@@ -73,6 +75,7 @@ If utilizing schemas other than ```dbo```, prefix the schema name before the ```
 ---
 
 <a name="43"/><a name="naming-natural-keys"/>
+
 ## Using Natural Key
 **Check Id:** 43 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Natural+Keys)
 
@@ -83,6 +86,7 @@ If utilizing schemas other than ```dbo```, prefix the schema name before the ```
 ---
 
 <a name="44"/><a name="naming-constraint-usage"/>
+
 ## Improper Named Constraint
 **Potential Finding:** <a name="improper-named-constraint"/><br/>
 **Check Id:** 44 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Constraints+Usage)
@@ -117,7 +121,8 @@ Use the format Use the format ```[TABLE-NAME]_[COLUMN-NAME]_[DESCRIPTION]```
 
 ---
 
-<a name="45"/><a name="Do-not-use-system-generated-object-names"/>
+<a name="45"/><a name="do-not-use-system-generated-object-names"/>
+
 ## Using System-Generated Object Names
 **Check Id:** 45 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Do+not+use+System-Generated+Object+Names)
 
@@ -151,6 +156,7 @@ CREATE TABLE dbo.TableName (
 ---
 
 <a name="13"/><a name="table-relationship-usage"/>
+
 ## Concatenating Two Table Names
 **Check Id:** 13
 
@@ -163,6 +169,7 @@ When a word does not exist to describe the relationship use ``Table1Table2`` wit
 ---
 
 <a name="46"/><a name="parameter-and-variable-naming"/>
+
 ## Improper Parameter and Variable Naming
 **Check Id:** 46 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Parameter+and+Variable+Naming)
 
@@ -183,6 +190,7 @@ Parameter and variable and names should be named identically as the column names
 ---
 
 <a name="47"/><a name="stored-procedures-and-function-naming"/>
+
 ## Improper Stored Procedures and Function Naming
 **Check Id:** 47 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Stored+Procedures+and+Function+Naming)
 
@@ -193,6 +201,7 @@ Stored procedures and functions should be named so they can be ordered by the ta
 ---
 
 <a name="7"/><a name="primary-key-column-name"/>
+
 ## Using ID for Primary Key Column Name
 **Check Id:** 7
 
@@ -233,6 +242,7 @@ FROM
 ---
 
 <a name="48"/><a name="name-foreign-key-columns-the-same-as-the-parent-table"/>
+
 ## Not Naming Foreign Key Column the Same as Parent Table
 **Check Id:** 48 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Name+Foreign+Key+Columns+the+Same+as+the+Parent+Table)
 
@@ -264,6 +274,7 @@ FROM
 
 ---
 <a name="1"/><a name="table-and-view-names-should-be-singular"/>
+
 ## Using Plural in Name
 **Check Id:** 1
 
@@ -277,6 +288,7 @@ If writing code for a data integration and the source is plural keep the staging
 ---
 
 <a name="2"/><a name="database-objects-should-not-use-prefixes"/>
+
 ## Using Prefix in Name
 **Check Id:** 2
 
@@ -294,7 +306,8 @@ Do not prefix your columns with ``fld_``, ``col_``, ``f_``, ``u_`` as it should 
 
 ---
 
-<a name="49"/><a name="Index Naming"/><a name="using-prefix-in-index-name"/>
+<a name="49"/><a name="idex-naming"/><a name="using-prefix-in-index-name"/>
+
 ## Improper Index Name
 **Check Id:** 49 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Improper+Index+Name)
 
@@ -309,7 +322,8 @@ No need for prefixing (``PK_``, ``IX_``, ``UK_``, ``UX_``) your index names. See
 
 ---
 
-<a name="50"/><a name="PascalCase Usage"/>
+<a name="50"/><a name="pascalcase-usage"/>
+
 ## Not Using PascalCase
 **Check Id:** 50 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=PascalCase+Usage)
 
@@ -320,6 +334,7 @@ For all parts of the table name, including prefixes, use Pascal Case. `PascalCas
 ---
 
 <a name="4"/><a name="reserved-words-usage"/>
+
 ## Using Reserved Words in Name
 **Check Id:** 4
 
@@ -332,6 +347,7 @@ Using reserved or future reserved words makes code more difficult to read, can c
 ---
 
 <a name="5"/><a name="special-characters-usage"/>
+
 ## Including Special Characters in Name
 **Check Id:** 5
 
@@ -344,6 +360,7 @@ Special characters should not be used in names. Using PascalCase for your table 
 ---
 
 <a name="11"/><a name="number-usage-in-database-objects"/>
+
 ## Including Numbers in Table Name
 **Check Id:** 11
 
@@ -356,6 +373,7 @@ It is far better to use partitions than to create dated tables such as ``Invoice
 ---
 
 <a name="12"/>
+
 ## Column Named Same as Table
 **Check Id:** 12
 
@@ -374,7 +392,7 @@ A use case exception is for tables that store something like account numbers. Th
 ## Using Abbreviation
 **Check Id:** 51 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Abbreviation)
 
-Avoid using abbreviation if possible. Use ``Account`` instead of ``Acct`` and ``Hour`` instead of ``Hr``. Not everyone will always agree with you on what your abbreviations stand for - and - this makes it simple to read and understand for both developers and non-developers..
+Avoid using abbreviation if possible. Use ``Account`` instead of ``Acct`` and ``Hour`` instead of ``Hr``. Not everyone will always agree with you on what your abbreviations stand for - and - this makes it simple to read and understand for both developers and non-developers.
 
 ```
 Acct, AP, AR, Hr, Rpt, Assoc, Desc
@@ -385,6 +403,7 @@ Acct, AP, AR, Hr, Rpt, Assoc, Desc
 ---
 
 <a name="52"/>
+
 ## Non-Affirmative Boolean Name Use
 **Check Id:** 52 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Non-Affirmative+Boolean+Name+Use)
 
@@ -395,6 +414,7 @@ Bit columns should be given affirmative boolean names like ``IsActive``, ``IsDel
 ---
 
 <a name="14"/>
+
 ## Column Naming
 **Check Id:** 14
 
@@ -440,6 +460,7 @@ Bit columns should be given affirmative boolean names like ``IsActive``, ``IsDel
 ---
 
 <a name="53"/>
+
 ## URL or URI Naming
 **Check Id:** 53 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=URL+or+URI+Naming)
 

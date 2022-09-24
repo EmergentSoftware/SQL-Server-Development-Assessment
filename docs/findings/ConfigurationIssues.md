@@ -25,10 +25,11 @@ These checks are for configurations to the SQL Server.
 
 ---
 
-54
+<a name="54"/>
+
 ## Use Code Retry Logic to Handle Transient Errors
 **Potential Finding:** <a name="not-using-code-retry-logic-for-transient-errors"/>Not Using Code Retry Logic for Transient Errors<br/>
-**Check Id:** 54 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Use+Code+Retry+Logic+to+Handle+Transient+Errors)
+**Check Id:** 54 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Use+Code+Retry+Logic+to+Handle+Transient+Errors)
 
 It is best practice to implement client code to mitigate connection errors and transient errors that your client application encounters when communicating with a SQL Server (On-premises SQL Server, Azure SQL Database, Azure SQL Managed Instance and Azure Synapse Analytics).
 
@@ -46,7 +47,8 @@ Ensure you are using the failover group name or availability group listener name
 
 ---
 
-55
+<a name="55"/>
+
 ## Do Not Grant an Application User the db_owner Role
 **Potential Finding:** <a name="application-user-granted-db_owner-role"/>Application User Granted db_owner Role<br/>
 **Check Id:** 55 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleDo+Not+Grant+an+Application+User+the+db_owner+Role)
@@ -61,10 +63,11 @@ When a vulnerability is found in the code, service or operating system the "Prin
 
 ---
 
-56
+<a name="56"/>
+
 ## Use the Query Execution Defaults
 **Potential Finding:** <a name="not-using-query-execution-defaults"/>Not Using Query Execution Defaults<br/>
-**Check Id:** 56 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Query+Execution+Defaults)
+**Check Id:** 56 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Query+Execution+Defaults)
 
 There are query execution defaults included in SSMS (SQL Server Management Studio) and Visual Studio. These defaults must be maintained or overridden at the connection or session level if needed. If the defaults are not consistently used certain TSQL script, stored procedures or functions might not behave as developed.
 
@@ -92,7 +95,8 @@ Visual Studio database projects should be setup with the 7 query execution SET d
 
 ---
 
-57
+<a name="57"/>
+
 ## The Application User should be a Contained User
 **Potential Finding:** <a name="application-user-is-not-a-contained-user"/>Application User is not a Contained User<br/>
 **Check Id:** 57 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleThe+Application+User+should+be+a+Contained+User)
@@ -105,7 +109,8 @@ Users that only access one database should generally be created as contained use
 
 ---
 
-58
+<a name="58"/>
+
 ## All Database Objects Should be Owned by dbo
 **Potential Finding:** <a name="object-not-owned-by-dbo"/>Object Not Owned by dbo<br/>
 **Check Id:** 58 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleAll+Database+Objects+Should+be+Owned+by+dbo)
@@ -116,7 +121,8 @@ It simplifies object management with dbo owning all the database objects. You wi
 
 ---
 
-59
+<a name="59"/>
+
 ## The Database Compatibility Level Should Match the SQL Server Version
 **Potential Finding:** <a name="database-compatibility-level-is-lower-than-the-sql-server"/>Database Compatibility Level is Lower Than the SQL Server<br/>
 **Check Id:** 59 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleThe+Database+Compatibility+Level+Should+Match+the+SQL+Server+Version)

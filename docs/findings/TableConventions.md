@@ -26,6 +26,7 @@ Table design matters because it is essential for building software applications 
 ---
 
 <a name="147"/>
+
 ## Incorrect Inheritance Type
 **Check Id:** 147 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Inheritance+Type)
 
@@ -42,6 +43,7 @@ TPC & TPH do not follow normal form.
 ---
 
 <a name="148"/>
+
 ## Using Entity Attribute Value
 **Check Id:** 148 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Entity+Attribute+Value)
 
@@ -130,6 +132,7 @@ CREATE TABLE dbo.ProductVariant (
 ---
 
 <a name="149"/>
+
 ## Incorrect Weak or Strong Table
 **Check Id:** 149 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Weak+or+Strong+Table)
 
@@ -172,6 +175,7 @@ A use case exception for using the proper weak or strong type is for security pu
 ---
 
 <a name="150"/>
+
 ## Nullable Columns with No Non-Null Records
 **Check Id:** 150 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Nullable+Columns+with+No+Non-Null+Records)
 
@@ -200,8 +204,9 @@ This execution plan shows ```JOIN``` elimination has not occurred. While there i
 
 ---
 
-## Column Named ????Id But No Foreign Key Exists
-**Potential Finding:** <a name="column-named-id-but-no-fk-exists"/>Column Named ????Id But No FK Exists<br/>
+<a name="31"/><a name="column-named-id-but-no-foreign-key-exists"/>
+
+## Column Named ????Id But No FK Exists
 **Check Id:** 31
 
 In most cases, columns with the name ????Id that are not the primary key should have a foreign key relationship to another table.
@@ -214,8 +219,10 @@ You will not get JOIN Eliminations without a foreign key and a column that allow
 
 ---
 
+<a name="151"/>
+
 ## Using Cascading Actions on Foreign Key
-**Check Id:** 151 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Cascading+Actions+on+Foreign+Key)
+**Check Id:** 151 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Cascading+Actions+on+Foreign+Key)
 
 Use a stored procedure or SQL command in your software code to delete data in multiple related tables instead of `ON DELETE CASCADE` on the foreign key.
 
@@ -235,17 +242,20 @@ Could not create constraint or index. See previous errors.
 
 ---
 
+<a name="152"/>
+
 ## NULL or NOT NULL Option is not Specified in CREATE or DECLARE TABLE
-**Check Id:** 152 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=NULL+or+NOT+NULL+option+is+not+specified+in+CREATE+or+DECLARE+TABLE)
+**Check Id:** 152 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=NULL+or+NOT+NULL+option+is+not+specified+in+CREATE+or+DECLARE+TABLE)
 
 You should always explicitly define ``NULL`` or ``NOT NULL`` for columns when creating or declaring a table. The default of allowing NULLs can be changed with the database setting ``ANSI_NULL_DFLT_ON``.
 
 [Back to top](#top)
 
 ---
+<a name="153"/>
 
 ## ASC or DESC is Not Specified
-**Check Id:** 153 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=ASC+or+DESC+is+Not+Specified)
+**Check Id:** 153 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=ASC+or+DESC+is+Not+Specified)
 
 You should always explicitly define ascending (``ASC``) or descending (``DESC``). This allows others who review or edit the code to not know that ``ASC`` is the default sort order.
 
@@ -253,8 +263,9 @@ You should always explicitly define ascending (``ASC``) or descending (``DESC``)
 
 ---
 
-## Unique Constraint or Unique Indexes Usage
-**Potential Finding:** <a name="using-unique-constraint-instead-of-unique-indexes"/>Using Unique Constraint Instead of Unique Indexes<br/>
+<a name="30"/><a name="using-unique-constraint-instead-of-unique-indexes"/>
+
+## 
 **Check Id:** 30
 
 Create unique indexes instead of unique constraints (unique key). Doing so removes a dependency of a unique key to the unique index that is created automatically and tightly coupled.
@@ -275,6 +286,8 @@ The only possible benefit of a unique constraint (unique key) has over a unique 
 
 ---
 
+<a name="32"/>
+
 ## More Than 5 Indexes
 **Check Id:** 32
 
@@ -294,6 +307,8 @@ You or your DBA should implement an index tuning strategy like below.
 
 ---
 
+<a name="33"/>
+
 ## Less than 2 Indexes
 **Check Id:** 33
 
@@ -303,6 +318,8 @@ Your table might be under indexed. Would an index on any other column make your 
 
 ---
 
+<a name="34"/>
+
 ## Disabled Index
 **Check Id:** 34
 
@@ -311,6 +328,8 @@ An index rebuild or reorganization will enabled disabled indexes. It is now best
 [Back to top](#top)
 
 ---
+
+<a name="35"/>
 
 ## Leftover Fake Index
 **Check Id:** 35
@@ -325,8 +344,10 @@ There are better ways to performance tune than using the wizards.
 
 ---
 
+<a name="154"/>
+
 ## Filter Columns Not In Index Definition
-**Check Id:** 154 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Filter+Columns+Not+In+Index+Definition)
+**Check Id:** 154 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Filter+Columns+Not+In+Index+Definition)
 
 Add the filtered columns in the ```INCLUDE()``` on your index so your queries do not need to perform a key lookup. By including the filtered columns, SQL Server generates statistics on the columns.
 
@@ -351,6 +372,8 @@ CREATE NONCLUSTERED INDEX Account_Greater_Than_Half_Million
 
 ---
 
+<a name="36"/>
+
 ## Column Has a Different Collation Than Database
 **Check Id:** 36
 
@@ -359,6 +382,8 @@ This could cause issues if the code is not aware of different collations and doe
 [Back to top](#top)
 
 ---
+
+<a name="37"/>
 
 ## Low Index Fill-Factor
 **Check Id:** 37
@@ -377,9 +402,9 @@ Review indexes diagnosed with low fill factor. Check how much they’re written 
 
 ---
 
+<a name="38"/><a name="39"/><a name="untrusted-foreign-key"/><a name="untrusted-check-constraints"/>
+
 ## Untrusted Foreign Key or Check Constraints
-**Potential Finding:** <a name="untrusted-foreign-key"/>Untrusted Foreign Key<br/>
-**Potential Finding:** <a name="untrusted-check-constraints"/>Untrusted Check Constraints<br/>
 **Check Id:** 38 & 39
 
 SQL Server is not going to consider using untrusted constraints to compile a better execution plan. This can have a huge performance impact on your database queries.
@@ -442,6 +467,8 @@ ORDER BY
 
 ---
 
+<a name="40"/>
+
 ## Disabled Check Constraint
 **Check Id:** 40
 
@@ -451,6 +478,8 @@ You should check to see if it was on purpose that you have a disabled check cons
 
 ---
 
+<a name="41"/>
+
 ## Unrelated to Any Other Table
 **Check Id:** 41
 
@@ -459,6 +488,8 @@ This is just a sanity check to let you know there is a table that does not have 
 [Back to top](#top)
 
 ---
+
+<a name="22"/>
 
 ## uniqueidentifier in a Clustered Index
 **Check Id:** 22
@@ -481,6 +512,8 @@ These are a 400 level tasks and please feel free to reach out to a DBA for assis
 
 ---
 
+<a name="21"/>
+
 ## Missing Index for Foreign Key
 **Check Id:** 21
 
@@ -490,6 +523,8 @@ Each foreign key in your table should be included in an index. Start off with an
 
 ---
 
+<a name="20"/>
+
 ## Missing Primary Key
 **Check Id:** 20
 
@@ -498,6 +533,8 @@ Every table should have some column (or set of columns) that uniquely identifies
 [Back to top](#top)
 
 ---
+
+<a name="8"/>
 
 ## uniqueidentifier For Primary Key
 **Check Id:** 8
@@ -517,6 +554,8 @@ A use case for when you can use ``uniqueidentifier/guid`` as primary keys, is wh
 
 ---
 
+<a name="3"/>
+
 ## Wide Table
 **Check Id:** 3
 
@@ -525,6 +564,8 @@ Do you have more than 20 columns? You might be treating this table like a spread
 [Back to top](#top)
 
 ---
+
+<a name="6"/>
 
 ## Heap
 **Check Id:** 6
@@ -543,8 +584,10 @@ Heaps have performance issues like table scans, forward fetches.
 
 ---
 
+<a name="155"/>
+
 ## Not Normalizing Tables
-**Check Id:** 155 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Normalizing+Tables)
+**Check Id:** 155 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Normalizing+Tables)
 
 [Database Normalizing](https://en.wikipedia.org/wiki/Database_normalization) tables is regarded as a best practice methodology for relational databases design. Relational database tables should be normalized to at least the [Boyce–Codd normal form (BCNF or 3.5NF)](https://en.wikipedia.org/wiki/Boyce%E2%80%93Codd_normal_form).
 
@@ -558,6 +601,8 @@ A normalize table design like addresses and phone numbers in separate tables all
 [Back to top](#top)
 
 ---
+
+<a name="30"/>
 
 ## System Versioned Temporal Tables are not Compressed
 **Check Id:** 30

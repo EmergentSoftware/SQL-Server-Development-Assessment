@@ -370,10 +370,11 @@ A use case exception is for tables that store something like account numbers. Th
 ---
 
 <a name="51"/>
+
 ## Using Abbreviation
 **Check Id:** 51 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Abbreviation)
 
-Avoid using abbreviation if possible. Use ``Account`` instead of ``Acct`` and ``Hour`` instead of ``Hr``. Not everyone will always agree with you on what your abbreviations stand for - and - this makes it simple to read and understand for both developers and non-developers.
+Avoid using abbreviation if possible. Use ``Account`` instead of ``Acct`` and ``Hour`` instead of ``Hr``. Not everyone will always agree with you on what your abbreviations stand for - and - this makes it simple to read and understand for both developers and non-developers..
 
 ```
 Acct, AP, AR, Hr, Rpt, Assoc, Desc

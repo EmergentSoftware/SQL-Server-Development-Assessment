@@ -24,10 +24,9 @@ The purpose of naming and style convention allows you and others to identify the
 [Back to top](#top)
 
 ---
-
-## Naming Foreign Key Relationships
-**Potential Finding:** <a name="improper-named-foreign-key-relationship"/>Improper Named Foreign Key Relationship<br/>
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Naming+Foreign+Key+Relationships)
+<a name="41"/><a name="naming-foreign-key-relationships"/><a name="naming-foreign-key-relationships"/><a name="improper-named-foreign-key-relationship"/>
+## Improper Named Foreign Key Relationship
+**Check Id:** 41 [Not implemented yet. click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Improper+Named+Foreign+Key+Relationship)
 
 No need to use the ``FK_`` prefix in foreign key relationships. See [Using Prefix in Name](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/naming-conventions#using-prefix-in-name).
 

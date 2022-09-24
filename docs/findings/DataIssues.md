@@ -25,9 +25,10 @@ Checks for data issues.
 
 ---
 
+60
 ## Do not use Placeholder Rows 
 **Potential Finding:** <a name="using-placeholder-rows"/>Using Placeholder Rows<br/>
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Placeholder+Rows)
+**Check Id:** 60 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Placeholder+Rows)
 
 A placeholder is an empty row/record that is created to hold the place of possible future data in the row that may or may not be necessary.
 

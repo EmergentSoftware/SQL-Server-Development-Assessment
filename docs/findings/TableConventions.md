@@ -25,8 +25,9 @@ Table design matters because it is essential for building software applications 
 
 ---
 
+<a name="147"/>
 ## Incorrect Inheritance Type
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Inheritance+Type)
+**Check Id:** 147 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Inheritance+Type)
 
 Use the [Table Per Type (TPT)](https://entityframework.net/tpt) table design pattern.
 
@@ -40,8 +41,9 @@ TPC & TPH do not follow normal form.
 
 ---
 
+<a name="148"/>
 ## Using Entity Attribute Value
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Entity+Attribute+Value)
+**Check Id:** 148 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Entity+Attribute+Value)
 
 The [Entity–Attribute–Value (EAV) model ](https://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model) falls victim to the [Inner-platform effect](https://en.wikipedia.org/wiki/Inner-platform_effect).
 
@@ -127,8 +129,9 @@ CREATE TABLE dbo.ProductVariant (
 
 ---
 
+<a name="149"/>
 ## Incorrect Weak or Strong Table
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Weak+or+Strong+Table)
+**Check Id:** 149 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Incorrect+Weak+or+Strong+Table)
 
 Use the proper weak or strong table type based on the entity.
 
@@ -168,8 +171,9 @@ A use case exception for using the proper weak or strong type is for security pu
 
 ---
 
+<a name="150"/>
 ## Nullable Columns with No Non-Null Records
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Nullable+Columns+with+No+Non-Null+Records)
+**Check Id:** 150 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Nullable+Columns+with+No+Non-Null+Records)
 
 If the row data in the table does not contain any ```NULL``` values you should assess setting the column to not 'Allow Nulls'.
 
@@ -211,7 +215,7 @@ You will not get JOIN Eliminations without a foreign key and a column that allow
 ---
 
 ## Using Cascading Actions on Foreign Key
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Cascading+Actions+on+Foreign+Key)
+**Check Id:** 151 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Cascading+Actions+on+Foreign+Key)
 
 Use a stored procedure or SQL command in your software code to delete data in multiple related tables instead of `ON DELETE CASCADE` on the foreign key.
 
@@ -232,7 +236,7 @@ Could not create constraint or index. See previous errors.
 ---
 
 ## NULL or NOT NULL Option is not Specified in CREATE or DECLARE TABLE
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=NULL+or+NOT+NULL+option+is+not+specified+in+CREATE+or+DECLARE+TABLE)
+**Check Id:** 152 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=NULL+or+NOT+NULL+option+is+not+specified+in+CREATE+or+DECLARE+TABLE)
 
 You should always explicitly define ``NULL`` or ``NOT NULL`` for columns when creating or declaring a table. The default of allowing NULLs can be changed with the database setting ``ANSI_NULL_DFLT_ON``.
 
@@ -241,7 +245,7 @@ You should always explicitly define ``NULL`` or ``NOT NULL`` for columns when cr
 ---
 
 ## ASC or DESC is Not Specified
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=ASC+or+DESC+is+Not+Specified)
+**Check Id:** 153 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=ASC+or+DESC+is+Not+Specified)
 
 You should always explicitly define ascending (``ASC``) or descending (``DESC``). This allows others who review or edit the code to not know that ``ASC`` is the default sort order.
 
@@ -322,7 +326,7 @@ There are better ways to performance tune than using the wizards.
 ---
 
 ## Filter Columns Not In Index Definition
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Filter+Columns+Not+In+Index+Definition)
+**Check Id:** 154 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Filter+Columns+Not+In+Index+Definition)
 
 Add the filtered columns in the ```INCLUDE()``` on your index so your queries do not need to perform a key lookup. By including the filtered columns, SQL Server generates statistics on the columns.
 
@@ -540,7 +544,7 @@ Heaps have performance issues like table scans, forward fetches.
 ---
 
 ## Not Normalizing Tables
-**Check Id:** [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Normalizing+Tables)
+**Check Id:** 155 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Normalizing+Tables)
 
 [Database Normalizing](https://en.wikipedia.org/wiki/Database_normalization) tables is regarded as a best practice methodology for relational databases design. Relational database tables should be normalized to at least the [Boyce–Codd normal form (BCNF or 3.5NF)](https://en.wikipedia.org/wiki/Boyce%E2%80%93Codd_normal_form).
 

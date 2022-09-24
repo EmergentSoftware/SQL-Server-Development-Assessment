@@ -25,10 +25,10 @@ Checks for data issues.
 
 ---
 
-60
-## Do not use Placeholder Rows 
-**Potential Finding:** <a name="using-placeholder-rows"/>Using Placeholder Rows<br/>
-**Check Id:** 60 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Placeholder+Rows)
+<a name="60"/><a name="do-not-use-placeholder-rows"/>
+
+## Using Placeholder Rows
+**Check Id:** 60 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Placeholder+Rows)
 
 A placeholder is an empty row/record that is created to hold the place of possible future data in the row that may or may not be necessary.
 
@@ -39,6 +39,9 @@ While placeholder rows do not violate database normalization rules, it is not co
 [Back to top](#top)
 
 ---
+
+<a name="27"/>
+
 ## Data Should be Encrypted if Compliance Dictates
 **Potential Finding:** <a name="unencrypted-data"/>Unencrypted Data<br/>
 **Check Id:** 27

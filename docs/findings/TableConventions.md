@@ -402,10 +402,10 @@ Review indexes diagnosed with low fill factor. Check how much they’re written 
 
 ---
 
-<a name="38"/><a name="39"/><a name="untrusted-foreign-key"/><a name="untrusted-check-constraints"/>
+<a name="38"/><a name="untrusted-foreign-key"/><a name="untrusted-check-constraints"/>
 
 ## Untrusted Foreign Key or Check Constraints
-**Check Id:** 38 & 39
+**Check Id:** 38
 
 SQL Server is not going to consider using untrusted constraints to compile a better execution plan. This can have a huge performance impact on your database queries.
 

@@ -1535,11 +1535,11 @@ END CATCH;
 
 ---
 
-<a name="156"/>
+<a name="39"/>
 
 ## Using Implicit Transactions
 **Potential Finding:** <a name="using-implicit-transactions"/><br/>
-**Check Id:** 156 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Implicit+Transactions)
+**Check Id:** 39 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+Implicit+Transactions)
 
 <a name="do-not-use-set-implicit_transactions-on"/>
 

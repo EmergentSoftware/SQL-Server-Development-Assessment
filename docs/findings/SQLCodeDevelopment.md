@@ -129,7 +129,6 @@ ELSE
     END;
 ```
 
-
 **Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.
 
 Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate an UPSERT stored procedure at least as starting point.
@@ -153,7 +152,6 @@ IF @@ROWCOUNT = 0
 
 COMMIT TRANSACTION;
 ```
-
 
 **Use this UPSERT pattern when a record insert is more likely:** Don't worry about checking for a records existence just perform the insert.
 
@@ -531,7 +529,6 @@ AS
     END;
 ```
 
-
 [Back to top](#top)
 
 ---
@@ -561,12 +558,10 @@ This pattern has joins on aggregated data sets, which can result in poor perform
 
 - See [Query Anti-Pattern 2: Aggregations in Intermediate Result Sets](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries#:~:text=Query%20Anti%2DPattern%202%3A%20Aggregations%20in%20Intermediate%20Result%20Sets)
 
-
 ### A large number of very complex joins
 This pattern has a large number of joins, especially joins on ranges, which can result in poor performance because of progressively degrading estimates of cardinality. This can be resolved by breaking down the query and using temporary tables.
 
 - See [Other Query Types to Break Down](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries#:~:text=A%20query%20with%20a%20large%20number%20of%20very%20complex%20joins)
-
 
 ### A CASE clause in the WHERE or JOIN clause
 This pattern has CASE operators in the WHERE or JOIN clauses, which cause poor estimates of cardinality. This can be resolved by breaking down the cases into separate queries and using the Transact-SQL IF statement to direct the flow for the conditions.
@@ -574,7 +569,6 @@ This pattern has CASE operators in the WHERE or JOIN clauses, which cause poor e
 - See [Other Query Types to Break Down](https://docs.microsoft.com/en-us/archive/blogs/sqlcat/when-to-break-down-complex-queries#:~:text=%C2%B7-,A%20CASE%20clause%20in%20the%20WHERE%20or%20JOIN%20clause,-This%20case%20refers)
 
 An understanding of the concepts introduced in these four cases can help you identify other situations in which these or similar patterns are causing poor or inconsistent performance; you can then construct a replacement query which will give you better, more consistent performance.
-
 
 [Back to top](#top)
 
@@ -627,7 +621,6 @@ AS
         AND (TH.Quantity         = ISNULL(@childFilter, m.Child));
     END;
 ```
-
 
 ### IF Branches are not a Viable Fix
 The problem is that we already have a query plan when we hit the `IF @CreationDate IS NULL` segment of TSQL.
@@ -1038,7 +1031,6 @@ The missing index feature has the following limitations:
 * It can return different costs for the same missing index group that appears multiple times in XML Showplans.
 * It does not consider trivial query plans.
 
-
 [Back to top](#top)
 
 ---
@@ -1164,7 +1156,6 @@ IF @@TRANCOUNT > 0
 ```sql
 IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
 ```
-
 ### Stored Procedures
 
 **Use this:**
@@ -1179,7 +1170,6 @@ AS
     END;
 GO
 ```
-
 **Instead of this:**
 ```sql
 CREATE OR ALTER PROCEDURE dbo.BusinessEntityAction

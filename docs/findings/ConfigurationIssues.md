@@ -25,10 +25,9 @@ These checks are for configurations to the SQL Server.
 
 ---
 
-<a name="54"/>
+<a name="54"/><a name="use-code-retry-logic-to-handle-transient-errors"/>
 
-## Use Code Retry Logic to Handle Transient Errors
-**Potential Finding:** <a name="not-using-code-retry-logic-for-transient-errors"/>Not Using Code Retry Logic for Transient Errors<br/>
+## Not Using Code Retry Logic for Transient Errors
 **Check Id:** 54 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Use+Code+Retry+Logic+to+Handle+Transient+Errors)
 
 It is best practice to implement client code to mitigate connection errors and transient errors that your client application encounters when communicating with a SQL Server (On-premises SQL Server, Azure SQL Database, Azure SQL Managed Instance and Azure Synapse Analytics).
@@ -47,10 +46,9 @@ Ensure you are using the failover group name or availability group listener name
 
 ---
 
-<a name="55"/>
+<a name="55"/><a name="do-not-grant-an-application-user-the-db_owner-role"/>
 
-## Do Not Grant an Application User the db_owner Role
-**Potential Finding:** <a name="application-user-granted-db_owner-role"/>Application User Granted db_owner Role<br/>
+## Application User Granted db_owner Role
 **Check Id:** 55 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleDo+Not+Grant+an+Application+User+the+db_owner+Role)
 
 You will want to give an account or process only those privileges which are essential to perform its intended function. Start your development with the app user account only a member of the db_reader, db_writer and db_executor roles.
@@ -63,10 +61,9 @@ When a vulnerability is found in the code, service or operating system the "Prin
 
 ---
 
-<a name="56"/>
+<a name="56"/><a name="use-the-query-execution-defaults"/>
 
-## Use the Query Execution Defaults
-**Potential Finding:** <a name="not-using-query-execution-defaults"/>Not Using Query Execution Defaults<br/>
+## Not Using Query Execution Defaults
 **Check Id:** 56 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Not+Using+Query+Execution+Defaults)
 
 There are query execution defaults included in SSMS (SQL Server Management Studio) and Visual Studio. These defaults must be maintained or overridden at the connection or session level if needed. If the defaults are not consistently used certain TSQL script, stored procedures or functions might not behave as developed.
@@ -95,10 +92,9 @@ Visual Studio database projects should be setup with the 7 query execution SET d
 
 ---
 
-<a name="57"/>
+<a name="57"/><a name="the-application-user-should-be-a-contained-user"/>
 
-## The Application User should be a Contained User
-**Potential Finding:** <a name="application-user-is-not-a-contained-user"/>Application User is not a Contained User<br/>
+## Application User is not a Contained User
 **Check Id:** 57 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleThe+Application+User+should+be+a+Contained+User)
 
 Users that only access one database should generally be created as contained users which means they don't have a SQL Server "login" and are not found as users in the master database. This makes the database portable by not requiring a link to a SQL Server Login. A database with contained users can be restored to your development SQL Server or a migration event needs to occur in production to a different SQL Server.
@@ -109,10 +105,9 @@ Users that only access one database should generally be created as contained use
 
 ---
 
-<a name="58"/>
+<a name="58"/><a name="all-database-objects-should-be-owned-by-dbo"/>
 
-## All Database Objects Should be Owned by dbo
-**Potential Finding:** <a name="object-not-owned-by-dbo"/>Object Not Owned by dbo<br/>
+## Object Not Owned by dbo
 **Check Id:** 58 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleAll+Database+Objects+Should+be+Owned+by+dbo)
 
 It simplifies object management with dbo owning all the database objects. You will need to transfer ownership of objects before an account can be deleted.
@@ -121,10 +116,9 @@ It simplifies object management with dbo owning all the database objects. You wi
 
 ---
 
-<a name="59"/>
+<a name="59"/><a name="the-database-compatibility-level-should-match-the-sql-server-version"/>
 
-## The Database Compatibility Level Should Match the SQL Server Version
-**Potential Finding:** <a name="database-compatibility-level-is-lower-than-the-sql-server"/>Database Compatibility Level is Lower Than the SQL Server<br/>
+## Database Compatibility Level is Lower Than the SQL Server
 **Check Id:** 59 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleThe+Database+Compatibility+Level+Should+Match+the+SQL+Server+Version)
 
 The database compatibility level lower than the SQL Server it is running on.

@@ -1563,7 +1563,6 @@ The sample stored procedures below can be used to wire up and test software code
 - See [Using RAISERROR Instead of THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-raiserror-instead-of-throw)
 - See [Not Using Transactions](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#not-using-transactions)
 
-
 ### THROW Methodology (dbo.TestTHROW)
 This error catching and trowing methodology is the newest. [```THROW```](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/throw-transact-sql), introduced in SQL Server 2012 and raises an exception and transfers execution to a ```CATCH``` block of a ```TRY...CATCH``` construct.
 
@@ -1580,7 +1579,6 @@ This methodology utilizes stored procedure ```OUTPUT``` parameters. Here you can
 [New applications should use THROW instead of RAISERROR](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/raiserror-transact-sql?redirectedfrom=MSDN#:~:text=New%20applications%20should%20use%20THROW%20instead.)
 
 - See [Using RAISERROR Instead of THROW](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-raiserror-instead-of-throw).
-
 
 ```sql
 /**********************************************************************************************************************/

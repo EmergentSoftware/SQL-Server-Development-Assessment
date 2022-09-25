@@ -199,10 +199,10 @@ SELECT * FROM sys.time_zone_info
 
 ---
 
-<a name="70"/><a name="use-the-date-data-type-when-time-values-are-not-required-or-the-smalldatetime-data-type-when-precision-of-minute-is-acceptable"/>
+<a name="156"/><a name="use-the-date-data-type-when-time-values-are-not-required-or-the-smalldatetime-data-type-when-precision-of-minute-is-acceptable"/>
 
 ## Using datetime or datetime2 Instead of date
-**Check Id:** 70 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Use+the+date+Data+Type+When+Time+Values+are+not+Required+or+the+smalldatetime+Data+Type+when+Precision+of+Minute+is+Acceptable)
+**Check Id:** 156 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Use+the+date+Data+Type+When+Time+Values+are+not+Required+or+the+smalldatetime+Data+Type+when+Precision+of+Minute+is+Acceptable)
 
 Use the `date` data type when time values are not required or the `smalldatetime` data type when precision of minute is acceptable.
 

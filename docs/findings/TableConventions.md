@@ -263,10 +263,10 @@ You should always explicitly define ascending (``ASC``) or descending (``DESC``)
 
 ---
 
-<a name="30"/><a name="using-unique-constraint-instead-of-unique-indexes"/>
+<a name="29"/><a name="using-unique-constraint-instead-of-unique-indexes"/>
 
-## System Versioned Temporal Tables are not Compressed
-**Check Id:** 30
+## Unique Constraint or Unique Indexes Usage
+**Check Id:** 29
 
 Create unique indexes instead of unique constraints (unique key). Doing so removes a dependency of a unique key to the unique index that is created automatically and tightly coupled.
 

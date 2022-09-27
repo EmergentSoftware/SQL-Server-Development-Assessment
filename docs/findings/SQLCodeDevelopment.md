@@ -131,7 +131,7 @@ ELSE
 
 **Use this UPSERT pattern when a record update is more likely:** Don't worry about checking for a records existence just perform the update.
 
-Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate an UPSERT stored procedure at least as starting point.
+Consider using [sp_CRUDGen](https://github.com/kevinmartintech/sp_CRUDGen) to generate an UPSERT stored procedure at least as starting point.
 
 ```sql
 SET NOCOUNT, XACT_ABORT ON;
@@ -667,7 +667,7 @@ AS
 
 - See [Dynamic Search Conditions in T‑SQL](http://www.sommarskog.se/dyn-search-2008.html) by Erland Sommarskog
 
-Consider using [sp_CRUDGen](https://kevinmartin.tech/sp_crudgen) to generate the dynamic SQL query for you.
+Consider using [sp_CRUDGen](https://github.com/kevinmartintech/sp_CRUDGen) to generate the dynamic SQL query for you.
 
 [Back to top](#top)
 

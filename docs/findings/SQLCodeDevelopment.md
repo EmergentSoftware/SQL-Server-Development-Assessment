@@ -59,6 +59,10 @@ With stored procedures there is a lot more options to tune a query. You can spli
 
 The free opensource [sp_CRUDGen](https://github.com/kevinmartintech/sp_CRUDGen) can be utilized to create 11 different stored procedures from basic your Create, Read, Update, Delete, Upsert stored procedures to extremely advanced safe dynamic Search stored procedures otherwise known as optional parameters, kitchen sink, Swiss army knife, catch-all queries. The generated stored procedure code utilizes the SQL Server community best practices.
 
+- See [Database-First: Stored Procedure in Entity Framework](https://www.entityframeworktutorial.net/stored-procedure-in-entity-framework.aspx)
+- See [Simple C# Data Access with Dapper and SQL - Minimal API Project Part 1](https://www.youtube.com/watch?v=dwMFg6uxQ0I)
+- See [Simple C# Data Access with Dapper and SQL - Minimal API Project Part 2](https://www.youtube.com/watch?v=5tYSO5mAjXs)
+
 [Back to top](#top)
 
 ---

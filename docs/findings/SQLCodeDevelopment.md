@@ -37,7 +37,17 @@ Most importantly, you work from a single source of truth, greatly reducing the r
 
 Your choices are [Redgate SQL Source Control](https://www.red-gate.com/products/sql-development/sql-source-control/) or a SSDT ([SQL Server Data Tools](https://docs.microsoft.com/en-us/sql/ssdt/download-sql-server-data-tools-ssdt)) database project backed by DevOps or Github depending on the client requirments.
 
-The database project source control should be kept separate from application code. Database and reporting team members might/should not need access to the app source code. The data and business intelligence development team might have their own changes (performance tuning, data warehouse, reporting) in a "dev" branch, but their version is not ready for production yet.
+It is recommended that the database project source control be kept separate from application code. Database and reporting team members might/should not need access to the app source code. The data and business intelligence development team might have their own changes (performance tuning, data warehouse, reporting) in a "dev" branch, but their version is not ready for production yet.
+
+**Reasons to use a [monorepo](https://en.wikipedia.org/wiki/Monorepo) for multiple projects**
+- All the projects have the same permissions and access needs
+- All the projects are fully aligned in terms of versioning
+- All the projects must always be deployed together by the CI/CD pipeline(s)
+- All the projects cannot be built separately unless they are in the same solution
+
+If you choose to use a [monorepo](https://en.wikipedia.org/wiki/Monorepo), please ensure you have accounted for the issues that can occur if not all the bullet points are fully true.
+
+- See [Should the Database and Application projects be in the same Repository?](https://eitanblumin.com/2022/07/05/should-the-database-and-application-projects-be-in-the-same-repository) article by Eitan Blumin.
 
 [Back to top](#top)
 

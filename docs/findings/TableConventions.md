@@ -593,10 +593,17 @@ Heaps have performance issues like table scans, forward fetches.
 
 These normalizing principles are used to reduce data duplication, avoid data anomalies, ensure table relationship integrity, and make data management simplified.
 
-You should always normalize the database schema unless you have a really good reason not to. Denormalizing has been performed in the past with the saying "Normalize until it hurts, denormalize until it works". Denormalization almost always leads to eventual issues. Denormalization complicates updates, deletes & inserts making the database difficult to modify. We have tools like indexed or materialized views and covering indexes to remediate performance issues. There are query rewriting techniques that can make queries more performant. 
-
 A normalize table design like addresses and phone numbers in separate tables allows for extensibility when the requirements today might only call for a single phone number or address. You can utilize a ``UNIQUE`` constraint/index to ensure only a single row can exist but allows for flexibility in the future. You will already have the Phone table so you will not have to create a new table and migrate the data and drop the ``UNIQUE`` constraint/index.
 
+You should always normalize the database schema unless you have a really good reason not to. Denormalizing has been performed in the past with the saying "Normalize until it hurts, denormalize until it works". Denormalization almost always leads to eventual issues. Denormalization complicates updates, deletes & inserts making the database difficult to modify. We have tools like indexes or materialized views and covering indexes to remediate performance issues. There are query rewriting techniques that can make queries more performant. 
+
+If data is denormalized there are methods of keeping denormalized or duplicated data values correct. The data should be strongly consistency instead of eventually consistent.
+
+Strongly consistent is with the use of transactions that will not allow the data to be out-of-sync like in stored procedure, triggers are the next best option, but triggers have performance issues.
+
+Eventually consistent methods are something like jobs that run at a predetermined or event-based time to sync the denormalized (duplicate) data. Eventually consistent leaves a gap of time, even if for milliseconds, that could cause data consistency issues.
+
+- See [Keeping Denormalized Values Correct](http://database-programmer.blogspot.com/2008/11/keeping-denormalized-values-correct.html) article by Kenneth Downs
 
 [Back to top](#top)
 

@@ -2583,9 +2583,14 @@ A view can be helpful with the use cases below and should be no less performant,
 - **View Use Cases**
   - Create a temporary indexed view for performance issues you cannot solve without changing T-SQL code
   - You need to retire a table and use a new table with similar data (still should be a temporary use)
-  - For security reasons to expose only a specific data to a database role
+  - For security reasons to expose only specific data to a database role
   - As an interface layer for a client that does not support a table or stored procedure data source
   - Abstracting complicated base tables
+  - Data aggregation like `SUM()`, `AVG()`, `COUNT()`, `MIN()`, `MAX()`, ...
+    - It is best to include this aggregation code in a stored procedure, but if there is a need to not have duplicated business logic code in multiple stored procedures, these data aggregation views can be helpful.
+      - If a view does not work and you need parameters, try an Inline Table Valued Function (iTVF). Views and iTVF at runtime are both inlined and treaded similarly to derived tables or CTEs.
+    - These aggregation views can be used to `JOIN` on with single row data like an Event. The aggregations would be used to sum up the Attendees joined on the EventId.
+    - Immutable (unchanging) records can have the parent table's column value set inside a transaction with the child rows.
 
 [Back to top](#top)
 

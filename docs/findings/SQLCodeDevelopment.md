@@ -266,7 +266,7 @@ ELSE
     END;
 ```
 
-**Do not use this UPSERT pattern:** It will produce primary key violations when run concurrently. MERGE can be used for ETL processing if it is assured to NOT be run concurrently.
+**This UPSERT pattern can be problematic:** It is best practices to not use the MERGE statement as it can produce primary key violations when run concurrently. MERGE can be used for ETL processing if it is assured to NOT be run concurrently.
 
 ```sql
 MERGE INTO dbo.Person WITH (HOLDLOCK) AS T

@@ -268,6 +268,9 @@ ELSE
 
 **This UPSERT pattern can be problematic:** It is best practices to not use the MERGE statement as it can produce primary key violations when run concurrently. MERGE can be used for ETL processing if it is assured to NOT be run concurrently.
 
+- See [What To Avoid If You Want To Use MERGE](https://michaeljswart.com/2021/08/what-to-avoid-if-you-want-to-use-merge/#:~:text=So%20just%20to,MERGE) article by Michael J. Swart
+- See [Use Caution with SQL Server's MERGE Statement](https://www.mssqltips.com/sqlservertip/3074/use-caution-with-sql-servers-merge-statement/#:~:text=function%20as%20expected.-,Conclusion,-I%20am%20not) article by Aaron Bertrand
+
 ```sql
 MERGE INTO dbo.Person WITH (HOLDLOCK) AS T
 USING (

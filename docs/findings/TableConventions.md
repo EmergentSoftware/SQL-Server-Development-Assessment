@@ -221,6 +221,24 @@ You will not get JOIN Eliminations without a foreign key and a column that allow
 
 ---
 
+<a name="157"/>
+
+## Using Table Partitions
+**Check Id:** 157
+
+Database table partitions should not be used to "speed up" query performance. Use an index instead.
+
+Partitioning can make your workload run slower if the partitions are not set up correctly and your queries cannot remain within a single partition. Instead of thinking about a partition, think about an index.
+
+Partitioning can be used as a maintenance tool for either distributing data between cold or hot storage. 
+
+Partition switching/swapping/truncating is another use case for managing large amounts of table data like in a data warehouse.
+
+
+[Back to top](#top)
+
+---
+
 <a name="151"/>
 
 ## Using Cascading Actions on Foreign Key

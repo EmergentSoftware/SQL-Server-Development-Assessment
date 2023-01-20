@@ -49,7 +49,7 @@ Ensure you are using the failover group name or availability group listener name
 <a name="55"/><a name="do-not-grant-an-application-user-the-db_owner-role"/>
 
 ## Application User Granted db_owner Role
-**Check Id:** 55 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleDo+Not+Grant+an+Application+User+the+db_owner+Role)
+**Check Id:** 55 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Do+Not+Grant+an+Application+User+the+db_owner+Role)
 
 You will want to give an account or process only those privileges which are essential to perform its intended function. Start your development with the app user account only a member of the db_reader, db_writer and db_executor roles.
 
@@ -95,7 +95,7 @@ Visual Studio database projects should be setup with the 7 query execution SET d
 <a name="57"/><a name="the-application-user-should-be-a-contained-user"/>
 
 ## Application User is not a Contained User
-**Check Id:** 57 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleThe+Application+User+should+be+a+Contained+User)
+**Check Id:** 57 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=The+Application+User+should+be+a+Contained+User)
 
 Users that only access one database should generally be created as contained users which means they don't have a SQL Server "login" and are not found as users in the master database. This makes the database portable by not requiring a link to a SQL Server Login. A database with contained users can be restored to your development SQL Server or a migration event needs to occur in production to a different SQL Server.
 
@@ -108,7 +108,7 @@ Users that only access one database should generally be created as contained use
 <a name="58"/><a name="all-database-objects-should-be-owned-by-dbo"/>
 
 ## Object Not Owned by dbo
-**Check Id:** 58 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleAll+Database+Objects+Should+be+Owned+by+dbo)
+**Check Id:** 58 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=All+Database+Objects+Should+be+Owned+by+dbo)
 
 It simplifies object management with dbo owning all the database objects. You will need to transfer ownership of objects before an account can be deleted.
 
@@ -119,11 +119,52 @@ It simplifies object management with dbo owning all the database objects. You wi
 <a name="59"/><a name="the-database-compatibility-level-should-match-the-sql-server-version"/>
 
 ## Database Compatibility Level is Lower Than the SQL Server
-**Check Id:** 59 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&titleThe+Database+Compatibility+Level+Should+Match+the+SQL+Server+Version)
+**Check Id:** 59 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=The+Database+Compatibility+Level+Should+Match+the+SQL+Server+Version)
 
 The database compatibility level lower than the SQL Server it is running on.
 
 There might be query optimization your are not getting running on an older database compatibility level. You might also introduce issues with a more modern database compatibility level.
+
+[Back to top](#top)
+
+---
+<a name="158"/>
+
+## Connection String Not Scalable
+**Check Id:** 158 [None yet, click here to add the issue](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Connection+String+Not+Scalable)
+
+Application connection strings should be set up to be scalable. 3 different connection strings are recommended.
+
+In the beginning, all three connection strings below will have the same content – they will all point to your production database server. When you need to scale, though, the production DBA can use different techniques to scale out each of those tiers.
+
+1. **Writes with Real-Time Reads**
+   - This connection is hard to scale, so keep the number of queries here to a minimum.  
+   - Treat this like a valuable resource.
+   - Functions like inserting or modifing database rows, then redirecting or displaying the data directly afterwards would fall into the use case pattern. Determine if it is necessary to redirect to a display UI, or just notify the user of the action. In high usage databases, performing additional database queries could consume resources unnecessarly.
+   - Indicate on the connection string `ApplicationIntent=ReadWrite`.
+     - See [Specifying Application Intent](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/sqlclient-support-for-high-availability-disaster-recovery#specifying-application-intent)
+   - Determine the `MultiSubnetFailover` property of `True` or `False`
+     - See [Connecting With MultiSubnetFailover](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/sqlclient-support-for-high-availability-disaster-recovery#connecting-with-multisubnetfailover)
+2. **No Writes with Reads That Can Tolerate Data Older Than 15 Seconds**
+   - This connection string has more options to scale out. This is where the majority of queries should go.
+   - Think of this as the default connection string.
+   - Indicate on the connection string `ApplicationIntent=ReadOnly`.
+     - See [Specifying Application Intent](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/sqlclient-support-for-high-availability-disaster-recovery#specifying-application-intent)
+   - Determine the `MultiSubnetFailover` property of `True` or `False`
+     - See [Connecting With MultiSubnetFailover](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/sqlclient-support-for-high-availability-disaster-recovery#connecting-with-multisubnetfailover)
+3. **No Writes with Reads That Can Tolerate Data Older Than Several Hours**
+   - This connection is for operational reporting, and not to be confused with analytical reporting aggregations like `SUM()`, `COUNT()`, `AVG()`, ... reporting. True analytical reporting should be performed in a system like a data warehouse or Online Analytical Arocessing (OLAP) system.
+   - Queries of these types utilize higher amounts of CPU and storage Input/Output.
+   - Stakeholders will eventually have to decide whether to prioritize near-real-time data for reports at the expense of slowing down production, or to separate these resource-intensive queries to a data source with a longer delay.
+   - Indicate on the connection string `ApplicationIntent=ReadOnly`.
+     - See [Specifying Application Intent](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/sqlclient-support-for-high-availability-disaster-recovery#specifying-application-intent)
+   - Determine the `MultiSubnetFailover` property of `True` or `False`
+     - See [Connecting With MultiSubnetFailover](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/sqlclient-support-for-high-availability-disaster-recovery#connecting-with-multisubnetfailover)
+
+
+- See [Not Using Code Retry Logic for Transient Errors](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/configuration-issues#54)
+
+
 
 [Back to top](#top)
 

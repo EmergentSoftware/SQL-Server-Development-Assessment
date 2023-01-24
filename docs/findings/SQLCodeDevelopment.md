@@ -483,18 +483,24 @@ WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
 
 Use Temporary Tables and not Table Variables.
 
-- There is optimization limitation like lack of statistics that very frequently lead to performance issues. The advice of "use table variables if you have less than NNN rows" is flawed. It might seem like temporary tables are performant, but they are not scalable with a couple more years of data.
+- There is optimization limitations like lack of statistics that very frequently lead to performance issues. The advice of "use table variables if you have less than NNN rows" is flawed. It might seem like temporary tables are performant, but they are not scalable with a couple more years of data.
 - There are two use cases for table variable and are infrequently called for.
   1. Extremely highly called code where recompiles from temporary table activity is a problem
   2. Audit scenarios when you need to keep data after a transaction is rolled back.
 
-```sql
+**Instead Of:**
+
+``` sql
 CREATE TABLE #UseMe (
     UseMeId   int           NOT NULL IDENTITY(1, 1) PRIMARY KEY
    ,FirstName nvarchar(100) NOT NULL
    ,LastName  nvarchar(100) NOT NULL
 );
+```
 
+**Do This:**
+
+``` sql
 DECLARE @DoNotUseMe table (
     DoNotUseMeId int           NOT NULL IDENTITY(1, 1) PRIMARY KEY
    ,FirstName    nvarchar(100) NOT NULL
@@ -614,7 +620,7 @@ aka. Catch-All Query or Kitchen Sink Query
 
 If your stored procedure has multiple parameters where any one (or more) number are parameters are optional, you have a dynamic search query.
 
-If your query is moderately complex you should use `OPTION (RECOMPILE)`. If you query is complex you should build the query with dynamic SQL.
+If your query is moderately complex you should use `OPTION (RECOMPILE)`. If your query is complex, you should build the query with dynamic SQL.
 
 You will also know this based on the `WHERE` clause of the query. You will see `@ProductId IS NULL` or have parameters wrapped in an `ISNULL()`.
 
@@ -973,12 +979,10 @@ END CATCH; /* <-- semicolon goes at the end here */
 
 ---
 
-<a name="100"/>
-
 ## Using a Non-SARGable Expression in a WHERE Clause
 **Check Id:** 100 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+a+Non-SARGable+Expression+in+a+WHERE+Clause)
 
-Search ARGument..able. Avoid having a column or variable used within an expression or used as a function parameter. Columns are best used its self on one side of the operator. You will get a table scan instead of a index seek which will hurt performance.
+Search ARGument..able. Avoid having a column or variable used within an expression or used as a function parameter. You will get a table scan instead of an index seek which will hurt performance.
 
 ![Non-SARGable Scan vs. SARGable Seek](../Images/Using_a_Non-SARGable_Expression_in_a_WHERE_Clause.png)
 
@@ -987,7 +991,7 @@ Another issue with non-sargable queries besides the forced table scan is SQL Ser
 
 - See [Using Missing Indexes Recommendations](/SQL-Server-Development-Assessment/best-practices-and-potential-findings/sql-code-conventions#using-missing-indexes-recommendations)
 
-By changed the WHERE clause to not use the YEAR() function and doing a bit more typing allows SQL Server to understand what you want it to do.
+Changing the WHERE clause to not use the YEAR() function and doing a bit more typing allows SQL Server to understand what you want it to do.
 
 ![Non-SARGable Does Not Get Index Recommendation](../Images/Non-SARGable_Does_Not_Get_Index_Recommendation.png)
 

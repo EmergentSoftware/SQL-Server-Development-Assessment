@@ -442,7 +442,7 @@ The `CHECK CHECK` syntax is correct. The 1st `CHECK` is the end of `WITH CHECK` 
 
 To find untrusted foreign keys and check constraints in your database run the script below to identify and create an ``ALTER`` statement to correct the issue. In Redgate SQL Prompt the snippet code is ``fk``. If you receive an error with the generated ``ALTER`` statement it means past constraint violations have been being suppressed by ``WITH NOCHECK``. You will have to figure out how to fix the rows that do not comply with the constraint.
 
-```
+```sql
 SELECT
     SchemaName = S.name
    ,TableName  = T.name
@@ -478,9 +478,9 @@ WHERE
 AND CC.is_not_for_replication = 0
 AND CC.is_disabled            = 0
 ORDER BY
-    SchemaName
-   ,TableName
-   ,ObjectName;
+    SchemaName ASC
+   ,TableName ASC
+   ,ObjectName ASC;
 ```
 
 [Back to top](#top)
@@ -660,8 +660,8 @@ WHERE
 AND I.type             <> 5 /* CLUSTERED */
 AND P.data_compression <> 2 /* Not Page compressed, which is the default for system-versioned temporal tables */
 ORDER BY
-    S.name
-   ,T.name;
+    S.name ASC
+   ,T.name ASC;
 ```
 
 [Back to top](#top)

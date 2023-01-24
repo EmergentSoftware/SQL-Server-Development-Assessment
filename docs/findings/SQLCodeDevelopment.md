@@ -979,8 +979,6 @@ END CATCH; /* <-- semicolon goes at the end here */
 
 ---
 
-<a name="100"/>
-
 ## Using a Non-SARGable Expression in a WHERE Clause
 **Check Id:** 100 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=Using+a+Non-SARGable+Expression+in+a+WHERE+Clause)
 

@@ -458,7 +458,7 @@ WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
         WHERE
             P.IsProcessedFlag = 0
         ORDER BY
-            P.PersonId;
+            P.PersonId ASC;
 
         UPDATE
             dbo.Person
@@ -2206,7 +2206,7 @@ SELECT
 FROM
     dbo.Person AS P
 ORDER BY
-    P.LastName;
+    P.LastName ASC;
 ```
 
 [Back to top](#top)
@@ -2277,12 +2277,12 @@ WHERE
     FirstName = 'Kevin' -- This line is a comment
     AND LastName = 'Martin'
 ORDER BY
-    LastName;
+    LastName ASC;
 ```
 
 It turns into this in monitoring tools and Dynamic Management Views:
 ```sql
-SELECT * FROM dbo.Person WHERE FirstName = 'Kevin' -- This line is a comment AND LastName = 'Martin' ORDER BY LastName;
+SELECT * FROM dbo.Person WHERE FirstName = 'Kevin' -- This line is a comment AND LastName = 'Martin' ORDER BY LastName ASC;
 ```
 
 You cannot tell where the query ends and it will break tools like Redgate SQL Prompt.

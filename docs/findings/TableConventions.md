@@ -169,7 +169,13 @@ With a 'Phone Number' table you would not use a linking table. The 'Phone Number
 |2|1|2|(612) 233-2255|
 |3|2|3|1+ (453) 556-9902|
 
-A use case exception for using the proper weak or strong type is for security purposes. You might encounter a requirement for security that utilizing a linking table makes it impossible to have a discriminator to prevent read or modifications to a row.
+An entity is a table and is a single set of attributes. There is a need sometimes for entity/table inheritance when you might have a parent entity/table named `Person`, you would need another inherited entity/table for `Employee`. The `Employee` entity/table will store attributes (Salary, Job Title, ...) that are not attributes in the `Person` entity/table.
+
+
+Table Entity Use Case Exception
+A use case exception for using proper table entities is for security purposes. You might encounter a requirement for security that utilizing a linking table makes it impossible to have a discriminator like `PhoneTypeId` to prevent read or modifications to a row based on how the software was/is written.
+
+This exception use can lead to table schema development issues for cases when you have a multiple entity/tables like `dbo.BuyerPhone`, `dbo.SellerPhone`, `dbo.ServicerPhone`, `dbo.VendorPhone`. With the address entity not being materialized in one `dbo.Phone` entity/table, the table schemas need to be kept in sync which might not occur. Ask me how I know. ;-(
 
 
 [Back to top](#top)

@@ -338,7 +338,9 @@ For all parts of the table name, including prefixes, use Pascal Case. `PascalCas
 ## Using Reserved Words in Name
 **Check Id:** 4
 
-Using reserved or future reserved words makes code more difficult to read, can cause problems to code formatters, and can cause errors when writing code.
+Using reserved or future reserved words makes code more difficult to read, can cause problems to code formatters, and can cause errors when writing code. 
+
+Sometimes SSMS will color code a word making you think it is a reserved keyword. It might just be a "special" word that is used in a database backup function somewhere. Check the Reserved Keyword link below. If the highlighted word in SSMS is not on the current or future reserved list, you are safe to use it as an object name.
 
 - See [Reserved Keywords](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/reserved-keywords-transact-sql)
 

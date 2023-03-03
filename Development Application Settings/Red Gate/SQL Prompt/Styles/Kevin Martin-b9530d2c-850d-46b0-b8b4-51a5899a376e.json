@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "id": "6d4cd025-b548-497f-bf21-3d5c64111b1f",
-    "name": "Team Expanded"
+    "id": "b9530d2c-850d-46b0-b8b4-51a5899a376e",
+    "name": "Kevin Martin"
   },
   "whitespace": {
-    "wrapLongLines": false
+    "wrapLinesLongerThan": 150
   },
   "lists": {
     "placeFirstItemOnNewLine": "always",
@@ -18,8 +18,7 @@
   "parentheses": {
     "parenthesisStyle": "expandedSplit",
     "indentParenthesesContents": true,
-    "collapseShortParenthesisContents": true,
-    "collapseParenthesesShorterThan": 78
+    "collapseParenthesesShorterThan": 35
   },
   "casing": {
     "reservedKeywords": "uppercase",
@@ -68,17 +67,19 @@
       "indentJoinTable": false
     },
     "on": {
+      "placeOnNewLine": false,
       "keywordAlignment": "indented"
     }
   },
   "insertStatements": {
     "columns": {
-      "parenthesisStyle": "expandedSplit"
+      "parenthesisStyle": "compactSimple",
+      "placeSubsequentColumnsOnNewLines": "ifLongerThanMaxLineLength"
     },
     "values": {
-      "parenthesisStyle": "compactRightAligned",
+      "parenthesisStyle": "compactSimple",
       "indentContents": true,
-      "placeSubsequentValuesOnNewLines": "always"
+      "placeSubsequentValuesOnNewLines": "ifLongerThanMaxLineLength"
     }
   },
   "caseExpressions": {

@@ -543,7 +543,9 @@ These are a 400 level tasks and please feel free to reach out to a DBA for assis
 ## Missing Index for Foreign Key
 **Check Id:** 21
 
-Each foreign key in your table should be included in an index. Start off with an index on just the foreign key column if you have no workload to tune a multi-column index. There is a real good chance the indexes will be used when queries join on the parent table.
+Each foreign key in your table should be included in an index in the primary key position. If you have a `UNIQUE NONCLUSTERED` index with multiple keys, ensure foreign key columns not in the primary key location also get their own `NONCLUSTERED` index in the primary key position.
+
+Start off with an index on just the foreign key column if you have no workload to tune a multi-column index. There is a real good chance the indexes will be used when queries join on the parent table.
 
 [Back to top](#top)
 

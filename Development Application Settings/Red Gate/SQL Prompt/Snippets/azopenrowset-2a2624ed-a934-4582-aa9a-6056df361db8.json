@@ -1,0 +1,6 @@
+{
+  "id": "2a2624ed-a934-4582-aa9a-6056df361db8",
+  "prefix": "azopenrowset",
+  "description": "ES: Query a file from Azure storage container",
+  "body": "SELECT\r\n    *\r\nFROM\r\n    OPENROWSET(BULK '<Azure Storage Location, text, Current Ingest Files/PurchaseGroup.CSV>', DATA_SOURCE = '<Data Source Name, text, DebtNextRaw>', SINGLE_CLOB) AS DataFile;"
+}

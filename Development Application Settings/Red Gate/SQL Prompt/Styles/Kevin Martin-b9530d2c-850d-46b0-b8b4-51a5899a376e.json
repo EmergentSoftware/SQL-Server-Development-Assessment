@@ -3,9 +3,6 @@
     "id": "b9530d2c-850d-46b0-b8b4-51a5899a376e",
     "name": "Kevin Martin"
   },
-  "whitespace": {
-    "wrapLinesLongerThan": 150
-  },
   "lists": {
     "placeFirstItemOnNewLine": "always",
     "alignSubsequentItemsWithFirstItem": false,
@@ -18,7 +15,8 @@
   "parentheses": {
     "parenthesisStyle": "expandedSplit",
     "indentParenthesesContents": true,
-    "collapseParenthesesShorterThan": 35
+    "collapseShortParenthesisContents": true,
+    "collapseParenthesesShorterThan": 120
   },
   "casing": {
     "reservedKeywords": "uppercase",
@@ -73,7 +71,7 @@
   },
   "insertStatements": {
     "columns": {
-      "parenthesisStyle": "compactSimple",
+      "parenthesisStyle": "expandedSplit",
       "placeSubsequentColumnsOnNewLines": "ifLongerThanMaxLineLength"
     },
     "values": {

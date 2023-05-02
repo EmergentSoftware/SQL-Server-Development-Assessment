@@ -1938,6 +1938,8 @@ WHERE
 
 **Serial execution:** SQL Server does not allow intra-query parallelism in queries that invoke UDFs.
 
+- See: [Refactor SQL Server scalar UDF to inline TVF to improve performance](https://www.mssqltips.com/sqlservertip/4772/refactor-sql-server-scalar-udf-to-inline-tvf-to-improve-performance/)
+
 [Back to top](#top)
 
 ---
@@ -2635,7 +2637,13 @@ If you are required to use JSON string in the relational database and need to fr
 ## JSON Performance
 **Check Id:** 160 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=JSON+Performance)
 
-If you are required to use JSON strings in the relational database and need to frequent parse the JSON string, create a computed column on the table using `JSON_VALUE(expression, path)` and create an index
+If you are required to use JSON strings in the relational database and need to frequent parse the JSON string, create a computed column on the table using `JSON_VALUE(expression, path)` and create an index.
+
+```sql
+ALTER TABLE dbo.DeliveryInventory ADD MakeName AS JSON_VALUE(JSONAttributes, '$.Make');
+CREATE NONCLUSTERED INDEX DealerInventory_MakeName ON dbo.DeliveryInventory (MakeName ASC);
+```
+
 
 - See: [JSON_VALUE (Transact-SQL)](https://learn.microsoft.com/en-us/sql/t-sql/functions/json-value-transact-sql?view=sql-server-ver16)
 

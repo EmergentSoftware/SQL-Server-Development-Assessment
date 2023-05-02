@@ -2615,6 +2615,33 @@ Try running EXEC sp_refreshsqlmodule or sp_refreshview.
 [Back to top](#top)
 
 ---
+
+<a name="159"/>
+
+## JSON Explicit Schema
+**Check Id:** 159 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=JSON+Explicit+Schema)
+
+Explicitly defining the schema JSON columns using [with_clause](https://learn.microsoft.com/en-us/sql/t-sql/functions/openjson-transact-sql?view=sql-server-ver16#with_clause) is more performant.
+
+If you are required to use JSON string in the relational database and need to frequent parse the JSON string, you could create a computed column using `JSON_VALUE(expression, path)` and create an index
+
+- See: [JSON_VALUE (Transact-SQL)](https://learn.microsoft.com/en-us/sql/t-sql/functions/json-value-transact-sql?view=sql-server-ver16)
+
+[Back to top](#top)
+
+---
+<a name="160"/>
+
+## JSON Performance
+**Check Id:** 160 [Not implemented yet. Click here to add the issue if you want to develop and create a pull request.](https://github.com/EmergentSoftware/SQL-Server-Development-Assessment/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=JSON+Performance)
+
+If you are required to use JSON strings in the relational database and need to frequent parse the JSON string, create a computed column on the table using `JSON_VALUE(expression, path)` and create an index
+
+- See: [JSON_VALUE (Transact-SQL)](https://learn.microsoft.com/en-us/sql/t-sql/functions/json-value-transact-sql?view=sql-server-ver16)
+
+[Back to top](#top)
+
+---
 <br>
 <br>
 <br>

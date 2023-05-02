@@ -488,7 +488,7 @@ Use Temporary Tables and not Table Variables.
   1. Extremely highly called code where recompiles from temporary table activity is a problem
   2. Audit scenarios when you need to keep data after a transaction is rolled back.
 
-**Instead Of:**
+**Do This:**
 
 ``` sql
 CREATE TABLE #UseMe (
@@ -498,7 +498,7 @@ CREATE TABLE #UseMe (
 );
 ```
 
-**Do This:**
+**Instead Of:**
 
 ``` sql
 DECLARE @DoNotUseMe table (

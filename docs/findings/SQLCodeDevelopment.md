@@ -222,22 +222,34 @@ SET NOCOUNT, XACT_ABORT ON;
 
 BEGIN TRANSACTION;
 
-CREATE TABLE #Update (FirstName varchar(50) NOT NULL, LastName varchar(50) NOT NULL);
+/***************************************************************
+** Create temp table to store the updates
+****************************************************************/
+CREATE TABLE #Update (
+    FirstName varchar(50) NOT NULL
+   ,LastName  varchar(50) NOT NULL
+);
 
 INSERT INTO #Update (FirstName, LastName)
-VALUES
-     ('Kevin', 'Martin')
-   , ('Jean-Luc', 'Picard');
+VALUES ('Kevin', 'Martin')
+   ,('Jean-Luc', 'Picard');
 
+
+/***************************************************************
+** Perform Updates
+****************************************************************/
 UPDATE
     P WITH (UPDLOCK, SERIALIZABLE)
 SET
     P.FirstName = U.FirstName
 FROM
-    dbo.Person         AS P
-    INNER JOIN #Update AS U
-        ON P.LastName = U.LastName;
+    dbo.Person     AS P
+INNER JOIN #Update AS U ON P.LastName = U.LastName;
 
+
+/***************************************************************
+** Perform Inserts
+****************************************************************/
 INSERT dbo.Person (FirstName, LastName)
 SELECT
     U.FirstName
@@ -245,7 +257,22 @@ SELECT
 FROM
     #Update AS U
 WHERE
-    NOT EXISTS (SELECT * FROM dbo.Person AS P WHERE P.LastName = U.LastName);
+    NOT EXISTS (
+    SELECT * FROM dbo.Person AS P WHERE P.LastName = U.LastName
+);
+
+
+/***************************************************************
+** Perform Deletes
+****************************************************************/
+DELETE
+P
+FROM
+    dbo.Person          AS P
+LEFT OUTER JOIN #Update AS U ON P.LastName = U.LastName
+WHERE
+    U.LastName IS NULL;
+
 
 COMMIT TRANSACTION;
 ```

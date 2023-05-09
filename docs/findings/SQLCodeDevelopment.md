@@ -236,7 +236,7 @@ VALUES ('Kevin', 'Martin')
 
 
 /***************************************************************
-** Perform Updates
+** Perform Updates (WHEN MATCHED)
 ****************************************************************/
 UPDATE
     P WITH (UPDLOCK, SERIALIZABLE)
@@ -248,7 +248,7 @@ INNER JOIN #Update AS U ON P.LastName = U.LastName;
 
 
 /***************************************************************
-** Perform Inserts
+** Perform Inserts (WHEN NOT MATCHED [BY TARGET])
 ****************************************************************/
 INSERT dbo.Person (FirstName, LastName)
 SELECT
@@ -263,7 +263,7 @@ WHERE
 
 
 /***************************************************************
-** Perform Deletes
+** Perform Deletes (WHEN NOT MATCHED BY SOURCE)
 ****************************************************************/
 DELETE
 P

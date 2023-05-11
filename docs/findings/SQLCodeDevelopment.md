@@ -150,21 +150,30 @@ Consider using [sp_CRUDGen](https://github.com/kevinmartintech/sp_CRUDGen) to ge
 ```sql
 SET NOCOUNT, XACT_ABORT ON;
 
-BEGIN TRANSACTION;
+BEGIN TRY
+    BEGIN TRANSACTION;
 
-UPDATE
-    dbo.Person WITH (UPDLOCK, SERIALIZABLE)
-SET
-    FirstName = 'Kevin'
-WHERE
-    LastName = 'Martin';
+    UPDATE
+        dbo.Person WITH (UPDLOCK, SERIALIZABLE)
+    SET
+        FirstName = 'Kevin'
+    WHERE LastName = 'Martin';
 
-IF @@ROWCOUNT = 0
+    IF @@ROWCOUNT = 0
     BEGIN
         INSERT dbo.Person (FirstName, LastName) VALUES ('Kevin', 'Martin');
     END;
 
-COMMIT TRANSACTION;
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+    BEGIN
+        ROLLBACK TRANSACTION;
+    END;
+
+    THROW;
+END CATCH;
 ```
 
 **Use this UPSERT pattern when a record insert is more likely:** Don't worry about checking for a records existence just perform the insert.
@@ -172,28 +181,40 @@ COMMIT TRANSACTION;
 ```sql
 SET NOCOUNT, XACT_ABORT ON;
 
-BEGIN TRANSACTION;
+BEGIN TRY
+    BEGIN TRANSACTION;
 
-INSERT dbo.Person (FirstName, LastName)
-SELECT
-    'Kevin'
-   ,'Martin'
-WHERE
-    NOT EXISTS (
+    INSERT dbo.Person
+    (
+        FirstName,
+        LastName
+    )
     SELECT
-        1
-    FROM
-        dbo.Person WITH (UPDLOCK, SERIALIZABLE)
-    WHERE
-        LastName = 'Martin'
-);
+        'Kevin',
+        'Martin'
+    WHERE NOT EXISTS
+    (
+        SELECT
+            1
+        FROM dbo.Person WITH (UPDLOCK, SERIALIZABLE)
+        WHERE LastName = 'Martin'
+    );
 
-IF @@ROWCOUNT = 0
+    IF @@ROWCOUNT = 0
     BEGIN
         UPDATE dbo.Person SET FirstName = 'Kevin' WHERE LastName = 'Martin';
     END;
 
-COMMIT TRANSACTION;
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+    BEGIN
+        ROLLBACK TRANSACTION;
+    END;
+
+    THROW;
+END CATCH;
 ```
 
 **Use this UPSERT pattern to allow the client application to handle the exception:** Ensure you handle the exception in your code.
@@ -220,61 +241,77 @@ For JSON, XML or comma-separated list ensure you insert the records into a tempo
 ```sql
 SET NOCOUNT, XACT_ABORT ON;
 
-BEGIN TRANSACTION;
+BEGIN TRY
+    BEGIN TRANSACTION;
 
-/***************************************************************
-** Create temp table to store the updates
-****************************************************************/
-CREATE TABLE #Update (
-    FirstName varchar(50) NOT NULL
-   ,LastName  varchar(50) NOT NULL
-);
+    /***************************************************************
+    ** Create temp table to store the updates
+    ****************************************************************/
+    CREATE TABLE #Update
+    (
+        FirstName varchar(50) NOT NULL,
+        LastName varchar(50) NOT NULL
+    );
 
-INSERT INTO #Update (FirstName, LastName)
-VALUES ('Kevin', 'Martin')
-   ,('Jean-Luc', 'Picard');
-
-
-/***************************************************************
-** Perform Updates (WHEN MATCHED)
-****************************************************************/
-UPDATE
-    P WITH (UPDLOCK, SERIALIZABLE)
-SET
-    P.FirstName = U.FirstName
-FROM
-    dbo.Person     AS P
-INNER JOIN #Update AS U ON P.LastName = U.LastName;
+    INSERT INTO #Update
+    (
+        FirstName,
+        LastName
+    )
+    VALUES 
+        ('Kevin', 'Martin'),
+        ('Jean-Luc', 'Picard');
 
 
-/***************************************************************
-** Perform Inserts (WHEN NOT MATCHED [BY TARGET])
-****************************************************************/
-INSERT dbo.Person (FirstName, LastName)
-SELECT
-    U.FirstName
-   ,U.LastName
-FROM
-    #Update AS U
-WHERE
-    NOT EXISTS (
-    SELECT * FROM dbo.Person AS P WHERE P.LastName = U.LastName
-);
+    /***************************************************************
+    ** Perform Updates (WHEN MATCHED)
+    ****************************************************************/
+    UPDATE
+        P WITH (UPDLOCK, SERIALIZABLE)
+    SET
+        P.FirstName = U.FirstName
+    FROM dbo.Person AS P
+    INNER JOIN #Update AS U
+        ON P.LastName = U.LastName;
 
 
-/***************************************************************
-** Perform Deletes (WHEN NOT MATCHED BY SOURCE)
-****************************************************************/
-DELETE
-P
-FROM
-    dbo.Person          AS P
-LEFT OUTER JOIN #Update AS U ON P.LastName = U.LastName
-WHERE
-    U.LastName IS NULL;
+    /***************************************************************
+    ** Perform Inserts (WHEN NOT MATCHED [BY TARGET])
+    ****************************************************************/
+    INSERT dbo.Person
+    (
+        FirstName,
+        LastName
+    )
+    SELECT
+        U.FirstName,
+        U.LastName
+    FROM #Update AS U
+    WHERE NOT EXISTS
+    (
+        SELECT * FROM dbo.Person AS P WHERE P.LastName = U.LastName
+    );
 
 
-COMMIT TRANSACTION;
+    /***************************************************************
+    ** Perform Deletes (WHEN NOT MATCHED BY SOURCE)
+    ****************************************************************/
+    DELETE P
+    FROM dbo.Person AS P
+    LEFT OUTER JOIN #Update AS U
+        ON P.LastName = U.LastName
+    WHERE U.LastName IS NULL;
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+    BEGIN
+        ROLLBACK TRANSACTION;
+    END;
+
+    THROW;
+END CATCH;
 ```
 
 **Do not use this UPSERT pattern:** It will produce primary key violations when run concurrently.
@@ -331,19 +368,28 @@ WHEN NOT MATCHED BY SOURCE THEN
 This method will not prevent a race condition and the last update will win.
 
 ```sql
-SET NOCOUNT, XACT_ABORT ON;
-BEGIN TRANSACTION;
+BEGIN TRY
+    BEGIN TRANSACTION;
 
-IF EXISTS (SELECT * FROM dbo.Person WITH (UPDLOCK, SERIALIZABLE) WHERE PersonId = @PersonId)
+    IF EXISTS (SELECT * FROM dbo.Person WITH (UPDLOCK, SERIALIZABLE) WHERE PersonId = @PersonId)
+        BEGIN
+            UPDATE dbo.Person SET FirstName = @FirstName WHERE PersonId = @PersonId;
+        END;
+    ELSE
+        BEGIN
+            INSERT dbo.Person (PersonId, FirstName) VALUES (@PersonId, @FirstName);
+        END;
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
     BEGIN
-        UPDATE dbo.Person SET FirstName = @FirstName WHERE PersonId = @PersonId;
-    END;
-ELSE
-    BEGIN
-        INSERT dbo.Person (PersonId, FirstName) VALUES (@PersonId, @FirstName);
+        ROLLBACK TRANSACTION;
     END;
 
-COMMIT TRANSACTION;
+    THROW;
+END CATCH;
 ```
 
 [Back to top](#top)

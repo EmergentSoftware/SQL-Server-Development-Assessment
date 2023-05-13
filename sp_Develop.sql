@@ -37,7 +37,7 @@ AS
         **
         ** All other copyrights for sp_Develop are held by Emergent Software, LLC as described below.
         ** 
-        ** Copyright (c) 2022 Emergent Software, LLC
+        ** Copyright (c) 2023 Emergent Software, LLC
         ** 
         ** Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
         ** documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
@@ -82,8 +82,8 @@ AS
 	    ** Setting some varibles
 	    **********************************************************************************************************************/
 
-        SET @Version = '2.0.1';
-        SET @VersionDate = '20220924';
+        SET @Version = '2.1.1';
+        SET @VersionDate = '20230513';
         SET @URLBase = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/best-practices-and-potential-findings/';
         SET @URLSkipChecks = 'https://emergentsoftware.github.io/SQL-Server-Development-Assessment/how-to-skip-checks';
         SET @OutputType = UPPER(@OutputType);

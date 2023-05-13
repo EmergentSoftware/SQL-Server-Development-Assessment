@@ -507,11 +507,11 @@ CREATE TABLE #Person (
     PersonId        int           NOT NULL IDENTITY(1, 1) PRIMARY KEY
    ,FirstName       nvarchar(100) NOT NULL
    ,LastName        nvarchar(128) NOT NULL
-   ,IsProcessedFlag bit           NOT NULL DEFAULT (0)
+   ,IsProcessed     bit           NOT NULL DEFAULT (0)
 );
 
 INSERT INTO
-    #Person (FirstName, LastName, IsProcessedFlag)
+    #Person (FirstName, LastName, IsProcessed)
 VALUES
      (N'Joel', N'Miller', 0);
 
@@ -520,7 +520,7 @@ DECLARE
    ,@FirstName nvarchar(100)
    ,@LastName  nvarchar(100);
 
-WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
+WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessed = 0)
     BEGIN
         SELECT TOP (1)
                @PersonId  = P.PersonId
@@ -529,7 +529,7 @@ WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
         FROM
             #Person AS P
         WHERE
-            P.IsProcessedFlag = 0
+            P.IsProcessed = 0
         ORDER BY
             P.PersonId ASC;
 
@@ -541,7 +541,7 @@ WHILE EXISTS (SELECT * FROM #Person WHERE IsProcessedFlag = 0)
         WHERE
             PersonId = @PersonId;
 
-        UPDATE #Person SET IsProcessedFlag = 1 WHERE PersonId = @PersonId;
+        UPDATE #Person SET IsProcessed = 1 WHERE PersonId = @PersonId;
     END;
 ```
 

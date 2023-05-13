@@ -16,8 +16,9 @@
     "alignComments": true
   },
   "parentheses": {
-    "parenthesisStyle": "expandedToStatement",
+    "parenthesisStyle": "expandedSplit",
     "indentParenthesesContents": true,
+    "collapseShortParenthesisContents": true,
     "collapseParenthesesShorterThan": 75
   },
   "casing": {
